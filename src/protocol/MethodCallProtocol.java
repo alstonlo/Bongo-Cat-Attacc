@@ -20,7 +20,7 @@ public class MethodCallProtocol extends Protocol {
      */
     public MethodCallProtocol(String method) {
         super(Convention.METHOD_CALL_TYPE);
-        addField("method", method);
+        addField(Convention.METHOD_FIELD, method);
     }
 
 
