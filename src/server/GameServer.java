@@ -6,6 +6,10 @@ public class GameServer implements Runnable, Listener{
 
     }
 
+    private GameServer(int port) {
+
+    }
+
     @Override
     public void run() {
 

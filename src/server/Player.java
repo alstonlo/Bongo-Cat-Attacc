@@ -1,13 +1,22 @@
 package server;
 
+import javax.json.JsonObject;
+import javax.json.JsonReader;
+import javax.json.JsonWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 class Player implements Runnable{
 
     private String username;
+    private Listener listener;
 
-    Player(String username, Socket socket) {
+    private Socket socket;
+    private JsonReader reader;
+    private JsonWriter writer;
 
+    Player(Socket socket) {
+        this.socket = socket;
     }
 
     @Override
@@ -20,7 +29,7 @@ class Player implements Runnable{
     }
 
     void setListener(Listener l) {
-
+        this.listener = l;
     }
 
     String getUsername() {
@@ -31,7 +40,7 @@ class Player implements Runnable{
         this.username = username;
     }
 
-    void sendMessage(Message message) {
+    void sendMessage(JsonObject message) {
 
     }
 }

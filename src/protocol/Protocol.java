@@ -13,7 +13,7 @@ import javax.json.JsonObjectBuilder;
  * @author Alston
  * last updated 12/19/2018
  */
-public abstract class Protocol {
+abstract class Protocol {
 
     private JsonObjectBuilder protocolFactory = Json.createObjectBuilder();
 
@@ -23,7 +23,7 @@ public abstract class Protocol {
      *
      * @param type the type of the message
      */
-    public Protocol(String type) {
+    Protocol(String type) {
         addField(Convention.TYPE_FIELD, type);
         addField(Convention.ID_FIELD);
     }
