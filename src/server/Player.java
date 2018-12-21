@@ -1,22 +1,32 @@
 package server;
 
-import javax.json.JsonObject;
-import javax.json.JsonReader;
-import javax.json.JsonWriter;
-import java.io.PrintWriter;
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 class Player implements Runnable{
 
     private String username;
     private Listener listener;
+    private volatile boolean running = true;
 
     private Socket socket;
-    private JsonReader reader;
-    private JsonWriter writer;
+    private InputStream input;
+    private OutputStream output;
 
-    Player(Socket socket) {
-        this.socket = socket;
+    Player(Socket socket) throws IOException {
+        try {
+            this.socket = socket;
+            this.input = socket.getInputStream();
+            this.output = socket.getOutputStream();
+
+        } catch (IOException e) {
+            close();
+            throw new IOException();
+        }
     }
 
     @Override
@@ -42,5 +52,9 @@ class Player implements Runnable{
 
     void sendMessage(JsonObject message) {
 
+    }
+
+    private void close() {
+        ServerUtils.close(socket);
     }
 }

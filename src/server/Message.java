@@ -1,6 +1,6 @@
 package server;
 
-import javax.json.JsonObject;
+import com.google.gson.JsonObject;
 
 class Message {
 

@@ -1,7 +1,7 @@
 package protocol;
 
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * A protocol message of the return type. Such a protocol passes
@@ -75,7 +75,7 @@ public class ReturnProtocol extends Protocol {
      * @param name  the name of the returned value
      * @param value the String representation of the value of the returned value
      */
-    public void setReturnValue(String name, JsonArrayBuilder value) {
+    public void setReturnValue(String name, JsonArray value) {
         addField(name, value);
     }
 
@@ -86,7 +86,7 @@ public class ReturnProtocol extends Protocol {
      * @param name  the name of the returned value
      * @param value the String representation of the value of the returned value
      */
-    public void setReturnValue(String name, JsonObjectBuilder value) {
+    public void setReturnValue(String name, JsonObject value) {
         addField(name, value);
     }
 

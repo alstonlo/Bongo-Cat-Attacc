@@ -1,7 +1,7 @@
 package protocol;
 
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * A protocol message of the method call type. Such a protocol requests
@@ -66,7 +66,7 @@ public class MethodCallProtocol extends Protocol {
      * @param name  the name of the parameter to be added
      * @param value the String representation of the value of the parameter to be added
      */
-    public void setParameter(String name, JsonArrayBuilder value) {
+    public void setParameter(String name, JsonArray value) {
         addField(name, value);
     }
 
@@ -77,7 +77,7 @@ public class MethodCallProtocol extends Protocol {
      * @param name  the name of the parameter to be added
      * @param value the String representation of the value of the parameter to be added
      */
-    public void setParameter(String name, JsonObjectBuilder value) {
+    public void setParameter(String name, JsonObject value) {
         addField(name, value);
     }
 

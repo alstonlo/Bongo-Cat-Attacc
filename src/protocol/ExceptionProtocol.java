@@ -26,7 +26,7 @@ public class ExceptionProtocol extends Protocol {
      * @param id the ID of the message that this message is responding to
      */
     public void setMethodRespone(String id) {
-        addField("response", id);
+        addField(Convention.RESPONSE_FIELD, id);
     }
 
     /**

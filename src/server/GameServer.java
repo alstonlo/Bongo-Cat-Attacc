@@ -1,9 +1,9 @@
 package server;
 
+
 public class GameServer implements Runnable, Listener{
 
     public static void main(String[] args) {
-
     }
 
     private GameServer(int port) {
