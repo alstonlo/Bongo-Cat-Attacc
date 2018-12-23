@@ -92,8 +92,8 @@ class Player implements Runnable {
     }
 
     /**
-     * Returns the registered username of the player. If the player has not registered a username,
-     * then null is returned.
+     * Returns the username of the player. If the player has not registered
+     * under a username, then null is returned.
      *
      * @return the registered username of the player
      */
@@ -102,13 +102,14 @@ class Player implements Runnable {
     }
 
     /**
-     * Registers and sets the username of the player. If the player has already registered a username,
-     * then nothing happens.
+     * Registers and sets the username of the player. If the player has already registered
+     * under a username, then nothing happens. Registering under a username, in this context,
+     * is defined as when the user logs in to an existing, registered account.
      *
      * @param username the username the player is to be registered under
      */
     void setUsername(String username) {
-        if (this.username == null) { //this.username == null if no username has been registered
+        if (this.username == null) {
             this.username = username;
         }
     }
