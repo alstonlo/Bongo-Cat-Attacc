@@ -1,0 +1,20 @@
+This file details expected protocol communication between the client and server
+
+
+To register a new account:
+Client sends:
+    methodcallprotocol
+    METHOD_FIELD: REGISTER_USER
+    "id": <give an id>
+    "username": <username of account>
+    "password": <password of account>
+
+if successful, server sends
+    returnprotocol
+    RESPONSE_FIELD: <the id given above>
+
+
+if unsuccessful, server sends
+    exceptionprotocol
+
+

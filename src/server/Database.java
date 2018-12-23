@@ -85,7 +85,7 @@ class Database {
             //an SQLException should, in theory, only be thrown if
             // a) the username of password is null
             // b) the username is not unique
-            //either way, any other potential causes for error will fail to register the account
+            //either way, any other potential causes for error will still fail to register the account
 
             return false;
         }

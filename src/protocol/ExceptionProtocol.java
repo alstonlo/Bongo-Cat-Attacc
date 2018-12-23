@@ -32,8 +32,7 @@ public class ExceptionProtocol extends Protocol {
     /**
      * Sets the error code of the protocol message, which gives information on the type
      * of error thrown. The error code field is initialized as null and can be accessed by
-     * passing {@link Convention#ERRORCODE_FIELD} as the key. Various error codes can also
-     * be found in the static fields of {@link Convention}.
+     * passing {@link Convention#ERRORCODE_FIELD} as the key.
      *
      * @param code a String code that represents the type of exception that is detailed in the message
      */
