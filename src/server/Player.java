@@ -120,7 +120,7 @@ class Player implements Runnable {
      *
      * @param message the message to be sent
      */
-    void sendMessage(JsonObject message) {
+    synchronized void sendMessage(JsonObject message) {
         writer.write(message.toString());
         writer.flush();
     }

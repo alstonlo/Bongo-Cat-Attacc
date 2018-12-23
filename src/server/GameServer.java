@@ -7,12 +7,12 @@ package server;
  * @author Alston
  * last updated 12/23/2018
  */
-public class GameServer implements Runnable, Listener{
+public class GameServer implements Runnable, Listener {
 
     public static void main(String[] args) {
-
+        GameServer server = new GameServer(5000);
+        server.run();
     }
-
 
     private Database database = Database.getInstance();
     private QueueingRoom matchMakingRoom = new QueueingRoom();

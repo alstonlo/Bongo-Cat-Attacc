@@ -4,7 +4,7 @@ This file details expected protocol communication between the client and server
 To register a new account:
 Client sends:
     methodcallprotocol
-    METHOD_FIELD: REGISTER_USER
+    METHOD_FIELD: "register"
     "id": <give an id>
     "username": <username of account>
     "password": <password of account>
@@ -12,9 +12,11 @@ Client sends:
 if successful, server sends
     returnprotocol
     RESPONSE_FIELD: <the id given above>
-
+    "successful": "true"
 
 if unsuccessful, server sends
     exceptionprotocol
+
+
 
 

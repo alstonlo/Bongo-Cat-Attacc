@@ -127,7 +127,7 @@ class Database {
     }
 
     /**
-     * Creates the user table of the SQL database, if it does not already exist.
+     * Creates the 'USER' table of the SQL database, if it does not already exist.
      */
     private void createUserTable() {
         try {
