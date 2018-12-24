@@ -1,4 +1,4 @@
-package main.java.server;
+package server;
 
 import java.io.File;
 
@@ -16,7 +16,6 @@ class Song implements Comparable<Song>{
         return null;
     }
 
-    @Override
     public int compareTo(Song o) {
         return 0;
     }

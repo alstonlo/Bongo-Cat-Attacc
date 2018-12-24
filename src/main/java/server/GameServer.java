@@ -1,4 +1,4 @@
-package main.java.server;
+package server;
 
 /**
  * The main connection point for players. In the GameServer, players can create new accounts,
@@ -10,6 +10,7 @@ package main.java.server;
 public class GameServer {
 
     public static void main(String[] args) {
+        Database.getInstance();
     }
 
     private GameServer(int port) {

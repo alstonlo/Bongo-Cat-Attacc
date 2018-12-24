@@ -1,4 +1,4 @@
-package main.java.protocol;
+package protocol;
 
 /**
  * Abstract representation of a protocol message between the client and server.

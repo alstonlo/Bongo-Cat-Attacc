@@ -1,4 +1,4 @@
-package main.java.server;
+package server;
 
 /**
  * Helper class for the server package. Contains convenience methods that
