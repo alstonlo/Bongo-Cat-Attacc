@@ -116,7 +116,8 @@ class Database {
 
     /**
      * Closes all opened resources, including the prepared statements,
-     * result sets, and the connection to the database.
+     * result sets, and the connection to the database. If the server is already closed,
+     * nothing happens instead.
      */
     void close() {
         ServerUtils.close(createTable);

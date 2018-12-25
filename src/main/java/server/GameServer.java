@@ -1,19 +1,27 @@
 package server;
 
-/**
- * The main connection point for players. In the GameServer, players can create new accounts,
- * log into an existing account, or start a game by joining the match making room.
- *
- * @author Alston
- * last updated 12/23/2018
- */
+import com.esotericsoftware.kryonet.Server;
+import protocol.Network;
+
+import java.io.IOException;
+
 public class GameServer {
 
     public static void main(String[] args) {
-        Database.getInstance();
+        new GameServer();
     }
 
-    private GameServer(int port) {
+    private Server server;
 
+    private GameServer() {
+        try {
+            server = new Server();
+            server.start();
+            server.bind(Network.PORT, Network.PORT);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 }
