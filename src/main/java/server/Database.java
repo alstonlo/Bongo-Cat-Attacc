@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * registering a new user and authenticating a user.
  *
  * @author Alston
- * last updated 12/22/2018
+ * last updated 12/25/2018
  */
 class Database {
 
@@ -108,6 +108,7 @@ class Database {
              PreparedStatement createTable = con.prepareStatement(tableSQL)) {
 
             createTable.executeUpdate();
+            con.commit();
 
         } catch (SQLException e) {
             if (e.getSQLState().equals("X0Y32")) {  //error state XOY32 is when a table that already exists
@@ -131,7 +132,7 @@ class Database {
         private ConnectionPool() {
             dataSource.setUrl("jdbc:derby:UserDatabase;create=true");
 
-            //insert more configuration parameters later to optomize...
+            //insert more configuration parameters later to optimize...
         }
 
         /**

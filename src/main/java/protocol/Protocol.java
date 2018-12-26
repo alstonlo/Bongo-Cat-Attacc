@@ -23,11 +23,15 @@ public abstract class Protocol {
     public final Date timeCreated;
 
     /**
+     * The ID of the protocol, if necessary (default null).
+     */
+    public String id = null;
+
+    /**
      * Constructs a Protocol. Sets {@link Protocol#timeCreated} to the time
      * that this constructor is called.
      */
     public Protocol() {
         this.timeCreated = Calendar.getInstance().getTime();
     }
-
 }

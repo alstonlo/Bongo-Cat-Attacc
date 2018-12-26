@@ -7,19 +7,19 @@ package protocol;
  * @author Alston
  * last updated 12/25/2018
  */
-public class RegisterUser extends Protocol {
+public class RegisterProtocol extends Protocol {
 
     public final String username;
     public final String password;
 
     /**
-     * Generates an RegisterUser protocol by setting the {@link RegisterUser#username}
-     * and {@link RegisterUser#password} to the username and password arguments respectively.
+     * Generates an RegisterProtocol protocol by setting the {@link RegisterProtocol#username}
+     * and {@link RegisterProtocol#password} to the username and password arguments respectively.
      *
      * @param username the username that the player is attempting to log in with
      * @param password the password that the player is attempting to log in with
      */
-    public RegisterUser(String username, String password) {
+    public RegisterProtocol(String username, String password) {
         this.username = username;
         this.password = password;
     }
