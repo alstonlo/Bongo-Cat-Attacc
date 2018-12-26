@@ -8,7 +8,6 @@ import java.io.IOException;
 public class GameServer {
 
     public static void main(String[] args) {
-        new GameServer();
     }
 
     private Server server;

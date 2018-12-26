@@ -1,16 +1,16 @@
 package server;
 
+import org.apache.commons.dbcp.BasicDataSource;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
 
 /**
- * Database that stores the username and passwords of registered users.
- * For simplicity, it supports only two operations: registering a new user
- * and authenticating a user.
+ * Contains methods to access the database of registered
+ * user accounts. For simplicity, it supports only two operations:
+ * registering a new user and authenticating a user.
  *
  * @author Alston
  * last updated 12/22/2018
@@ -20,7 +20,7 @@ class Database {
     private static Database DEFAULT_INSTANCE = new Database();
 
     /**
-     * Returns the Singleton instance of the database.
+     * Returns a Singleton instance of the database.
      *
      * @return the database
      */
@@ -28,39 +28,20 @@ class Database {
         return DEFAULT_INSTANCE;
     }
 
-    //Resources stored as private fields so they can be closed at the very end
-    private Connection con;
-    private PreparedStatement createTable;
-    private PreparedStatement insert;
-    private PreparedStatement authenticate;
-    private ResultSet res;
 
-    /**
-     * Constructs a Database. As the Database is implemented with Apache Derby, the constructor
-     * connects to the SQL database and creates the prepared statements. If an error occurs in trying
-     * to do so, any opened resources are first closed, and then the program is killed.
+    /*
+     * The class itself does not contain the Connection, Statements, or ResultSets
+     * of the database. If multiple threads try to access the Database, the resources
+     * are not shared amongst them (which is advised against by Apache Derby).
      */
+
+    private ConnectionPool pool = new ConnectionPool();
+    private String tableSQL = "create table users(username varchar(20) not null unique, password varchar(20) not null)";
+    private String insertSQL = "insert into users (username, password) values (?,?)";
+    private String authenticateSQL = "select * from users where username=? and password=?";
+
     private Database() {
-        try {
-            Properties props = new Properties();
-            con = DriverManager.getConnection("jdbc:derby:UserDatabase;create=true", props);
-
-            //create tables if they don't exist
-            createTable = con.prepareStatement(
-                    "create table users(username varchar(20) not null unique, password varchar(20) not null)");
-            createUserTable();
-
-            //make the prepared statements
-            insert = con.prepareStatement("insert into users (username, password) values (?, ?)");
-            authenticate = con.prepareStatement("select * from users where username=? and password=?");
-
-            con.commit();
-
-        } catch (SQLException e) { //an error has occurred so resources are closed and the program is killed
-            close();
-            e.printStackTrace();
-            System.exit(1);
-        }
+        createUserTable();
     }
 
     /**
@@ -74,7 +55,9 @@ class Database {
      * @return true if the account was successfully registered; false otherwise
      */
     boolean register(String username, String password) {
-        try {
+        try (Connection con = pool.getConnection();
+             PreparedStatement insert = con.prepareStatement(insertSQL)) {
+
             insert.setString(1, username);
             insert.setString(2, password);
             insert.executeUpdate();
@@ -102,12 +85,15 @@ class Database {
      * @return true, if an account under the username and password arguments is successfully found; false, otherwise
      */
     boolean authenticate(String username, String password) {
-        try {
+        try (Connection con = pool.getConnection();
+             PreparedStatement authenticate = con.prepareStatement(authenticateSQL)) {
+
             authenticate.setString(1, username);
             authenticate.setString(2, password);
 
-            res = authenticate.executeQuery();
-            return res.next(); //next() will return false if res is empty
+            try (ResultSet res = authenticate.executeQuery()) {
+                return res.next(); //next() will return false if res is empty
+            }
 
         } catch (SQLException e) {
             return false;
@@ -115,23 +101,12 @@ class Database {
     }
 
     /**
-     * Closes all opened resources, including the prepared statements,
-     * result sets, and the connection to the database. If the server is already closed,
-     * nothing happens instead.
-     */
-    void close() {
-        ServerUtils.close(createTable);
-        ServerUtils.close(insert);
-        ServerUtils.close(authenticate);
-        ServerUtils.close(res);
-        ServerUtils.close(con);
-    }
-
-    /**
      * Creates the 'USER' table of the SQL database, if it does not already exist.
      */
     private void createUserTable() {
-        try {
+        try (Connection con = pool.getConnection();
+             PreparedStatement createTable = con.prepareStatement(tableSQL)) {
+
             createTable.executeUpdate();
 
         } catch (SQLException e) {
@@ -142,4 +117,30 @@ class Database {
             }
         }
     }
+
+    /**
+     * Connection pool implementation by Apache Commons DBCP
+     */
+    private class ConnectionPool {
+
+        private BasicDataSource dataSource = new BasicDataSource();
+
+        /**
+         * Constructs a new ConnectionPool
+         */
+        private ConnectionPool() {
+            dataSource.setUrl("jdbc:derby:UserDatabase;create=true");
+
+            //insert more configuration parameters later to optomize...
+        }
+
+        /**
+         * @return a Connection from the pool
+         * @throws SQLException if a database access error occurs
+         */
+        private Connection getConnection() throws SQLException {
+            return dataSource.getConnection();
+        }
+    }
+
 }
