@@ -13,8 +13,7 @@ public class AuthenticateProtocol extends Protocol {
     public final String password;
 
     /**
-     * Generates an AuthenticateProtocol protocol by setting the {@link AuthenticateProtocol#username}
-     * and {@link AuthenticateProtocol#password} to the username and password arguments respectively.
+     * Constructs an AuthenticateProtocol.
      *
      * @param username the username that the player is attempting to log in with
      * @param password the password that the player is attempting to log in with

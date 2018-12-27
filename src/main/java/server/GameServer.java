@@ -6,7 +6,7 @@ import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 import com.esotericsoftware.kryonet.Server;
 import exceptions.GameException;
 import protocol.AuthenticateProtocol;
-import protocol.ErrorProtocol;
+import protocol.ExceptionProtocol;
 import protocol.JoinQueueProtocol;
 import protocol.Network;
 import protocol.RegisterProtocol;
@@ -14,21 +14,33 @@ import protocol.ResponseProtocol;
 
 import java.io.IOException;
 
-public class GameServer {
+/**
+ * Main server/room where players connect, log in, and join games.
+ *
+ * @author Alston
+ * last updated 12/27/2018
+ */
+class GameServer {
 
     public static void main(String[] args) {
         new GameServer();
     }
 
-
     private Server server;
     private Database database = Database.getInstance();
 
-    private GameServer() {
+    /**
+     * Constructs a GameServer.
+     */
+    GameServer() {
         try {
 
             server = new Server() {
 
+                /*
+                 * By overriding this method, whenever a client connects, a new
+                 * Player is created instead of a new Connection
+                 */
                 @Override
                 protected Connection newConnection() {
                     return new Player();
@@ -36,10 +48,16 @@ public class GameServer {
 
             };
 
-            Network.register(server);
+            Network.register(server); //registers all objects that will be sent to/from server
 
+            //ThreadedListener executes each method on a separate thread
             server.addListener(new ThreadedListener(new Listener() {
 
+                /*
+                 * Listens to when a Connection sends this GameServer an Object o.
+                 * Since newConnection() was overridden above, we can be sure that
+                 * the Connection is actually a Player and cast it accordingly.
+                 */
                 @Override
                 public void received(Connection connection, Object o) {
                     Player player = (Player) connection;
@@ -48,58 +66,82 @@ public class GameServer {
 
             }));
 
-            server.bind(Network.PORT, Network.PORT);
+            server.bind(Network.PORT, Network.PORT); //bind to TCP and UDP port 5000
             server.start();
 
-        } catch (IOException e) {
+        } catch (IOException e) { //server fails to be started...
             e.printStackTrace();
-            server.close();
-            System.exit(1);
+            close();
+            System.exit(1); //everything is closed and the program is killed
         }
     }
 
+    /**
+     * Closes this GameServer.
+     */
+    void close() {
+        server.close();
+        database.close();
+    }
 
+    /**
+     * Resolves and executes some protocol sent by a player.
+     * If the protocol argument is improperly formatted, then nothing happens.
+     *
+     * @param player   the player that sends the protocol
+     * @param protocol the protocol
+     */
     private void process(Player player, Object protocol) {
+
+        //the class of the protocol argument is inspected,
+        //casted accordingly and then directed to some method
         if (protocol instanceof RegisterProtocol) {
-            register(player, (RegisterProtocol) protocol);
+            process(player, (RegisterProtocol) protocol);
 
         } else if (protocol instanceof AuthenticateProtocol) {
-            authenticate(player, (AuthenticateProtocol) protocol);
+            process(player, (AuthenticateProtocol) protocol);
 
         } else if (protocol instanceof JoinQueueProtocol) {
-            joinQueue(player, (JoinQueueProtocol) protocol);
+            process(player, (JoinQueueProtocol) protocol);
 
         }
     }
 
-    private void register(Player player, RegisterProtocol protocol) {
+    /*
+     * Below are the overloaded methods of process(Player, Object)
+     * in the format of process(Player, E extends Object). Doing so just
+     * makes it cleaner.
+     */
+
+    private void process(Player player, RegisterProtocol protocol) {
         try {
-            database.register(protocol.username, protocol.password);
-            player.sendTCP(new ResponseProtocol(protocol.id))
-
+            database.register(protocol.username, protocol.password); //attempt to register account
         } catch (GameException e) {
-            ErrorProtocol response = new ErrorProtocol(protocol.id, e.getState());
-            player.sendTCP(response);
+            player.sendTCP(new ExceptionProtocol(protocol.id, e.getState()));
+            return;
         }
+
+        player.sendTCP(new ResponseProtocol(protocol.id)); //no error was thrown, so send ResponseProtocol
     }
 
-    private void authenticate(Player player, AuthenticateProtocol protocol) {
-        if (player.loggedIn()) {
-            player.sendTCP(new ErrorProtocol(protocol.id, 3));
+    private void process(Player player, AuthenticateProtocol protocol) {
+
+        if (player.loggedIn()) { //if player has already logged in, send an ExceptionProtocol
+            player.sendTCP(new ExceptionProtocol(protocol.id, 3));
             return;
         }
 
         boolean authenticated = database.authenticate(protocol.username, protocol.password);
-        if (authenticated) {
+
+        if (authenticated) { //authentication successful, so send ResponseProtocol
             player.registerUsername(protocol.username);
             player.sendTCP(new ResponseProtocol(protocol.id));
-
         } else {
-            player.sendTCP(new ErrorProtocol(protocol.id, 4));
+            player.sendTCP(new ExceptionProtocol(protocol.id, 4));
         }
     }
 
-    private void joinQueue(Player player, JoinQueueProtocol protocol) {
+    private void process(Player player, JoinQueueProtocol protocol) {
 
     }
 }

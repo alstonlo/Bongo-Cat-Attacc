@@ -9,9 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Contains methods to access the database of registered
- * user accounts. For simplicity, it supports only two operations:
- * registering a new user and authenticating a user.
+ * Contains methods to access the database of registered user accounts.
+ * For simplicity, it supports only two operations: registration and authentication.
  *
  * @author Alston
  * last updated 12/25/2018
@@ -35,6 +34,10 @@ class Database {
     private String insertSQL = "insert into users (username, password) values (?,?)";
     private String authenticateSQL = "select * from users where username=? and password=?";
 
+    /**
+     * Constructs the Database. Also, creates the 'USERS' table if it does not
+     * already exist.
+     */
     private Database() {
         createUserTable();
     }
@@ -47,6 +50,7 @@ class Database {
      *
      * @param username the proposed username of the new user
      * @param password the proposed password of the new user
+     * @throws GameException thrown if a database access error occurs or the username or password are invalid
      */
     void register(String username, String password) throws GameException {
         try (Connection con = pool.getConnection();
@@ -67,7 +71,8 @@ class Database {
                 throw new GameException(2);
             }
 
-            throw new GameException(1); //otherwise, the error is a database error
+            e.printStackTrace();
+            throw new GameException(1); //otherwise, the error is an unexpected database error
         }
     }
 
@@ -93,7 +98,19 @@ class Database {
             }
 
         } catch (SQLException e) {
-            return false;
+            e.printStackTrace();
+            return false; //for safety, return false if any error occurs as well
+        }
+    }
+
+    /**
+     * Closes the database by releasing all Connections.
+     */
+    void close() {
+        try {
+            pool.dataSource.close(); //close the Connection pool
+        } catch (SQLException e) {
+            System.out.println("Failed to close Database");
         }
     }
 
@@ -109,7 +126,7 @@ class Database {
 
         } catch (SQLException e) {
             if (e.getSQLState().equals("X0Y32")) {  //error state XOY32 is when a table that already exists
-                System.out.println("Users table already exists.");
+                System.out.println("'USERS' table already exists.");
             } else {
                 e.printStackTrace();
             }
