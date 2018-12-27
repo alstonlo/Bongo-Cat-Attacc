@@ -13,7 +13,7 @@ import java.io.IOException;
 public class GameServer {
 
     public static void main(String[] args) {
-        new GameServer();
+        //new GameServer();
     }
 
 
@@ -38,41 +38,46 @@ public class GameServer {
 
                 @Override
                 public void received(Connection connection, Object o) {
-                    Player player = (Player) connection;
-                    process(player, o);
-                }
+                        Player player = (Player) connection;
+                        process(player, o);
+                    }
 
-            }));
+                }));
 
-            server.bind(Network.PORT, Network.PORT);
-            server.start();
+                server.bind(Network.PORT, Network.PORT);
+                server.start();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            server.close();
-            System.exit(1);
-        }
-    }
-
-    private void process(Player player, Object protocol) {
-
-        if (protocol instanceof RegisterProtocol) {
-            register(player, (RegisterProtocol)protocol);
-
-        } else if (protocol instanceof AuthenticateProtocol) {
-            authenticate(player, (AuthenticateProtocol)protocol);
+            } catch (IOException e) {
+                e.printStackTrace();
+                server.close();
+                System.exit(1);
+            }
         }
 
-    }
+        private void process(Player player, Object protocol) {
 
-    private void register(Player player, RegisterProtocol protocol) {
+            if (protocol instanceof RegisterProtocol) {
+                register(player, (RegisterProtocol)protocol);
 
-    }
+            } else if (protocol instanceof AuthenticateProtocol) {
+                authenticate(player, (AuthenticateProtocol)protocol);
+            }
+
+        }
+
+        private void register(Player player, RegisterProtocol protocol) {
+
+            //boolean registered = database.register(protocol.username, protocol.password);
+
+
+        }
 
     private void authenticate(Player player, AuthenticateProtocol protocol) {
         if (player.loggedIn()) {
             return;
         }
+
+        //boolean authentucated = database.authenticate(protocol.username, protocol.password);
 
     }
 }

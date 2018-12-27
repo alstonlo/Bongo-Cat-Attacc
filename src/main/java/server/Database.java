@@ -1,5 +1,6 @@
 package server;
 
+import exceptions.GameException;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import java.sql.Connection;
@@ -54,7 +55,7 @@ class Database {
      * @param password the proposed password of the new user
      * @return true if the account was successfully registered; false otherwise
      */
-    boolean register(String username, String password) {
+    boolean register(String username, String password) throws GameException {
         try (Connection con = pool.getConnection();
              PreparedStatement insert = con.prepareStatement(insertSQL)) {
 
@@ -69,7 +70,7 @@ class Database {
             // a) the username of password is null
             // b) the username is not unique
             //either way, any other potential causes for error will still fail to register the account
-
+            e.printStackTrace();
             return false;
         }
     }
@@ -84,7 +85,7 @@ class Database {
      * @param password the password of the account
      * @return true, if an account under the username and password arguments is successfully found; false, otherwise
      */
-    boolean authenticate(String username, String password) {
+    boolean authenticate(String username, String password) throws GameException {
         try (Connection con = pool.getConnection();
              PreparedStatement authenticate = con.prepareStatement(authenticateSQL)) {
 

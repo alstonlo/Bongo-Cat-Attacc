@@ -9,14 +9,14 @@ package protocol;
  */
 public class ErrorProtocol extends Protocol{
 
-    public final int response;
+    public final String response;
     public final int errorCode;
 
     /**
      * Constructs a ErrorProtocol.
      *
-     * @param response
-     * @param errorCode
+     * @param response the ID of the protocol this is in response to
+     * @param errorCode the error code of the error message that this is sending
      */
     public ErrorProtocol(String response, int errorCode) {
         this.response = response;
