@@ -1,18 +1,19 @@
 package exceptions;
 
 /**
- * A list of error codes and their meaning
- * 0 - unknown error
- * 1 - somebody tried to register an account with a duplicate username
- * 2 - somebody tried to register an account with an invalid username
- * 3 -
- */
-
-/**
  *
  */
 public class GameException extends Exception {
 
+    /**
+     * List of states
+     *
+     * 1 - database error
+     * 2 - attempt to register a user with invalid username or password (duplicate, null, too long)
+     * 3 - already logged in player tries to log into a another account (they need to log off first)
+     * 4 - player logs in with incorrect combination of username and password
+     *
+     */
     private int state;
 
     public GameException(int state) {

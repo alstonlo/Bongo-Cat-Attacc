@@ -3,6 +3,7 @@ package protocol;
 /**
  * Protocol for registering a new player or account. The player
  * attempts to register a new account under a specified username and password.
+ * Registering a new account does not automatically sign them in.
  *
  * @author Alston
  * last updated 12/25/2018

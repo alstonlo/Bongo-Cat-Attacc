@@ -23,8 +23,9 @@ public class Network {
      * library and using up more space.
      */
     private static Class[] protocolClasses = {
-            Protocol.class, AuthenticateProtocol.class, RegisterProtocol.class,
-            ErrorProtocol.class
+            Protocol.class, ErrorProtocol.class, ResponseProtocol.class,
+            AuthenticateProtocol.class, RegisterProtocol.class,
+            JoinQueueProtocol.class
     };
 
     /**

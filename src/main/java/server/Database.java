@@ -30,12 +30,6 @@ class Database {
     }
 
 
-    /*
-     * The class itself does not contain the Connection, Statements, or ResultSets
-     * of the database. If multiple threads try to access the Database, the resources
-     * are not shared amongst them (which is advised against by Apache Derby).
-     */
-
     private ConnectionPool pool = new ConnectionPool();
     private String tableSQL = "create table users(username varchar(20) not null unique, password varchar(20) not null)";
     private String insertSQL = "insert into users (username, password) values (?,?)";
@@ -49,13 +43,12 @@ class Database {
      * Registers a new account to the database with a proposed username and password.
      * A valid username is any String under 20 characters that is unique from existing registered
      * usernames. A valid password is any String under 20 characters. If the two are valid and no
-     * other error occurs, the account will be successfully registered and true will be returned.
+     * other error occurs, the account will be successfully registered.
      *
      * @param username the proposed username of the new user
      * @param password the proposed password of the new user
-     * @return true if the account was successfully registered; false otherwise
      */
-    boolean register(String username, String password) throws GameException {
+    void register(String username, String password) throws GameException {
         try (Connection con = pool.getConnection();
              PreparedStatement insert = con.prepareStatement(insertSQL)) {
 
@@ -63,15 +56,18 @@ class Database {
             insert.setString(2, password);
             insert.executeUpdate();
             con.commit();
-            return true;
 
         } catch (SQLException e) {
-            //an SQLException should, in theory, only be thrown if
-            // a) the username of password is null
-            // b) the username is not unique
-            //either way, any other potential causes for error will still fail to register the account
-            e.printStackTrace();
-            return false;
+
+            //check for duplicate username (state 23505)
+            //check for null value (state 23502)
+            //check for |username| or |password| > 20 (state 22001)
+            if (e.getSQLState().equals("23505") || e.getSQLState().equals("23502") ||
+                e.getSQLState().equals("22001")) {
+                throw new GameException(2);
+            }
+
+            throw new GameException(1); //otherwise, the error is a database error
         }
     }
 
@@ -85,7 +81,7 @@ class Database {
      * @param password the password of the account
      * @return true, if an account under the username and password arguments is successfully found; false, otherwise
      */
-    boolean authenticate(String username, String password) throws GameException {
+    boolean authenticate(String username, String password) {
         try (Connection con = pool.getConnection();
              PreparedStatement authenticate = con.prepareStatement(authenticateSQL)) {
 
