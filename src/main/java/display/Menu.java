@@ -2,12 +2,17 @@ package display;
 
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL20;
 import utilities.Utils;
+
+import java.util.EventListener;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class Menu implements Runnable{
+    Texture bongoCat;
     public static void main(String[] args){
         new Menu("Main Menu");
 
@@ -24,10 +29,8 @@ public class Menu implements Runnable{
     }
 
     private void init(){
-        try{
-        glfwInit();
-        } catch (VerifyError e){
-            e.printStackTrace();
+        if (!glfwInit()){
+            throw new RuntimeException("Unable to initialzed glfw");
         }
 
         window = glfwCreateWindow(Utils.MAX_X, Utils.MAX_Y, title, NULL, NULL);
@@ -43,7 +46,16 @@ public class Menu implements Runnable{
 
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
+
+        glEnable(GL_TEXTURE_2D);
+
+        bongoCat = new Texture("res/bongocat.png");
+
         glClearColor(1,1,1,0);
+
+    }
+
+    public static void drawImage(float x, float y, float width, float height){
 
     }
 
@@ -53,6 +65,22 @@ public class Menu implements Runnable{
         while (!glfwWindowShouldClose(window)){
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
+
+            bongoCat.bind();
+
+            glBegin(GL_QUADS);
+            {
+                glTexCoord2f(0, 0);
+                glVertex2f(-0.5f, 0.5f);
+                glTexCoord2f(1, 0);
+                glVertex2f(0.5f, 0.5f);
+                glTexCoord2f(1, 1);
+                glVertex2f(0.5f, -0.5f);
+                glTexCoord2f(0, 1);
+                glVertex2f(-0.5f, -0.5f);
+            }
+            glEnd();
+
             glfwSwapBuffers(window);
         }
     }
