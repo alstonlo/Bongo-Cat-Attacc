@@ -1,4 +1,4 @@
-package display;
+package client;
 
 import javax.swing.JPanel;
 

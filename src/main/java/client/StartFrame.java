@@ -1,4 +1,4 @@
-package display;
+package client;
 
 import javax.swing.JFrame;
 import java.awt.Color;
@@ -20,7 +20,6 @@ public class StartFrame extends JFrame {
     private static final Image mouth = Toolkit.getDefaultToolkit().getImage("res/m1.png"); //retrieves the image
     private static final Image[] left = {Toolkit.getDefaultToolkit().getImage("res/l1.png"), Toolkit.getDefaultToolkit().getImage("res/l2.png")};
     private static final Image[] right = {Toolkit.getDefaultToolkit().getImage("res/r2.png"), Toolkit.getDefaultToolkit().getImage("res/r1.png")};
-
 
     private int state = 0;
     private Graphics g;
