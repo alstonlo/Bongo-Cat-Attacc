@@ -47,7 +47,7 @@ public class StartFrame extends JFrame {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                state = (state == 0)? 1 : 0;
+                state = (state == 0) ? 1 : 0;
                 repaint();
             }
         }, 0, 1000);
@@ -63,15 +63,15 @@ public class StartFrame extends JFrame {
     public void paint(Graphics g) {
         super.paint(g);
 
-        g.drawImage(bongoCat, -200,0, this);
-        g.drawImage(mouth, -200,100, this);
+        g.drawImage(bongoCat, -200, 0, this);
+        g.drawImage(mouth, -200, 100, this);
 
-        if (state == 0){
-            g.drawImage(left[0], -200,100, frame);
-            g.drawImage(right[0], -200,100, frame);
+        if (state == 0) {
+            g.drawImage(left[0], -200, 100, frame);
+            g.drawImage(right[0], -200, 100, frame);
         } else {
-            g.drawImage(left[1], -200,100, frame);
-            g.drawImage(right[1], -200,100, frame);
+            g.drawImage(left[1], -200, 100, frame);
+            g.drawImage(right[1], -200, 100, frame);
         }
     }
 }
