@@ -2,6 +2,8 @@ package client;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -12,7 +14,8 @@ import java.awt.event.KeyListener;
  */
 public class Window extends JFrame {
     JFrame window;
-    JPanel menuPanel = new MenuPanel();
+    JPanel menuPanel = new MenuPanel(this);
+    JPanel gamePanel = new GamePanel();
 
 
     public static void main(String[] args) {
@@ -30,6 +33,7 @@ public class Window extends JFrame {
         this.setUndecorated(true);
         this.setVisible(true);
         this.addKeyListener(new MyKeyListener());
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         switchState(0);
     }
 
@@ -37,6 +41,9 @@ public class Window extends JFrame {
         switch(state){
             case(0):
                 switchPanel(menuPanel);
+                break;
+            case(1):
+                switchPanel(gamePanel);
                 break;
 
             default:
