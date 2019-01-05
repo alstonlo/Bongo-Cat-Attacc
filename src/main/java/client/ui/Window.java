@@ -1,10 +1,6 @@
 package client.ui;
 
-import mdlaf.MaterialLookAndFeel;
-
 import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -39,13 +35,6 @@ public class Window extends JFrame {
      */
     Window() {
         super("Bongo Cat Attacc");
-
-        //set the look and feel to Material Design
-        try {
-            UIManager.setLookAndFeel(new MaterialLookAndFeel());
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
 
         //resolve scaling and sizing
         //the height of the content pane should be 80% the height of the screen

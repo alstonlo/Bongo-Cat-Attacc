@@ -30,7 +30,7 @@ class MenuPanel extends GamePanel {
     @Override
     public void notifyLeftPress() {
         cat.leftPawDown();
-        repaint(); //repaint panel to ensure that the state change is animated (even if it violates fps) 
+        repaint(); //repaint panel to ensure that the state change is animated (even if it violates fps)
     }
 
     /**
