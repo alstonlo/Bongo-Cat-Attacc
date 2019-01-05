@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 /**
- * A modified KeyListener that only listens to the left and right arrow keys.
+ * A modified KeyListener that only listens to the left and right bongo keys.
  * This is analogous to the left and right bongos.
  *
  * @author Alston
@@ -12,6 +12,8 @@ import java.awt.event.KeyListener;
  */
 public class BongoListener implements KeyListener {
 
+    static final int LEFT_BONGO_KEY = KeyEvent.VK_LEFT;
+    static final int RIGHT_BONGO_KEY = KeyEvent.VK_RIGHT;
     static final long HOLD_DURATION = 1500;
 
     private Controllable obj = null;
@@ -35,7 +37,7 @@ public class BongoListener implements KeyListener {
 
     /**
      * Stops the internal thread used by this listener, which is used
-     * to detect if the two arrow keys are held for {@link BongoListener#HOLD_DURATION} seconds.
+     * to detect if the two bongo keys are held for {@link BongoListener#HOLD_DURATION} seconds.
      */
     void stop() {
         holdListener.running = false;
@@ -52,7 +54,7 @@ public class BongoListener implements KeyListener {
     }
 
     /**
-     * Invoked when the left or right arrow key are pressed, which
+     * Invoked when the left or right bongo key are pressed, which
      * notifies the controlled object via {@link Controllable#notifyLeftPress()}
      * and {@link Controllable#notifyRightPress()}.
      *
@@ -60,24 +62,24 @@ public class BongoListener implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) { //detect left arrow press
+        if (e.getKeyCode() == LEFT_BONGO_KEY) { //detect left bongo key press
             if (obj != null) {
                 obj.notifyLeftPress();
             }
-            holdListener.states[0] = true;
+            holdListener.left = true;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //detect right arrow press
+        if (e.getKeyCode() == RIGHT_BONGO_KEY) { //detect right bongo press
             if (obj != null) {
                 obj.notifyRightPress();
             }
-            holdListener.states[1] = true;
+            holdListener.right = true;
         }
     }
 
 
     /**
-     * Invoked when the left or right arrow key are released, which
+     * Invoked when the left or right bongo key are released, which
      * notifies the controlled object via {@link Controllable#notifyLeftRelease()}
      * and {@link Controllable#notifyRightRelease()}.
      *
@@ -85,23 +87,23 @@ public class BongoListener implements KeyListener {
      */
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_LEFT) { //detect left arrow release
+        if (e.getKeyCode() == LEFT_BONGO_KEY) { //detect left bongo release
             if (obj != null) {
                 obj.notifyLeftRelease();
             }
-            holdListener.states[0] = false;
+            holdListener.left = false;
         }
 
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT) { //detect right arrow release
+        if (e.getKeyCode() == RIGHT_BONGO_KEY) { //detect right bongo release
             if (obj != null) {
                 obj.notifyRightRelease();
             }
-            holdListener.states[1] = false;
+            holdListener.right = false;
         }
     }
 
     /**
-     * Runnable object that observes whether the left and right arrow key
+     * Runnable object that observes whether the left and right bongo key
      * were hold for longer than {@link BongoListener#HOLD_DURATION} ms.
      */
     private class HoldListener implements Runnable {
@@ -109,7 +111,8 @@ public class BongoListener implements KeyListener {
         private volatile boolean running = false;
 
         private long holdStart;
-        private boolean[] states = new boolean[2];
+        private boolean left = false;
+        private boolean right = false;
 
         /**
          * Starts the listener.
@@ -120,7 +123,7 @@ public class BongoListener implements KeyListener {
             holdStart = System.currentTimeMillis();
 
             while (running) {
-                if (!(states[0] && states[1])) {
+                if (!(left && right)) {
                     holdStart = System.currentTimeMillis();
                 }
 
