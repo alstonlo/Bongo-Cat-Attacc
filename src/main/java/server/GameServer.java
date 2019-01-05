@@ -34,7 +34,6 @@ class GameServer {
      */
     GameServer() {
         try {
-
             server = new Server() {
 
                 /*

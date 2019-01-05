@@ -39,7 +39,8 @@ class Player extends Connection {
 
     /**
      * Registers or logs in a player under the username argument. If the player had already
-     * logged in, then this does nothing.
+     * logged in, then this does nothing. Sets {@link Connection#setKeepAliveTCP(int)} back
+     * to default (8000 ms).
      *
      * @param username the new username of the player
      */
