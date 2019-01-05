@@ -1,5 +1,8 @@
 package client.ui;
 
+import client.utilities.Utils;
+
+import javax.rmi.CORBA.Util;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -15,6 +18,9 @@ class MenuPanel extends GamePanel {
     private Window window;
     private BongoCat cat;
 
+    private BufferedImage title;
+    private BufferedImage background;
+
     /**
      * Constructs a MenuPanel.
      *
@@ -24,6 +30,8 @@ class MenuPanel extends GamePanel {
         super();
         this.window = window;
         this.cat = new BongoCat();
+        this.title = Utils.loadImage("resources/menu/title.png");
+        this.background = Utils.loadImage("resources/menu/yellow.png");
     }
 
 
@@ -78,8 +86,9 @@ class MenuPanel extends GamePanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.scale(window.getScale(), window.getScale()); //we set the scaling
 
-        BufferedImage catImage = cat.getImage();
-        g2D.drawImage(catImage, 0, 0, catImage.getWidth(), catImage.getHeight(), this);
+        g2D.drawImage(background, 0, 0, this);
+        g2D.drawImage(cat.getImage(), 0, 0, this);
+        g2D.drawImage(title, 0, 0, this);
     }
 }
 
