@@ -2,7 +2,6 @@ package client.ui;
 
 import client.utilities.Utils;
 
-import javax.rmi.CORBA.Util;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;

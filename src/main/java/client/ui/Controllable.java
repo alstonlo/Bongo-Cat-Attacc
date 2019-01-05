@@ -31,7 +31,7 @@ public interface Controllable {
 
     /**
      * Notify to this object that both the left and right arrow key have
-     * been held or pressed for 3 seconds.
+     * been held or pressed for {@link BongoListener#HOLD_DURATION} milliseconds.
      */
     void notifyHold();
 
