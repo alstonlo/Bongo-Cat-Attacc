@@ -1,8 +1,10 @@
 package client.ui;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Toolkit;
 
 /**
@@ -44,6 +46,9 @@ public class Window extends JFrame {
         Dimension paneSize = new Dimension();
         paneSize.setSize(750 * scale, 1334 * scale);
         this.getContentPane().setPreferredSize(paneSize);
+
+        Image icon = Toolkit.getDefaultToolkit().getImage("resources/icon.png");
+        this.setIconImage(icon);
 
         //create the JFrame
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
