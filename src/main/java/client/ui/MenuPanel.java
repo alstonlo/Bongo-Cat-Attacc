@@ -37,7 +37,6 @@ class MenuPanel extends GamePanel {
         super();
         this.window = window;
         this.cat = new BongoCat();
-        this.title = Utils.loadImage("resources/menu/title.png");
         this.background = Utils.loadImage("resources/menu/yellow.png");
     }
 
@@ -48,11 +47,13 @@ class MenuPanel extends GamePanel {
 
         //start playing the background music
         try {
-            File song = new File("resources/menu/music.png");
+            File song = new File("resources/menu/music.wav ");
             AudioInputStream stream = AudioSystem.getAudioInputStream(song);
+            bgMusic = AudioSystem.getClip();
+            bgMusic.open(stream);
+            bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
 
-
-        } catch (IOException | UnsupportedAudioFileException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -119,7 +120,6 @@ class MenuPanel extends GamePanel {
 
         g2D.drawImage(background, 0, 0, this);
         g2D.drawImage(cat.getImage(), 0, 0, this);
-        g2D.drawImage(title, 0, 0, this);
     }
 }
 
