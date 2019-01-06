@@ -1,5 +1,7 @@
 package client.ui;
 
+import client.utilities.Utils;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -47,13 +49,11 @@ public class Window extends JFrame {
         paneSize.setSize(750 * scale, 1334 * scale);
         this.getContentPane().setPreferredSize(paneSize);
 
-        Image icon = Toolkit.getDefaultToolkit().getImage("resources/icon.png");
-        this.setIconImage(icon);
-
         //create the JFrame
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.addKeyListener(bongoListener);
+        this.setIconImage(Utils.loadImage("resources/icon.png"));
         this.pack();
         this.setVisible(true);
 

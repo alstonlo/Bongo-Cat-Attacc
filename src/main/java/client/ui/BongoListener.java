@@ -12,8 +12,8 @@ import java.awt.event.KeyListener;
  */
 public class BongoListener implements KeyListener {
 
-    static final int LEFT_BONGO_KEY = KeyEvent.VK_LEFT;
-    static final int RIGHT_BONGO_KEY = KeyEvent.VK_RIGHT;
+    static final int LEFT_BONGO_KEY = KeyEvent.VK_A;
+    static final int RIGHT_BONGO_KEY = KeyEvent.VK_L;
     static final long HOLD_DURATION = 1500;
 
     private Controllable obj = null;
