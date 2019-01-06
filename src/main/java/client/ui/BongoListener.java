@@ -50,7 +50,6 @@ public class BongoListener implements KeyListener {
      */
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     /**

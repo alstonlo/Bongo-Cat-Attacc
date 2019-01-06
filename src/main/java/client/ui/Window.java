@@ -56,6 +56,13 @@ public class Window extends JFrame {
     }
 
     /**
+     * Releases all threads and stops all resources used by the window.
+     */
+    void close() {
+        bongoListener.stop();
+    }
+
+    /**
      * @return the scale factor of this Window
      */
     double getScale() {
