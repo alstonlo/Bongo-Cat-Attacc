@@ -2,9 +2,15 @@ package client.ui;
 
 import client.utilities.Utils;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Panel for the main menu.
@@ -20,6 +26,8 @@ class MenuPanel extends GamePanel {
     private BufferedImage title;
     private BufferedImage background;
 
+    private Clip bgMusic;
+
     /**
      * Constructs a MenuPanel.
      *
@@ -33,6 +41,30 @@ class MenuPanel extends GamePanel {
         this.background = Utils.loadImage("resources/menu/yellow.png");
     }
 
+
+    @Override
+    public void run() {
+        super.run();
+
+        //start playing the background music
+        try {
+            File song = new File("resources/menu/music.png");
+            AudioInputStream stream = AudioSystem.getAudioInputStream(song);
+
+
+        } catch (IOException | UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+
+        if (bgMusic != null) {
+            bgMusic.close();
+        }
+    }
 
     @Override
     public void notifyLeftPress() {
