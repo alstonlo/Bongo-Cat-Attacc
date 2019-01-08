@@ -52,6 +52,11 @@ class GameServer {
             //ThreadedListener executes each method on a separate thread
             server.addListener(new ThreadedListener(new Listener() {
 
+                @Override
+                public void connected(Connection connection) {
+                    System.out.println("Client connected");
+                }
+
                 /*
                  * Listens to when a Connection sends this GameServer an Object o.
                  * Since newConnection() was overridden above, we can be sure that
@@ -63,6 +68,11 @@ class GameServer {
                     process(player, o);
                 }
 
+                @Override
+                public void disconnected(Connection connection) {
+                    Player player = (Player)connection;
+                    System.out.println((player.loggedIn())? player.getUsername() : "Client" + " disconnected." );
+                }
             }));
 
             server.bind(Network.PORT, Network.PORT); //bind to TCP and UDP port 5000

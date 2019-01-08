@@ -28,7 +28,6 @@ class Database {
         return DEFAULT_INSTANCE;
     }
 
-
     private ConnectionPool pool = new ConnectionPool();
     private String tableSQL = "create table users(username varchar(20) not null unique, password varchar(20) not null)";
     private String insertSQL = "insert into users (username, password) values (?,?)";
@@ -67,7 +66,7 @@ class Database {
             //check for null value (state 23502)
             //check for |username| or |password| > 20 (state 22001)
             if (e.getSQLState().equals("23505") || e.getSQLState().equals("23502") ||
-                e.getSQLState().equals("22001")) {
+                    e.getSQLState().equals("22001")) {
                 throw new GameException(2);
             }
 
