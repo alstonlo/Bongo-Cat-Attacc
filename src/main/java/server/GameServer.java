@@ -104,14 +104,14 @@ class GameServer {
 
         //the class of the protocol argument is inspected,
         //casted accordingly and then directed to some method
-        if (protocol instanceof RegisterProtocol) {
+        if (protocol instanceof JoinQueueProtocol) {
+            process(player, (JoinQueueProtocol) protocol);
+
+        } else if (protocol instanceof RegisterProtocol) {
             process(player, (RegisterProtocol) protocol);
 
         } else if (protocol instanceof AuthenticateProtocol) {
             process(player, (AuthenticateProtocol) protocol);
-
-        } else if (protocol instanceof JoinQueueProtocol) {
-            process(player, (JoinQueueProtocol) protocol);
 
         }
     }
@@ -121,6 +121,10 @@ class GameServer {
      * in the format of process(Player, E extends Object). Doing so just
      * makes it cleaner.
      */
+
+    private void process(Player player, JoinQueueProtocol protocol) {
+
+    }
 
     private void process(Player player, RegisterProtocol protocol) {
         try {
@@ -148,9 +152,5 @@ class GameServer {
         } else {
             player.sendTCP(new ExceptionProtocol(protocol.id, 4));
         }
-    }
-
-    private void process(Player player, JoinQueueProtocol protocol) {
-
     }
 }

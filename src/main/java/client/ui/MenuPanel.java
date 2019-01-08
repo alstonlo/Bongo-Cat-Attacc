@@ -19,9 +19,8 @@ import java.io.File;
 class MenuPanel extends GamePanel {
 
     private Window window;
-    private BongoCat cat;
 
-    private BufferedImage title;
+    private BongoCat cat;
     private BufferedImage background;
 
     private Clip bgMusic;
@@ -103,7 +102,7 @@ class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyHold() {
-        repaint();
+        window.switchState(Window.QUEUE_STATE);
     }
 
     /**

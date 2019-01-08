@@ -2,11 +2,9 @@ package client.ui;
 
 import client.utilities.Utils;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Toolkit;
 
 /**
@@ -23,6 +21,7 @@ public class Window extends JFrame {
         new Window();
     }
 
+    private static final int LOGIN_STATE = -1;
     static final int MENU_STATE = 0;
     static final int QUEUE_STATE = 1;
 
@@ -31,6 +30,7 @@ public class Window extends JFrame {
     private BongoListener bongoListener = new BongoListener();
 
     private GamePanel currPanel;
+    private LoginPanel loginPanel = new LoginPanel(this);
     private MenuPanel menuPanel = new MenuPanel(this);
     private QueuePanel queuePanel = new QueuePanel();
 
@@ -57,7 +57,7 @@ public class Window extends JFrame {
         this.pack();
         this.setVisible(true);
 
-        switchState(MENU_STATE);
+        switchState(LOGIN_STATE);
     }
 
     /**
@@ -83,6 +83,10 @@ public class Window extends JFrame {
      */
     void switchState(int state) {
         switch (state) {
+            case LOGIN_STATE:
+                switchPanel(loginPanel);
+                break;
+
             case MENU_STATE:
                 switchPanel(menuPanel);
                 break;
@@ -114,5 +118,7 @@ public class Window extends JFrame {
         getContentPane().add(newPanel);
         getContentPane().revalidate();
         getContentPane().repaint();   //repaint
+
+        setFocusable(true); //set focus back to frame to keep bongoListener working
     }
 }
