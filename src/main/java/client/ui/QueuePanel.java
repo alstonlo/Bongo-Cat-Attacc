@@ -34,7 +34,7 @@ public class QueuePanel extends GamePanel {
     }
 
     @Override
-    public void paintComponents(Graphics g) {
+    public void paintComponent(Graphics g) {
 
     }
 }
