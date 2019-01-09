@@ -41,10 +41,10 @@ class MenuPanel extends GamePanel {
 
         this.cat = new BongoCat();
         this.background = Utils.loadImage("resources/menu/yellow.png");
-        this.playButton = new Button("Play", (int) Math.round(window.getWidth()/2-window.getScale()*50),
-                (int) Math.round(window.getScale()*500),
-                (int) Math.round(window.getScale()*100),
-                (int) Math.round(window.getScale()*50),
+        this.playButton = new Button("Play", (750/2-50),
+                500,
+                100,
+                50,
                 new Color(101, 101, 255),
                 new Color(212, 212, 212));
         buttons.add(playButton);
@@ -176,11 +176,9 @@ class MenuPanel extends GamePanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.scale(window.getScale(), window.getScale()); //we set the scaling
 
-        playButton.draw(g2D);
-
         g2D.drawImage(background, 0, 0, this);
         g2D.drawImage(cat.getImage(), 0, 0, this);
 
-      //  playButton.draw(g2D);
+        playButton.draw(g2D);
     }
 }
