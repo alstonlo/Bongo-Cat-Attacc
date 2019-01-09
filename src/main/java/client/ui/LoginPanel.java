@@ -1,38 +1,53 @@
 package client.ui;
 
+import protocol.AuthenticateProtocol;
+import protocol.Protocol;
+import protocol.RegisterProtocol;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 
+/**
+ * Login panel where players can log into their accounts or
+ * register new accounts.
+ *
+ * @author Alston
+ * last updated 1/9/2018
+ */
 class LoginPanel extends GamePanel {
 
-    private Window window;
     private JTextField usernameField;
     private JTextField passwordField;
     private JRadioButton loginButton;
     private JRadioButton registerButton;
     private JButton submitButton;
 
-    private String errorMessage;
-
+    /**
+     * Constructs a LoginPanel.
+     *
+     * @param window the Window this panel belongs to
+     */
     LoginPanel(Window window) {
-        this.window = window;
+        super(window);
 
+        //text fields (for username and password)
         usernameField = new JTextField("Username");
         passwordField = new JTextField("Password");
 
-        submitButton = new JButton("Submit");
-        submitButton.addActionListener(e -> submit());
-
+        //radio buttons (to toggle between registering and loggin in)
         loginButton = new JRadioButton("Login", true);
         registerButton = new JRadioButton("Register");
 
         ButtonGroup group = new ButtonGroup();
         group.add(loginButton);
         group.add(registerButton);
+
+        //submit button
+        submitButton = new JButton("Submit");
+        submitButton.addActionListener(e -> submit());
 
         add(usernameField);
         add(passwordField);
@@ -41,39 +56,61 @@ class LoginPanel extends GamePanel {
         add(submitButton);
     }
 
-    public void submit() {
-        errorMessage = null;
-
-        if (registerButton.isSelected()) {
-            window.switchState(Window.MENU_STATE);
-        } else {
-            window.switchState(Window.MENU_STATE);
-        }
-
-        repaint();
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D g2D = (Graphics2D)g;
-
-        if (errorMessage != null) {
-            g2D.drawString(errorMessage, 100, 500);
-        }
-    }
-
+    /**
+     * Does nothing.
+     */
     @Override
     public void run() {
     }
 
+    /**
+     * Gives focus back to the window, so that its {@link BongoListener} will
+     * work again.
+     */
     @Override
     public void stop() {
+        window.setFocusable(true);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param protocol the protocol that was received
+     */
+    @Override
+    public void notifyReceived(Protocol protocol) {
+        window.switchState(Window.MENU_STATE);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param g
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+    }
+
+    /**
+     * Submits the form and sends the appropriate message to the server
+     * based on what is inputted in the fields and buttons.
+     */
+    private void submit() {
+        String username = usernameField.getText().trim().toLowerCase();
+        String password = passwordField.getText().trim().toLowerCase();
+
+        if (registerButton.isSelected()) {      //if user is registering a new account
+            window.sendMessage(new RegisterProtocol(username, password));
+
+        } else if (loginButton.isSelected()) {   //if user is logging into an account
+            window.sendMessage(new AuthenticateProtocol(username, password));
+        }
     }
 
 
-    //WE DISABLE THE BONGOLISTENER ------------------------------------------
+    //WE DISABLE SOME CONTROLLABLE METHODS ------------------------------------------
+    //We don't need the notifying methods below so they are left empty.
 
     @Override
     public void notifyLeftPress() {
@@ -93,5 +130,14 @@ class LoginPanel extends GamePanel {
 
     @Override
     public void notifyHold() {
+    }
+
+    @Override
+    public void notifyConnected() {
+
+    }
+
+    @Override
+    public void notifyDisconnected() {
     }
 }

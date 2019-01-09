@@ -19,6 +19,9 @@ public class BongoListener implements KeyListener {
     private Controllable obj = null;
     private HoldListener holdListener;
 
+    /**
+     * Constructs a BongoListener.
+     */
     BongoListener() {
         this.holdListener = new HoldListener();
         new Thread(holdListener).start();

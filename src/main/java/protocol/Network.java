@@ -3,6 +3,8 @@ package protocol;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
+import java.util.Date;
+
 /**
  * Helper class that contains information and methods that are shared between the client
  * and server.
@@ -23,6 +25,7 @@ public class Network {
      * library and using up more space.
      */
     private static Class[] protocolClasses = {
+            Date.class,
             Protocol.class, ExceptionProtocol.class, ResponseProtocol.class,
             AuthenticateProtocol.class, RegisterProtocol.class,
             JoinQueueProtocol.class

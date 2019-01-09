@@ -20,4 +20,10 @@ public class ResponseProtocol extends Protocol {
         this.response = response;
     }
 
+    /**
+     * Empty constructor necessary for Kyro serialization
+     */
+    private ResponseProtocol() {
+        response = null;
+    }
 }

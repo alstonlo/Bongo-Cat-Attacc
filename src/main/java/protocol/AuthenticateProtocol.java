@@ -22,4 +22,12 @@ public class AuthenticateProtocol extends Protocol {
         this.username = username;
         this.password = password;
     }
+
+    /**
+     * Empty constructor necessary for Kyro serialization
+     */
+    private AuthenticateProtocol() {
+        username = null;
+        password = null;
+    }
 }

@@ -18,7 +18,7 @@ import java.io.IOException;
  * Main server/room where players connect, log in, and join games.
  *
  * @author Alston
- * last updated 12/27/2018
+ * last updated 1/9/2018
  */
 class GameServer {
 
@@ -54,7 +54,7 @@ class GameServer {
 
                 @Override
                 public void connected(Connection connection) {
-                    System.out.println("Client connected");
+                    System.out.println("Client connected.");
                 }
 
                 /*
@@ -70,12 +70,12 @@ class GameServer {
 
                 @Override
                 public void disconnected(Connection connection) {
-                    Player player = (Player)connection;
-                    System.out.println((player.loggedIn())? player.getUsername() : "Client" + " disconnected." );
+                    System.out.println("Client disconnected.");
                 }
+
             }));
 
-            server.bind(Network.PORT, Network.PORT); //bind to TCP and UDP port 5000
+            server.bind(Network.PORT); //bind to TCP port 5000
             server.start();
 
         } catch (IOException e) { //server fails to be started...

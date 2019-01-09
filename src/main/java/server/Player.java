@@ -3,10 +3,10 @@ package server;
 import com.esotericsoftware.kryonet.Connection;
 
 /**
- * A connection to the GameServer, or player.
+ * A connection to the GameServer - a player.
  *
  * @author Alston
- * last updated 12/27/2018
+ * last updated 1/9/2018
  */
 class Player extends Connection {
 
@@ -14,13 +14,9 @@ class Player extends Connection {
 
     /**
      * Constructs a Player who has not logged in (unregistered).
-     * {@link Connection#setKeepAliveTCP(int)} is disabled unless the player logs in.
-     * This way, unless the player logs in within 12000ms of connecting, they
-     * are automatically disconnected.
      */
     Player() {
         super();
-        setKeepAliveTCP(0); //disable setKeepAliveTCP(int) by setting it to 0
     }
 
     /**
@@ -39,15 +35,13 @@ class Player extends Connection {
 
     /**
      * Registers or logs in a player under the username argument. If the player had already
-     * logged in, then this does nothing. Sets {@link Connection#setKeepAliveTCP(int)} back
-     * to default (8000 ms).
+     * logged in, then this does nothing.
      *
      * @param username the new username of the player
      */
     void registerUsername(String username) {
         if (!loggedIn()) {
             this.username = username;
-            setKeepAliveTCP(8000);
         }
     }
 }

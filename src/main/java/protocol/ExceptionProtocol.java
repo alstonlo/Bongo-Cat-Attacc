@@ -23,4 +23,13 @@ public class ExceptionProtocol extends Protocol {
         this.response = response;
         this.errorState = errorState;
     }
+
+    /**
+     * Empty constructor necessary for Kyro serialization
+     */
+    private ExceptionProtocol() {
+        response = null;
+        errorState = -1;
+    }
+
 }

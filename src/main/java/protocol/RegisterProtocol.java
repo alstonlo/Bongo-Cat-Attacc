@@ -22,4 +22,12 @@ public class RegisterProtocol extends Protocol {
         this.username = username;
         this.password = password;
     }
+
+    /**
+     * Empty constructor necessary for Kyro serialization
+     */
+    private RegisterProtocol() {
+        this.username = null;
+        this.password = null;
+    }
 }

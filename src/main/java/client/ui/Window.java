@@ -1,11 +1,19 @@
 package client.ui;
 
 import client.utilities.Utils;
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
+import protocol.Network;
+import protocol.Protocol;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 /**
  * JFrame on which all panels are displayed. We wanted to
@@ -13,7 +21,7 @@ import java.awt.Toolkit;
  * content pane is set to a 750 x 1334 ratio.
  *
  * @author Katelyn Wang and Alston
- * last updated 2019/1/4
+ * last updated 2019/1/8
  */
 public class Window extends JFrame {
 
@@ -27,18 +35,38 @@ public class Window extends JFrame {
 
     private double scale;
 
+    private Client client;
     private BongoListener bongoListener = new BongoListener();
+    private ServerListener serverListener = new ServerListener();
 
     private GamePanel currPanel;
     private LoginPanel loginPanel = new LoginPanel(this);
     private MenuPanel menuPanel = new MenuPanel(this);
-    private QueuePanel queuePanel = new QueuePanel();
+    private QueuePanel queuePanel = new QueuePanel(this);
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
      */
     Window() {
         super("Bongo Cat Attacc");
+
+        //create and start the client
+        client = new Client();
+        client.start();
+        Network.register(client); //register objects sent over the network so they can be serialized
+        client.addListener(serverListener);
+        client.addListener(new Listener() { //add a listener exclusively to check if the client disconnects
+            @Override
+            public void disconnected(Connection connection) {
+                //do something (e.g. notify and bring back to log in)
+            }
+        });
+
+        try {
+            client.connect(5000, "127.0.0.1", Network.PORT); //connect to the server
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //resolve scaling and sizing
         //the height of the content pane should be 80% the height of the screen
@@ -54,6 +82,12 @@ public class Window extends JFrame {
         this.setResizable(false);
         this.addKeyListener(bongoListener);
         this.setIconImage(Utils.loadImage("resources/icon.png"));
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                close();
+            }
+        });
         this.pack();
         this.setVisible(true);
 
@@ -61,9 +95,10 @@ public class Window extends JFrame {
     }
 
     /**
-     * Releases all threads and stops all resources used by the window.
+     * Releases all resources used by this window.
      */
     void close() {
+        client.close();
         bongoListener.stop();
     }
 
@@ -72,6 +107,16 @@ public class Window extends JFrame {
      */
     double getScale() {
         return scale;
+    }
+
+    /**
+     * Sends a message to the server. Currently, the message defaults to being
+     * sent over TCP.
+     *
+     * @param protocol the message to be sent
+     */
+    void sendMessage(Protocol protocol) {
+        client.sendTCP(protocol);
     }
 
     /**
@@ -110,15 +155,16 @@ public class Window extends JFrame {
         if (currPanel != null) { //stop the animation running on the currently displayed panel
             currPanel.stop();
         }
-        bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
-        newPanel.run();                           //run its animation
         currPanel = newPanel;                     //set it as the currently displayed panel
+
+        bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
+        serverListener.setControllableObj(newPanel);
 
         getContentPane().removeAll(); //removes previous panel and add new one
         getContentPane().add(newPanel);
         getContentPane().revalidate();
         getContentPane().repaint();   //repaint
 
-        setFocusable(true); //set focus back to frame to keep bongoListener working
+        newPanel.run();                           //run its animation
     }
 }

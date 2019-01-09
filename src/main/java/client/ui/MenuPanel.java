@@ -1,6 +1,7 @@
 package client.ui;
 
 import client.utilities.Utils;
+import protocol.Protocol;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -14,11 +15,9 @@ import java.io.File;
  * Panel for the main menu.
  *
  * @author Katelyn Wang and Alston
- * last updated 2019/1/4
+ * last updated 1/9/2019
  */
 class MenuPanel extends GamePanel {
-
-    private Window window;
 
     private BongoCat cat;
     private BufferedImage background;
@@ -31,39 +30,48 @@ class MenuPanel extends GamePanel {
      * @param window the Window that this MenuPanel is displayed on
      */
     MenuPanel(Window window) {
-        super();
-        this.window = window;
+        super(window);
+
         this.cat = new BongoCat();
         this.background = Utils.loadImage("resources/menu/yellow.png");
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         super.run();
 
-        //start playing the background music
+        //playing background music
         try {
-            File song = new File("resources/menu/music.wav ");
+            File song = new File("resources/menu/music.wav");
             AudioInputStream stream = AudioSystem.getAudioInputStream(song);
             bgMusic = AudioSystem.getClip();
             bgMusic.open(stream);
-            bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
+//            bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stop() {
         super.stop();
 
+        //stop the background music
         if (bgMusic != null) {
             bgMusic.close();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void notifyLeftPress() {
         cat.leftPawDown();
@@ -102,11 +110,36 @@ class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyHold() {
-        window.switchState(Window.QUEUE_STATE);
     }
 
     /**
      * {@inheritDoc}
+     */
+    @Override
+    public void notifyConnected() {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void notifyReceived(Protocol protocol) {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void notifyDisconnected() {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param g
      */
     @Override
     public void paintComponent(Graphics g) {

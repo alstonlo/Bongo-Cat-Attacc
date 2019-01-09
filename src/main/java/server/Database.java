@@ -60,6 +60,8 @@ class Database {
             insert.executeUpdate();
             con.commit();
 
+            System.out.println(username + ", " + password + " added to the database.");
+
         } catch (SQLException e) {
 
             //check for duplicate username (state 23505)

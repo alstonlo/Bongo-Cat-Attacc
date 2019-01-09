@@ -1,10 +1,14 @@
 package client.ui;
 
+import com.esotericsoftware.kryonet.Connection;
+import protocol.Protocol;
+
 import java.awt.Graphics;
 
 public class QueuePanel extends GamePanel {
 
-    QueuePanel() {
+    QueuePanel(Window window) {
+        super(window);
 
     }
 
@@ -30,6 +34,21 @@ public class QueuePanel extends GamePanel {
 
     @Override
     public void notifyHold() {
+
+    }
+
+    @Override
+    public void notifyConnected() {
+
+    }
+
+    @Override
+    public void notifyReceived(Protocol protocol) {
+
+    }
+
+    @Override
+    public void notifyDisconnected() {
 
     }
 

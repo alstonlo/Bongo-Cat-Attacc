@@ -8,15 +8,26 @@ import java.util.TimerTask;
  * Representation of the type of JPanels used by this game.
  *
  * @author Alston
- * last updated 1/4/2019
+ * last updated 1/9/2019
  */
 abstract class GamePanel extends JPanel implements Animatable, Controllable {
 
     private int fps = 30;
     private Timer animationTimer;
+    final Window window;
+
+    /**
+     * Constructs a GamePanel with the Window it belongs to.
+     *
+     * @param window the Window this panel belongs to
+     */
+    GamePanel(Window window) {
+        this.window = window;
+    }
 
     /**
      * {@inheritDoc}
+     *
      * @return the fps of this GamePanel, which is initialized at 30
      */
     @Override
@@ -26,6 +37,7 @@ abstract class GamePanel extends JPanel implements Animatable, Controllable {
 
     /**
      * {@inheritDoc}
+     *
      * @param fps the upper bound of the animation's fps
      */
     @Override
@@ -47,7 +59,7 @@ abstract class GamePanel extends JPanel implements Animatable, Controllable {
                     repaint();
                 }
 
-            }, 1000/fps, 100); //continuously repaint at a fixed fps
+            }, 1000 / fps, 100); //continuously repaint at a fixed fps
         }
     }
 
