@@ -96,7 +96,7 @@ public class Window extends JFrame {
         this.pack();
         this.setVisible(true);
 
-        switchState(LOGIN_STATE);
+        switchState(MENU_STATE);
     }
 
     /**
