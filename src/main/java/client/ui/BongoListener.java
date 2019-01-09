@@ -8,23 +8,20 @@ import java.awt.event.KeyListener;
  * This is analogous to the left and right bongos.
  *
  * @author Alston
- * last updated 1/4/2019
+ * last updated 1/9/2019
  */
 public class BongoListener implements KeyListener {
 
     static final int LEFT_BONGO_KEY = KeyEvent.VK_A;
     static final int RIGHT_BONGO_KEY = KeyEvent.VK_L;
-    static final long HOLD_DURATION = 1500;
+    static final int HOLD_BONGO_KEY = KeyEvent.VK_ENTER;
 
     private Controllable obj = null;
-    private HoldListener holdListener;
 
     /**
      * Constructs a BongoListener.
      */
     BongoListener() {
-        this.holdListener = new HoldListener();
-        new Thread(holdListener).start();
     }
 
     /**
@@ -39,20 +36,17 @@ public class BongoListener implements KeyListener {
     }
 
     /**
-     * Stops the internal thread used by this listener, which is used
-     * to detect if the two bongo keys are held for {@link BongoListener#HOLD_DURATION} seconds.
-     */
-    void stop() {
-        holdListener.running = false;
-    }
-
-    /**
-     * Does nothing.
+     * Invoked when the hold bongo key is typed.
      *
      * @param e the key pressed
      */
     @Override
     public void keyTyped(KeyEvent e) {
+        if (e.getKeyCode() == HOLD_BONGO_KEY) {
+            if (obj != null) {
+                obj.notifyHold();
+            }
+        }
     }
 
     /**
@@ -68,14 +62,12 @@ public class BongoListener implements KeyListener {
             if (obj != null) {
                 obj.notifyLeftPress();
             }
-            holdListener.left = true;
         }
 
         if (e.getKeyCode() == RIGHT_BONGO_KEY) { //detect right bongo press
             if (obj != null) {
                 obj.notifyRightPress();
             }
-            holdListener.right = true;
         }
     }
 
@@ -93,46 +85,11 @@ public class BongoListener implements KeyListener {
             if (obj != null) {
                 obj.notifyLeftRelease();
             }
-            holdListener.left = false;
         }
 
         if (e.getKeyCode() == RIGHT_BONGO_KEY) { //detect right bongo release
             if (obj != null) {
                 obj.notifyRightRelease();
-            }
-            holdListener.right = false;
-        }
-    }
-
-    /**
-     * Runnable object that observes whether the left and right bongo key
-     * were hold for longer than {@link BongoListener#HOLD_DURATION} ms.
-     */
-    private class HoldListener implements Runnable {
-
-        private volatile boolean running = false;
-
-        private long holdStart;
-        private boolean left = false;
-        private boolean right = false;
-
-        /**
-         * Starts the listener.
-         */
-        @Override
-        public void run() {
-            running = true;
-            holdStart = System.currentTimeMillis();
-
-            while (running) {
-                if (!(left && right)) {
-                    holdStart = System.currentTimeMillis();
-                }
-
-                if (System.currentTimeMillis() - holdStart > HOLD_DURATION && obj != null) {
-                    obj.notifyHold();
-                    holdStart = System.currentTimeMillis(); //reset time
-                }
             }
         }
     }

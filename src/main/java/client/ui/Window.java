@@ -106,7 +106,6 @@ public class Window extends JFrame {
      */
     void close() {
         client.close();
-        bongoListener.stop();
     }
 
     /**
