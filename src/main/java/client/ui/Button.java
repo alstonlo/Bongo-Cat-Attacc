@@ -24,7 +24,7 @@ class Button {
     private Color textColour;
     private Color bgColour;
     private boolean selected;
-    private int nextPanel;
+    private Runnable onSubmit;
 
     /**
      * Constructs a Button given its dimensions and colour
@@ -37,7 +37,7 @@ class Button {
      * @param bgColour   the button's colour
      * @param textColour the button's text colour
      */
-    public Button(String text, int x, int y, int width, int height, Color bgColour, Color textColour, int nextPanel) {
+    public Button(String text, int x, int y, int width, int height, Color bgColour, Color textColour) {
         super();
         this.x = x;
         this.y = y;
@@ -47,15 +47,20 @@ class Button {
         this.textColour = textColour;
         this.bgColour = bgColour;
         this.buttonFont = Utils.getFont("resources/moon.otf", Math.round(this.height * 0.8));
-        this.nextPanel = nextPanel;
-    }
-
-    public int getNextPanel(){
-        return nextPanel;
     }
 
     void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    void setOnSubmit(Runnable onSubmit) {
+        this.onSubmit = onSubmit;
+    }
+
+    void submit() {
+        if (onSubmit != null) {
+            onSubmit.run();
+        }
     }
 
     /**

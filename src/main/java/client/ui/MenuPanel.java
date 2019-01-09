@@ -41,19 +41,34 @@ class MenuPanel extends GamePanel {
 
         this.cat = new BongoCat();
         this.background = Utils.loadImage("resources/menu/yellow.png");
+
         this.playButton = new Button("Play", (750/2-250),
                 700,
                 500,
                 110,
                 new Color(255, 233, 116),
-                new Color(212, 212, 212), window.SONG_SELECT_STATE);
+                new Color(212, 212, 212));
+        this.playButton.setOnSubmit(new Runnable() {
+            @Override
+            public void run() {
+                window.switchState(Window.SONG_SELECT_STATE);
+            }
+        });
+
         buttons.add(playButton);
-        this.instructionButton = new Button("Instructions", (750/2-250),
+        instructionButton = new Button("Instructions", (750/2-250),
                 900,
                 500,
                 110,
                 new Color(255, 233, 116),
-                new Color(212, 212, 212), window.INSTRUCTION_STATE);
+                new Color(212, 212, 212));
+        instructionButton.setOnSubmit(new Runnable() {
+            @Override
+            public void run() {
+                window.switchState(Window.INSTRUCTION_STATE);
+            }
+        });
+
         buttons.add(instructionButton);
         buttons.get(currSelected).setSelected(true);
     }
@@ -151,8 +166,7 @@ class MenuPanel extends GamePanel {
     @Override
     public void notifyHold() {
         repaint();
-        //window.switchState(Window.QUEUE_STATE);
-        window.switchState(buttons.get(currSelected).getNextPanel());
+        buttons.get(currSelected).submit();
     }
 
     /**
