@@ -52,12 +52,14 @@ public class Window extends JFrame {
     Window() {
         super("Bongo Cat Attacc");
 
-        //create and start the client
+        //CLIENT CODE ------------------------------------------------------------------------------
         client = new Client();
         client.start();
         Network.register(client); //register objects sent over the network so they can be serialized
+
+        //add listeners to the client
         client.addListener(serverListener);
-        client.addListener(new Listener() { //add a listener exclusively to check if the client disconnects
+        client.addListener(new Listener() { //add a listener to check if the client disconnects
             @Override
             public void disconnected(Connection connection) {
                 //do something (e.g. notify and bring back to log in)
@@ -70,6 +72,7 @@ public class Window extends JFrame {
             e.printStackTrace();
         }
 
+        //FRAME CODE -----------------------------------------------------------------------------
         //resolve scaling and sizing
         //the height of the content pane should be 80% the height of the screen
         int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;

@@ -1,6 +1,7 @@
 package client.ui;
 
 import client.utilities.Utils;
+import protocol.Protocol;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -11,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class SongSelectionPanel extends GamePanel {
+
     private String[] songFiles = {"resources/songs/music.wav", "resources/songs/music2.wav"};
     private BufferedImage[] backgrounds = {Utils.loadImage("resources/songs/background1.jpg"),
             Utils.loadImage("resources/songs/background2.jpg")};
@@ -18,10 +20,9 @@ public class SongSelectionPanel extends GamePanel {
     private int currIndex = 0;
     private Clip currMusic;
     private int state = 0;
-    private Window window;
 
     SongSelectionPanel(Window window){
-        this.window = window;
+        super(window);
         playSong(songFiles[currIndex]);
     }
 
@@ -127,5 +128,18 @@ public class SongSelectionPanel extends GamePanel {
         }
     }
 
+    @Override
+    public void notifyConnected() {
 
+    }
+
+    @Override
+    public void notifyReceived(Protocol protocol) {
+
+    }
+
+    @Override
+    public void notifyDisconnected() {
+
+    }
 }
