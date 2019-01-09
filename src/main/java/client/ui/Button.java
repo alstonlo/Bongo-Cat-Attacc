@@ -1,40 +1,42 @@
-package client;
+package client.ui;
 
-import client.ui.Controllable;
-import client.ui.Window;
 import client.utilities.Utils;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
-import java.awt.Point;
 
-public class Button extends JButton {
-    // Important class variables
-    protected int x;
-    protected int y;
-    protected int width;
-    protected int height;
-    protected String text;
+/**
+ * Custom game button object.
+ *
+ * @author Katelyn
+ * last updated 1/9/2019
+ */
+class Button {
+
+    private int x;
+    private int y;
+    private int width;
+    private int height;
+    private String text;
     private Font buttonFont;
     private Color textColour;
     private Color bgColour;
     private boolean selected;
 
     /**
-     * Constructor
-     * @param text String text on the button
-     * @param x button position x
-     * @param y button position y
-     * @param width button width
-     * @param height button height
+     * Constructs a Button given its dimensions and colour
+     *
+     * @param text       String text on the button
+     * @param x          button x coordinate
+     * @param y          button y coordinate
+     * @param width      button width
+     * @param height     button height
+     * @param bgColour   the button's colour
+     * @param textColour the button's text colour
      */
-    public Button(String text, int x, int y, int width, int height, Color bgColour, Color textColour) {
+    Button(String text, int x, int y, int width, int height, Color bgColour, Color textColour) {
         super();
         this.x = x;
         this.y = y;
@@ -46,17 +48,17 @@ public class Button extends JButton {
         this.buttonFont = Utils.getFont("resources/moon.otf", Math.round(this.height * 0.8));
     }
 
-    @Override
-    public void setSelected(boolean selected){
+    void setSelected(boolean selected) {
         this.selected = selected;
     }
 
     /**
      * draw
      * draws the button
+     *
      * @param g2D
      */
-    public void draw(Graphics2D g2D) {
+    void draw(Graphics2D g2D) {
         // Set colour based on whether it should be selected or not
         if (selected) {
             g2D.setColor(textColour);
@@ -65,7 +67,7 @@ public class Button extends JButton {
         }
 
         // Fill button rectangle
-        g2D.fillRect(x,y, width, height);
+        g2D.fillRect(x, y, width, height);
 
 
         // Set font and text variables
@@ -80,9 +82,6 @@ public class Button extends JButton {
         } else {
             g2D.setColor(textColour);
         }
-        g2D.drawString(text, x + width /2 - textWidth/2, y + height/2 + textHeight/4);
-
+        g2D.drawString(text, x + width / 2 - textWidth / 2, y + height / 2 + textHeight / 4);
     }
-
-
 }
