@@ -22,9 +22,8 @@ import java.util.ArrayList;
 class MenuPanel extends GamePanel {
 
     private Window window;
-    private BongoCat cat;
 
-    private BufferedImage title;
+    private BongoCat cat;
     private BufferedImage background;
 
     private Clip bgMusic;
@@ -129,7 +128,8 @@ class MenuPanel extends GamePanel {
     @Override
     public void notifyHold() {
         repaint();
-        window.switchState(2);
+        //window.switchState(Window.QUEUE_STATE);
+        window.switchState(Window.SONG_SELECT_STATE);
     }
 
     /**
