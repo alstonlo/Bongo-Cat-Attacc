@@ -1,6 +1,5 @@
 package client.ui;
 
-import client.Button;
 import client.utilities.Utils;
 import protocol.Protocol;
 import java.awt.Color;
