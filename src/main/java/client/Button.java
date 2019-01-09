@@ -1,18 +1,12 @@
 package client;
 
-import client.ui.Controllable;
-import client.ui.Window;
 import client.utilities.Utils;
 
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.MouseInfo;
-import java.awt.Point;
 
 public class Button extends JButton {
     // Important class variables
@@ -25,6 +19,7 @@ public class Button extends JButton {
     private Color textColour;
     private Color bgColour;
     private boolean selected;
+    private int nextPanel;
 
     /**
      * Constructor
@@ -34,7 +29,7 @@ public class Button extends JButton {
      * @param width button width
      * @param height button height
      */
-    public Button(String text, int x, int y, int width, int height, Color bgColour, Color textColour) {
+    public Button(String text, int x, int y, int width, int height, Color bgColour, Color textColour, int nextPanel) {
         super();
         this.x = x;
         this.y = y;
@@ -44,6 +39,11 @@ public class Button extends JButton {
         this.textColour = textColour;
         this.bgColour = bgColour;
         this.buttonFont = Utils.getFont("resources/moon.otf", Math.round(this.height * 0.8));
+        this.nextPanel = nextPanel;
+    }
+
+    public int getNextPanel(){
+        return nextPanel;
     }
 
     @Override

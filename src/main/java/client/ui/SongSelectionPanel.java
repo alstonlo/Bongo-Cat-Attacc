@@ -34,6 +34,7 @@ public class SongSelectionPanel extends GamePanel {
         g2D.scale(window.getScale(), window.getScale()); //we set the scaling
 
         g2D.drawImage(backgrounds[currIndex], 0, 0, this);
+
         if (state == 1){
             if (prevIndex > currIndex){
                 moveLeft(g2D);

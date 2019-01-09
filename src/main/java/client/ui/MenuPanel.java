@@ -27,6 +27,7 @@ class MenuPanel extends GamePanel {
 
     private Clip bgMusic;
     private Button playButton;
+    private Button instructionButton;
 
     private ArrayList<Button> buttons = new ArrayList<>();
     private int currSelected = 0;
@@ -41,13 +42,20 @@ class MenuPanel extends GamePanel {
 
         this.cat = new BongoCat();
         this.background = Utils.loadImage("resources/menu/yellow.png");
-        this.playButton = new Button("Play", (750/2-50),
+        this.playButton = new Button("Play", (750/2-250),
+                700,
                 500,
-                100,
-                50,
-                new Color(101, 101, 255),
-                new Color(212, 212, 212));
+                110,
+                new Color(255, 233, 116),
+                new Color(212, 212, 212), window.SONG_SELECT_STATE);
         buttons.add(playButton);
+        this.instructionButton = new Button("Instructions", (750/2-250),
+                900,
+                500,
+                110,
+                new Color(255, 233, 116),
+                new Color(212, 212, 212), window.INSTRUCTION_STATE);
+        buttons.add(instructionButton);
         buttons.get(currSelected).setSelected(true);
     }
 
@@ -93,6 +101,10 @@ class MenuPanel extends GamePanel {
             buttons.get(currSelected).setSelected(false);
             currSelected--;
             buttons.get(currSelected).setSelected(true);
+        } else {
+            buttons.get(currSelected).setSelected(false);
+            currSelected = buttons.size()-1;
+            buttons.get(currSelected).setSelected(true);
         }
         cat.leftPawDown();
         repaint(); //repaint panel to ensure that the state change is animated (even if it violates fps)
@@ -116,6 +128,10 @@ class MenuPanel extends GamePanel {
             buttons.get(currSelected).setSelected(false);
             currSelected++;
             buttons.get(currSelected).setSelected(true);
+        } else {
+            buttons.get(currSelected).setSelected(false);
+            currSelected = 0;
+            buttons.get(currSelected).setSelected(true);
         }
         cat.rightPawDown();
         repaint();
@@ -137,7 +153,7 @@ class MenuPanel extends GamePanel {
     public void notifyHold() {
         repaint();
         //window.switchState(Window.QUEUE_STATE);
-        window.switchState(Window.SONG_SELECT_STATE);
+        window.switchState(buttons.get(currSelected).getNextPanel());
     }
 
     /**
@@ -179,6 +195,8 @@ class MenuPanel extends GamePanel {
         g2D.drawImage(background, 0, 0, this);
         g2D.drawImage(cat.getImage(), 0, 0, this);
 
-        playButton.draw(g2D);
+        for (Button button : buttons){
+            button.draw(g2D);
+        }
     }
 }

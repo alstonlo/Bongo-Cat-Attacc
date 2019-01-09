@@ -33,6 +33,7 @@ public class Window extends JFrame {
     static final int MENU_STATE = 0;
     static final int QUEUE_STATE = 1;
     static final int SONG_SELECT_STATE = 2;
+    static final int INSTRUCTION_STATE = 3;
 
     private double scale;
 
@@ -45,6 +46,7 @@ public class Window extends JFrame {
     private MenuPanel menuPanel = new MenuPanel(this);
     private QueuePanel queuePanel = new QueuePanel(this);
     private SongSelectionPanel songPanel = new SongSelectionPanel(this);
+    private InstructionPanel instructionPanel = new InstructionPanel(this);
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
@@ -147,6 +149,10 @@ public class Window extends JFrame {
 
             case SONG_SELECT_STATE:
                 switchPanel(songPanel);
+                break;
+
+            case INSTRUCTION_STATE:
+                switchPanel(instructionPanel);
                 break;
 
             default:
