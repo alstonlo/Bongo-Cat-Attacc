@@ -70,4 +70,8 @@ public class Utils {
         }
         return merged;
     }
+
+    public static BufferedImage joinImages(BufferedImage[] images) {
+        
+    }
 }

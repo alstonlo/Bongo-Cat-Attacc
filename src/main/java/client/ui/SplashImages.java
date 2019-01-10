@@ -10,13 +10,45 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class SplashImages {
-    BufferedImage[] images = {Utils.loadImage("resources/songs/background1.jpg"),
-            Utils.loadImage("resources/songs/background2.jpg")};
+    BufferedImage[] images = {Utils.loadImage("resources/songs/song1/background.jpg"),
+            Utils.loadImage("resources/songs/song2/background2.jpg")};
     private int currXPos;
     private int prevIndex;
     private int currIndex;
     private Timer timer = new Timer();
     private int state = 0; // if 0 not animating, if 1 it is animating
+    private Runnable left = new Runnable(){
+        @Override
+        public void run() {
+            currXPos = 750;
+            do {
+                currXPos -= 2;
+                try{
+                    Thread.sleep(100);
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            } while (currXPos >= 0);
+            state = 0;
+
+        }
+    };
+
+    private Runnable right = new Runnable() {
+        @Override
+        public void run() {
+            currXPos = -750;
+            do {
+                currXPos += 2;
+                try{
+                    Thread.sleep(100);
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            } while (currXPos <= 0);
+            state = 0;
+        }
+    };
 
     SplashImages() {
 
@@ -31,37 +63,18 @@ public class SplashImages {
         this.currIndex = index;
     }
     void leftMove() {
-        timer.scheduleAtFixedRate(new TimerTask() {
+        if (state == 0) {
+            state = 1;
+            left.run();
+        }
 
-            @Override
-            public void run() {
-                state = 1;
-                currXPos = 750;
-                do {
-                    currXPos -= 2;
-                } while (currXPos >= 0);
-                state = 0;
-                timer.cancel();
-            }
-
-        }, 0, 100);
     }
 
     void rightMove() {
-        timer.scheduleAtFixedRate(new TimerTask() {
-
-            @Override
-            public void run() {
-                state = 2;
-                currXPos = -750;
-                do {
-                    currXPos += 2;
-                } while (currXPos <= 0);
-                state = 0;
-                timer.cancel();
-            }
-
-        }, 0, 100);
+        if (state == 0){
+            state = 2;
+            right.run();
+        }
     }
 
     void draw(Graphics2D g2D, JPanel panel){
