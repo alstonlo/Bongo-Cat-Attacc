@@ -50,6 +50,7 @@ public class SongSelectionPanel extends GamePanel {
                 state = 1;
                 prevIndex = currIndex;
                 currIndex++;
+                background.setCurrIndex(currIndex);
             }
             //background.moveRight()
         }
@@ -67,8 +68,10 @@ public class SongSelectionPanel extends GamePanel {
                 state = 1;
                 prevIndex = currIndex;
                 currIndex--;
+                background.setCurrIndex(currIndex);
             }
             //background.moveLeft()
+
         }
     }
 

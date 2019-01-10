@@ -16,19 +16,17 @@ public class SplashImages {
     private int currIndex;
     private Timer timer = new Timer();
     private int state = 0; // if 0 not animating, if 1 it is animating
+    private double velocity = 1.7; //pixels per millisecond
 
     private Runnable left = new Runnable() {
         @Override
         public void run() {
+            long startTime = System.currentTimeMillis();
             currXPos = 750;
             do {
-                currXPos -= 2;
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                currXPos = 750 - (int) Math.round((System.currentTimeMillis()-startTime)*velocity);
             } while (currXPos >= 0);
+            currXPos = 0;
             state = 0;
 
         }
@@ -37,15 +35,12 @@ public class SplashImages {
     private Runnable right = new Runnable() {
         @Override
         public void run() {
+            long startTime = System.currentTimeMillis();
             currXPos = -750;
             do {
-                currXPos += 2;
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                currXPos = -750 + (int) Math.round((System.currentTimeMillis()-startTime)*velocity);
             } while (currXPos <= 0);
+            currXPos = 0;
             state = 0;
         }
     };
@@ -53,11 +48,6 @@ public class SplashImages {
     SplashImages() {
 
     }
-
-    int getXPos() {
-        return currXPos;
-    }
-
     void setCurrIndex(int index) {
         this.prevIndex = currIndex;
         this.currIndex = index;
@@ -66,7 +56,7 @@ public class SplashImages {
     void leftMove() {
         if (state == 0) {
             state = 1;
-            new Thread(left).start();
+            new Thread(right).start();
         }
 
     }
@@ -74,17 +64,17 @@ public class SplashImages {
     void rightMove() {
         if (state == 0) {
             state = 2;
-            new Thread(right).start();
+            new Thread(left).start();
         }
     }
 
     void draw(Graphics2D g2D, JPanel panel) {
         if (state == 1) {
             g2D.drawImage(images[currIndex], currXPos, 0, panel);
-            g2D.drawImage(images[prevIndex], currXPos - 750, 0, panel);
+            g2D.drawImage(images[prevIndex], currXPos + 750, 0, panel);
         } else if (state == 2) {
             g2D.drawImage(images[currIndex], currXPos, 0, panel);
-            g2D.drawImage(images[prevIndex], currXPos + 750, 0, panel);
+            g2D.drawImage(images[prevIndex], currXPos - 750, 0, panel);
         } else {
             g2D.drawImage(images[currIndex], currXPos, 0, panel);
         }
