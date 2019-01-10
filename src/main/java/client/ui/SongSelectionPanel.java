@@ -8,17 +8,14 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class SongSelectionPanel extends GamePanel {
-
     private String[] songFiles = {"resources/songs/music.wav", "resources/songs/music2.wav"};
-    private BufferedImage[] backgrounds = {Utils.loadImage("resources/songs/background1.jpg"),
-            Utils.loadImage("resources/songs/background2.jpg")};
-    private int prevIndex = 0;
-    private int currIndex = 0;
     private Clip currMusic;
+    private SplashImages background = new SplashImages();
+    private int currIndex;
+    private int prevIndex;
     private int state = 0;
 
     SongSelectionPanel(Window window){
@@ -33,38 +30,18 @@ public class SongSelectionPanel extends GamePanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.scale(window.getScale(), window.getScale()); //we set the scaling
 
-        g2D.drawImage(backgrounds[currIndex], 0, 0, this);
-
+        background.draw(g2D, this);
         if (state == 1){
             if (prevIndex > currIndex){
-                moveLeft(g2D);
+                background.leftMove();
             } else {
-                moveRight(g2D);
+                background.rightMove();
             }
             playSong(songFiles[currIndex]);
             state = 0;
         }
     }
 
-    void moveLeft(Graphics2D g2D){
-        int xPos = 0;
-        do {
-            xPos -= 2;
-            g2D.drawImage(backgrounds[prevIndex], xPos, 0, this);
-            g2D.drawImage(backgrounds[currIndex], xPos + backgrounds[prevIndex].getWidth(), 0, this);
-            repaint();
-        } while (xPos + backgrounds[prevIndex].getWidth() >= 0);
-    }
-
-    void moveRight(Graphics2D g2D){
-        int xPos = 0;
-        do {
-            xPos += 2;
-            g2D.drawImage(backgrounds[prevIndex], xPos, 0, this);
-            g2D.drawImage(backgrounds[currIndex], xPos - backgrounds[currIndex].getWidth(), 0, this);
-            repaint();
-        } while (xPos <= backgrounds[prevIndex].getWidth());
-    }
 
     @Override
     public void notifyRightPress() {
