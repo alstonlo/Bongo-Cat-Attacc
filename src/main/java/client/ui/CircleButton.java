@@ -16,7 +16,6 @@ class CircleButton {
     private int x;
     private int y;
     private int radius;
-    private int diameter;
 
     private BufferedImage icon;
     private Color color = new Color(212, 212, 212);
@@ -40,7 +39,6 @@ class CircleButton {
         this.x = centerX;
         this.y = centerY;
         this.radius = radius;
-        this.diameter = radius * 2;
         this.icon = icon;
     }
 
@@ -48,6 +46,9 @@ class CircleButton {
      * Selects or places focus on this button.
      */
     void select() {
+        if (!selected) { //increase the button size to show the selection
+            this.radius += 5;
+        }
         selected = true;
     }
 
@@ -55,6 +56,9 @@ class CircleButton {
      * Deselects or removes focus from this button.
      */
     void deselect() {
+        if (selected) { //decrease the button size back to normal
+            this.radius -= 5;
+        }
         selected = false;
     }
 
@@ -75,13 +79,13 @@ class CircleButton {
      */
     void draw(Graphics2D g2D) {
         g2D.setColor((selected) ? selectedColor : color);
-        g2D.fillOval(x - radius, y - radius, diameter, diameter);
+        g2D.fillOval(x - radius, y - radius, radius * 2, radius * 2);
 
         g2D.setColor(outlineColor);
         g2D.setStroke(outline);
-        g2D.drawOval(x - radius, y - radius, diameter, diameter);
+        g2D.drawOval(x - radius, y - radius, radius * 2, radius * 2);
 
-        g2D.drawImage(icon, x - radius, y - radius, diameter, diameter, null);
+        g2D.drawImage(icon, x - radius, y - radius, radius * 2, radius * 2, null);
     }
 
     //SETTERS -----------------------------------------------------------------------
