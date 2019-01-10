@@ -38,25 +38,26 @@ class MenuPanel extends GamePanel {
         cat = new BongoCat();
         background = Utils.loadImage("resources/menu/yellow.png");
 
-        CircleButton loginButton = new CircleButton(null, 620, 940, 50);
+        CircleButton loginButton = new CircleButton(null, 670, 990, 50);
         loginButton.setOnSubmit(() -> {
             window.switchState(Window.LOGIN_STATE);
         });
         buttons[0] = loginButton;
 
-        CircleButton playButton = new CircleButton(null, 620, 1070, 50);
+        BufferedImage playIcon = Utils.loadImage("resources/icons/play.png");
+        CircleButton playButton = new CircleButton(playIcon, 670, 1120, 50);
         playButton.setOnSubmit(() -> {
             window.switchState(Window.SONG_SELECT_STATE);
         });
         buttons[1] = playButton;
 
-        CircleButton instructionButton = new CircleButton(null, 620, 1200, 50);
+        CircleButton instructionButton = new CircleButton(null, 670, 1250, 50);
         instructionButton.setOnSubmit(() -> {
             window.switchState(Window.INSTRUCTION_STATE);
         });
         buttons[2] = instructionButton;
 
-        buttons[currSelected].setSelected(true);
+        buttons[currSelected].select();
     }
 
     /**
@@ -72,7 +73,7 @@ class MenuPanel extends GamePanel {
             AudioInputStream stream = AudioSystem.getAudioInputStream(song);
             bgMusic = AudioSystem.getClip();
             bgMusic.open(stream);
-//            bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
+            //bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,11 +98,9 @@ class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyLeftPress() {
-        if (currSelected > 0) {
-            buttons[currSelected].setSelected(false);
-            currSelected--;
-            buttons[currSelected].setSelected(true);
-        }
+        buttons[currSelected].deselect();
+        currSelected = (3 + currSelected - 1) % buttons.length;
+        buttons[currSelected].select();
 
         cat.leftPawDown();
 
@@ -122,11 +121,9 @@ class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyRightPress() {
-        if (currSelected < buttons.length - 1) {
-            buttons[currSelected].setSelected(false);
-            currSelected++;
-            buttons[currSelected].setSelected(true);
-        }
+        buttons[currSelected].deselect();
+        currSelected = (currSelected + 1) % buttons.length;
+        buttons[currSelected].select();
 
         cat.rightPawDown();
 
