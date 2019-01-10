@@ -38,7 +38,8 @@ class MenuPanel extends GamePanel {
         cat = new BongoCat();
         background = Utils.loadImage("resources/menu/yellow.png");
 
-        CircleButton loginButton = new CircleButton(null, 670, 990, 50);
+        BufferedImage loginIcon = Utils.loadImage("resources/icons/login.png");
+        CircleButton loginButton = new CircleButton(loginIcon, 670, 990, 50);
         loginButton.setOnSubmit(() -> {
             window.switchState(Window.LOGIN_STATE);
         });
@@ -51,7 +52,8 @@ class MenuPanel extends GamePanel {
         });
         buttons[1] = playButton;
 
-        CircleButton instructionButton = new CircleButton(null, 670, 1250, 50);
+        BufferedImage controlsIcon = Utils.loadImage("resources/icons/controls.png");
+        CircleButton instructionButton = new CircleButton(controlsIcon, 670, 1250, 50);
         instructionButton.setOnSubmit(() -> {
             window.switchState(Window.INSTRUCTION_STATE);
         });
