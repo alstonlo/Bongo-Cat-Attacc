@@ -29,7 +29,7 @@ public class Window extends JFrame {
         new Window();
     }
 
-    private static final int LOGIN_STATE = -1;
+    static final int LOGIN_STATE = -1;
     static final int MENU_STATE = 0;
     static final int QUEUE_STATE = 1;
     static final int SONG_SELECT_STATE = 2;
@@ -88,7 +88,7 @@ public class Window extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.addKeyListener(bongoListener);
-        this.setIconImage(Utils.loadImage("resources/icon.png"));
+        this.setIconImage(Utils.loadImage("resources/icons/app icon.png"));
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
