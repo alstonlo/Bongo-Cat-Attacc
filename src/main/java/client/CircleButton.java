@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
  * @author Katelyn and Alston
  * last updated 1/9/2019
  */
-class CircleButton {
+public class CircleButton {
 
     private int x;
     private int y;
@@ -34,7 +34,7 @@ class CircleButton {
      * @param centerY the center y-coordinate of this button
      * @param radius  the radius of this button
      */
-    CircleButton(BufferedImage icon, int centerX, int centerY, int radius) {
+    public CircleButton(BufferedImage icon, int centerX, int centerY, int radius) {
         super();
         this.x = centerX;
         this.y = centerY;
@@ -45,7 +45,7 @@ class CircleButton {
     /**
      * Selects or places focus on this button.
      */
-    void select() {
+    public void select() {
         if (!selected) { //increase the button size to show the selection
             this.radius += 5;
         }
@@ -55,7 +55,7 @@ class CircleButton {
     /**
      * Deselects or removes focus from this button.
      */
-    void deselect() {
+    public void deselect() {
         if (selected) { //decrease the button size back to normal
             this.radius -= 5;
         }
@@ -65,7 +65,7 @@ class CircleButton {
     /**
      * Submits or clicks the button.
      */
-    void submit() {
+    public void submit() {
         if (onSubmit != null) {
             onSubmit.run();
         }
@@ -77,7 +77,7 @@ class CircleButton {
      *
      * @param g2D
      */
-    void draw(Graphics2D g2D) {
+    public void draw(Graphics2D g2D) {
         g2D.setColor((selected) ? selectedColor : color);
         g2D.fillOval(x - radius, y - radius, radius * 2, radius * 2);
 
@@ -95,7 +95,7 @@ class CircleButton {
      *
      * @param color the color to be set
      */
-    void setColor(Color color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
@@ -104,7 +104,7 @@ class CircleButton {
      *
      * @param color the color to be set
      */
-    void setSelectedColor(Color color) {
+    public void setSelectedColor(Color color) {
         this.selectedColor = color;
     }
 
@@ -114,7 +114,7 @@ class CircleButton {
      *
      * @param onSubmit the action the button will perform on being clicked
      */
-    void setOnSubmit(Runnable onSubmit) {
+    public void setOnSubmit(Runnable onSubmit) {
         this.onSubmit = onSubmit;
     }
 

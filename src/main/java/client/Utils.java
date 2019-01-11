@@ -1,4 +1,4 @@
-package client.utilities;
+package client;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;

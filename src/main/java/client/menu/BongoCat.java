@@ -1,6 +1,6 @@
-package client;
+package client.menu;
 
-import client.utilities.Utils;
+import client.Utils;
 
 import java.awt.image.BufferedImage;
 

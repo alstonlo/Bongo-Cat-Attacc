@@ -1,6 +1,9 @@
-package client;
+package client.menu;
 
-import client.utilities.Utils;
+import client.CircleButton;
+import client.GamePanel;
+import client.Window;
+import client.Utils;
 import protocol.Protocol;
 
 import javax.sound.sampled.Clip;
@@ -14,7 +17,7 @@ import java.awt.image.BufferedImage;
  * @author Katelyn Wang and Alston
  * last updated 1/9/2019
  */
-class MenuPanel extends GamePanel {
+public class MenuPanel extends GamePanel {
 
     private BongoCat cat;
     private BufferedImage background;
@@ -29,7 +32,7 @@ class MenuPanel extends GamePanel {
      *
      * @param window the Window that this MenuPanel is displayed on
      */
-    MenuPanel(Window window) {
+    public MenuPanel(Window window) {
         super(window);
         this.setLayout(null);
 
@@ -39,10 +42,7 @@ class MenuPanel extends GamePanel {
         BufferedImage loginIcon = Utils.loadImage("resources/icons/login.png");
         CircleButton loginButton = new CircleButton(loginIcon, 670, 990, 50);
         loginButton.setOnSubmit(() -> {
-            LoginPanel panel = new LoginPanel(window);
-            panel.setSize(300, 300 );
-            panel.setLocation(0, 0);
-            add(panel);
+
         });
         buttons[0] = loginButton;
 

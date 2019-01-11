@@ -1,6 +1,9 @@
 package client;
 
-import client.utilities.Utils;
+import client.menu.InstructionPanel;
+import client.menu.LoginPanel;
+import client.menu.MenuPanel;
+import client.menu.QueuePanel;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -29,10 +32,10 @@ public class Window extends JFrame {
         new Window();
     }
 
-    static final int MENU_STATE = 0;
-    static final int QUEUE_STATE = 1;
-    static final int SONG_SELECT_STATE = 2;
-    static final int INSTRUCTION_STATE = 3;
+    public static final int MENU_STATE = 0;
+    public static final int QUEUE_STATE = 1;
+    public static final int SONG_SELECT_STATE = 2;
+    public static final int INSTRUCTION_STATE = 3;
 
     private double scale;
 
@@ -103,14 +106,14 @@ public class Window extends JFrame {
     /**
      * Releases all resources used by this window.
      */
-    void close() {
+    public void close() {
         client.close();
     }
 
     /**
      * @return the scale factor of this Window
      */
-    double getScale() {
+    public double getScale() {
         return scale;
     }
 
@@ -120,7 +123,7 @@ public class Window extends JFrame {
      *
      * @param protocol the message to be sent
      */
-    void sendMessage(Protocol protocol) {
+    public void sendMessage(Protocol protocol) {
         client.sendTCP(protocol);
     }
 
@@ -131,7 +134,7 @@ public class Window extends JFrame {
      * @param state an integer representing the state of this Window
      * @throws IndexOutOfBoundsException if the state argument is invalid
      */
-    void switchState(int state) {
+    public void switchState(int state) {
         switch (state) {
             case MENU_STATE:
                 switchPanel(menuPanel);

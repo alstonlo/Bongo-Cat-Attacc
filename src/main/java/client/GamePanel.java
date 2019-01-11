@@ -10,18 +10,18 @@ import java.util.TimerTask;
  * @author Alston
  * last updated 1/9/2019
  */
-abstract class GamePanel extends JPanel implements Animatable, Controllable {
+public abstract class GamePanel extends JPanel implements Animatable, Controllable {
 
     private int fps = 30;
     private Timer animationTimer;
-    final Window window;
+    protected final Window window;
 
     /**
      * Constructs a GamePanel with the Window it belongs to.
      *
      * @param window the Window this panel belongs to
      */
-    GamePanel(Window window) {
+    public GamePanel(Window window) {
         this.window = window;
     }
 

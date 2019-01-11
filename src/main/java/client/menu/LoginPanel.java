@@ -1,5 +1,6 @@
-package client;
+package client.menu;
 
+import client.Window;
 import protocol.AuthenticateProtocol;
 import protocol.RegisterProtocol;
 
