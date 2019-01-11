@@ -2,8 +2,8 @@ package client.menu;
 
 import client.CircleButton;
 import client.GamePanel;
-import client.Window;
 import client.Utils;
+import client.Window;
 import protocol.Protocol;
 
 import javax.sound.sampled.Clip;
@@ -22,10 +22,13 @@ public class MenuPanel extends GamePanel {
     private BongoCat cat;
     private BufferedImage background;
 
-    private Clip bgMusic;
+    private DrawerPanel loginPanel;
+    private DrawerPanel instructPanel;
 
     private int currSelected = 0;
     private CircleButton[] buttons = new CircleButton[3];
+
+    private Clip bgMusic;
 
     /**
      * Constructs a MenuPanel.
@@ -34,33 +37,44 @@ public class MenuPanel extends GamePanel {
      */
     public MenuPanel(Window window) {
         super(window);
+
         this.setLayout(null);
 
-        cat = new BongoCat();
-        background = Utils.loadImage("resources/menu/yellow.png");
+        //load the image assets
+        this.cat = new BongoCat();
+        this.background = Utils.loadImage("resources/menu/yellow.png");
 
+        //create the drawer panels
+        this.loginPanel = new LoginPanel(window);
+        this.instructPanel = new InstructionPanel(window);
+        this.add(loginPanel);
+        this.add(instructPanel);
+
+        //create the buttons
         BufferedImage loginIcon = Utils.loadImage("resources/icons/login.png");
         CircleButton loginButton = new CircleButton(loginIcon, 670, 990, 50);
         loginButton.setOnSubmit(() -> {
-
+            loginPanel.pullDown();
         });
-        buttons[0] = loginButton;
 
         BufferedImage playIcon = Utils.loadImage("resources/icons/play.png");
         CircleButton playButton = new CircleButton(playIcon, 670, 1120, 50);
         playButton.setOnSubmit(() -> {
             window.switchState(Window.SONG_SELECT_STATE);
         });
-        buttons[1] = playButton;
 
         BufferedImage controlsIcon = Utils.loadImage("resources/icons/controls.png");
         CircleButton instructionButton = new CircleButton(controlsIcon, 670, 1250, 50);
         instructionButton.setOnSubmit(() -> {
-            window.switchState(Window.INSTRUCTION_STATE);
+            instructPanel.pullDown();
         });
-        buttons[2] = instructionButton;
 
+        buttons[0] = loginButton;
+        buttons[1] = playButton;
+        buttons[2] = instructionButton;
         buttons[currSelected].select();
+
+        window.setFocusable(true);
     }
 
     /**
@@ -100,7 +114,6 @@ public class MenuPanel extends GamePanel {
         buttons[currSelected].select();
 
         cat.leftPawDown();
-
         repaint(); //repaint panel to ensure that the state change is animated (even if it violates fps)
     }
 
@@ -123,7 +136,6 @@ public class MenuPanel extends GamePanel {
         buttons[currSelected].select();
 
         cat.rightPawDown();
-
         repaint();
     }
 

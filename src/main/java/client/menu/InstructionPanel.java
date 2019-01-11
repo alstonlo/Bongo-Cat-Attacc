@@ -6,9 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 public class InstructionPanel extends DrawerPanel {
-    private Window window;
 
     InstructionPanel(Window window) {
+        super(window);
     }
 
     @Override
@@ -16,7 +16,6 @@ public class InstructionPanel extends DrawerPanel {
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-        g2D.scale(window.getScale(), window.getScale());
 
         g2D.drawString("Instructions lmao", 0, 0);
     }

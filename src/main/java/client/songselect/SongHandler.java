@@ -1,4 +1,4 @@
-package client;
+package client.songselect;
 
 import javax.sound.sampled.Clip;
 import java.io.File;

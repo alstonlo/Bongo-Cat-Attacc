@@ -56,11 +56,19 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
 
                 @Override
                 public void run() {
-                    repaint();
+                    update();
                 }
 
             }, 1000 / fps, 100); //continuously repaint at a fixed fps
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update() {
+        repaint();
     }
 
     /**

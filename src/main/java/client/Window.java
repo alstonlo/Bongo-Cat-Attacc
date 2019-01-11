@@ -1,9 +1,7 @@
 package client;
 
-import client.menu.InstructionPanel;
-import client.menu.LoginPanel;
 import client.menu.MenuPanel;
-import client.menu.QueuePanel;
+import client.songselect.SongSelectionPanel;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -33,9 +31,7 @@ public class Window extends JFrame {
     }
 
     public static final int MENU_STATE = 0;
-    public static final int QUEUE_STATE = 1;
-    public static final int SONG_SELECT_STATE = 2;
-    public static final int INSTRUCTION_STATE = 3;
+    public static final int SONG_SELECT_STATE = 1;
 
     private double scale;
 
@@ -44,11 +40,8 @@ public class Window extends JFrame {
     private ServerListener serverListener = new ServerListener();
 
     private GamePanel currPanel;
-    private LoginPanel loginPanel = new LoginPanel(this);
-    private MenuPanel menuPanel = new MenuPanel(this);
-    private QueuePanel queuePanel = new QueuePanel(this);
-    private SongSelectionPanel songPanel = new SongSelectionPanel(this);
-    private InstructionPanel instructionPanel = new InstructionPanel(this);
+    private MenuPanel menuPanel;
+    private SongSelectionPanel songPanel;
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
@@ -97,10 +90,14 @@ public class Window extends JFrame {
                 close();
             }
         });
+
+        //create JPanels
+        this.menuPanel = new MenuPanel(this);
+        this.songPanel = new SongSelectionPanel(this);
+        switchState(MENU_STATE);
+
         this.pack();
         this.setVisible(true);
-
-        switchState(MENU_STATE);
     }
 
     /**
@@ -115,6 +112,14 @@ public class Window extends JFrame {
      */
     public double getScale() {
         return scale;
+    }
+
+    /**
+     * @param x an integer
+     * @return the scaled value of x based on {@link Window#getScale()}, rounded to the nearest integer
+     */
+    public int scale(int x) {
+        return (int) Math.round(scale * x);
     }
 
     /**
@@ -140,16 +145,8 @@ public class Window extends JFrame {
                 switchPanel(menuPanel);
                 break;
 
-            case QUEUE_STATE:
-                switchPanel(queuePanel);
-                break;
-
             case SONG_SELECT_STATE:
                 switchPanel(songPanel);
-                break;
-
-            case INSTRUCTION_STATE:
-                switchPanel(instructionPanel);
                 break;
 
             default:
@@ -177,6 +174,6 @@ public class Window extends JFrame {
         getContentPane().revalidate();
         getContentPane().repaint();   //repaint
 
-        newPanel.run();                           //run its animation
+        newPanel.run();               //run its animation
     }
 }

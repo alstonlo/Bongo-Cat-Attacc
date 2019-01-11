@@ -1,5 +1,7 @@
-package client;
+package client.songselect;
 
+import client.GamePanel;
+import client.Window;
 import protocol.Protocol;
 
 import java.awt.Graphics;
@@ -9,7 +11,7 @@ public class SongSelectionPanel extends GamePanel {
     private SplashImages background = new SplashImages();
     private int currIndex;
 
-    SongSelectionPanel(Window window){
+    public SongSelectionPanel(Window window){
         super(window);
     }
 

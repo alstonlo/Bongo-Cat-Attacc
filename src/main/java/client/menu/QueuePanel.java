@@ -9,6 +9,7 @@ import java.awt.Graphics;
 class QueuePanel extends DrawerPanel {
 
     QueuePanel(Window window) {
+        super(window);
     }
 
     @Override

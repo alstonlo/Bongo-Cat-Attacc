@@ -1,4 +1,6 @@
-package client;
+package client.songselect;
+
+import client.CircleButton;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

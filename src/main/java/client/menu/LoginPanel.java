@@ -6,7 +6,6 @@ import protocol.RegisterProtocol;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.awt.Graphics;
@@ -18,9 +17,8 @@ import java.awt.Graphics;
  * @author Alston
  * last updated 1/9/2018
  */
-class LoginPanel extends JPanel {
+class LoginPanel extends DrawerPanel {
 
-    private Window window;
     private JTextField usernameField;
     private JTextField passwordField;
     private JRadioButton loginButton;
@@ -33,7 +31,7 @@ class LoginPanel extends JPanel {
      * @param window the Window this panel belongs to
      */
     LoginPanel(Window window) {
-        this.window = window;
+        super(window);
 
         //text fields (for username and password)
         usernameField = new JTextField("Username");

@@ -1,4 +1,6 @@
-package client;
+package client.songselect;
+
+import client.Utils;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
