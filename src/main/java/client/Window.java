@@ -1,4 +1,4 @@
-package client.ui;
+package client;
 
 import client.utilities.Utils;
 import com.esotericsoftware.kryonet.Client;

@@ -1,4 +1,4 @@
-package client.ui;
+package client;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

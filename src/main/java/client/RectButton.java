@@ -1,4 +1,4 @@
-package client.ui;
+package client;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -12,8 +12,6 @@ import java.awt.image.BufferedImage;
  * last updated 1/9/2019
  */
 class RectButton {
-    private int x;
-    private int y;
 
     private BufferedImage icon;
     private java.awt.Color color = new Color(212, 212, 212);
@@ -24,20 +22,18 @@ class RectButton {
     private boolean selected;
     private Runnable onSubmit;
 
+    private static final int WIDTH = 650;
+    private static final int HEIGHT = 360;
+    private static final int Y_POS = 800;
+    private int xPos;
     /**
      * Constructs a CircleButton based on its icon, position, and size.
      *
      * @param icon    the icon displayed on this button
-     * @param centerX the center x-coordinate of this button
-     * @param centerY the center y-coordinate of this button
-     * @param radius  the radius of this button
      */
-    RectButton(BufferedImage icon, int centerX, int centerY, int radius) {
-        super();
-        this.x = centerX;
-        this.y = centerY;
-        //this.radius = radius;
+    RectButton(BufferedImage icon, int xPos) {
         this.icon = icon;
+        this.xPos = xPos;
     }
 
     /**
@@ -67,6 +63,14 @@ class RectButton {
         }
     }
 
+    void setX(int x){
+        xPos = x;
+    }
+
+    int getX(){
+        return this.xPos;
+    }
+
     /**
      * Draws the button. The icon of this button is drawn at (x - radius, y - radius)
      * with width and height of 2 * radius.
@@ -74,14 +78,11 @@ class RectButton {
      * @param g2D
      */
     void draw(Graphics2D g2D) {
-//        g2D.setColor((selected) ? selectedColor : color);
-//        g2D.fillOval(x - radius, y - radius, radius * 2, radius * 2);
-//
-//        g2D.setColor(outlineColor);
-//        g2D.setStroke(outline);
-//        g2D.drawOval(x - radius, y - radius, radius * 2, radius * 2);
-//
-//        g2D.drawImage(icon, x - radius, y - radius, radius * 2, radius * 2, null);
+        g2D.setColor((selected) ? selectedColor : color);
+
+        g2D.drawRoundRect(xPos, Y_POS, WIDTH,HEIGHT,30,30);
+
+        g2D.drawImage(icon, xPos + 30, Y_POS + 30,null);
     }
 
     //SETTERS -----------------------------------------------------------------------
@@ -106,7 +107,7 @@ class RectButton {
 
     /**
      * Sets the Runnable action the button will perform on being clicked
-     * or submitted by {@link client.ui.CircleButton#submit()}.
+     * or submitted by {@link CircleButton#submit()}.
      *
      * @param onSubmit the action the button will perform on being clicked
      */

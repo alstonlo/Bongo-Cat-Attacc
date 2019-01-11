@@ -1,4 +1,4 @@
-package client.ui;
+package client;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;

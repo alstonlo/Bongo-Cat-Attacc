@@ -1,4 +1,4 @@
-package client.ui;
+package client;
 
 import javax.swing.JPanel;
 import java.util.Timer;
