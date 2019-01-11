@@ -6,6 +6,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,6 +22,7 @@ public class SplashImages {
     private int currXPos;
     private int prevIndex;
     private int currIndex;
+    private float alpha = 1f;
 
     private int state = 0; // if 0 not animating, if 1 it is animating
     private double velocity = 1.7; //pixels per millisecond
@@ -55,22 +57,19 @@ public class SplashImages {
         }
     };
 
-    private Runnable fadeOut = new Runnable() {
+    private Runnable fadeIn = new Runnable() {
         @Override
         public void run() {
             long startTime = System.currentTimeMillis();
             do {
-
-            } while (true);
+                alpha = 0 + (System.currentTimeMillis()-startTime)*0.001f;
+            } while (alpha <= 1f);
+            alpha = 1f;
+            animating.set(false);
+            playSong(currIndex);
         }
     };
 
-    private Runnable fadeIn = new Runnable() {
-        @Override
-        public void run() {
-
-        }
-    };
 
     SplashImages() {
 
@@ -88,7 +87,8 @@ public class SplashImages {
     void leftMove() {
         if (!animating.get()){
             animating.set(true);
-            new Thread(right).start();
+            //new Thread(right).start();
+            new Thread(fadeIn).start();
         }
 
     }
@@ -96,7 +96,8 @@ public class SplashImages {
     void rightMove() {
         if (!animating.get()) {
             animating.set(true);
-            new Thread(left).start();
+            //new Thread(left).start();
+            new Thread(fadeIn).start();
         }
     }
 
@@ -110,6 +111,11 @@ public class SplashImages {
         } else {
             g2D.drawImage(images[currIndex], currXPos, 0, panel);
         }
+
+        g2D.setComposite(AlphaComposite.SrcOver.derive(alpha));
+        g2D.drawImage(images[currIndex], currXPos, 0, panel);
+        g2D.setComposite(AlphaComposite.SrcOver.derive(1f - alpha));
+        g2D.drawImage(images[prevIndex], currXPos, 0, panel);
 
     }
 
