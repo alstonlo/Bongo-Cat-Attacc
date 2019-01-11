@@ -1,26 +1,16 @@
 package client.ui;
 
-import client.utilities.Utils;
 import protocol.Protocol;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.File;
 
 public class SongSelectionPanel extends GamePanel {
-    private String[] songFiles = {"resources/songs/music.wav", "resources/songs/music2.wav"};
-    private Clip currMusic;
     private SplashImages background = new SplashImages();
     private int currIndex;
-    private int prevIndex;
-    private int state = 0;
 
     SongSelectionPanel(Window window){
         super(window);
-        playSong(songFiles[currIndex]);
     }
 
     @Override
@@ -31,26 +21,19 @@ public class SongSelectionPanel extends GamePanel {
         g2D.scale(window.getScale(), window.getScale()); //we set the scaling
 
         background.draw(g2D, this);
-        if (state == 1){
-            if (prevIndex > currIndex){
-                background.leftMove();
-            } else {
-                background.rightMove();
-            }
-            playSong(songFiles[currIndex]);
-            state = 0;
-        }
+
     }
 
 
     @Override
     public void notifyRightPress() {
-        if (state == 0) {
-            if (currIndex < songFiles.length - 1) {
-                state = 1;
-                prevIndex = currIndex;
+        if (!background.isAnimating()) {
+            if (currIndex < background.length() - 1) {
                 currIndex++;
                 background.setCurrIndex(currIndex);
+                background.rightMove();
+
+
             }
             //background.moveRight()
         }
@@ -63,14 +46,13 @@ public class SongSelectionPanel extends GamePanel {
 
     @Override
     public void notifyLeftPress() {
-        if (state == 0) {
+        if (!background.isAnimating()) {
             if (currIndex > 0) {
-                state = 1;
-                prevIndex = currIndex;
                 currIndex--;
                 background.setCurrIndex(currIndex);
+                background.leftMove();
+
             }
-            //background.moveLeft()
 
         }
     }
@@ -85,28 +67,16 @@ public class SongSelectionPanel extends GamePanel {
 
     }
 
-    public void playSong(String file){
-        if (currMusic != null) {
-            currMusic.stop();
-        }
-
-        try {
-            File song = new File(file);
-            AudioInputStream stream = AudioSystem.getAudioInputStream(song);
-            currMusic = AudioSystem.getClip();
-            currMusic.open(stream);
-            currMusic.loop(Clip.LOOP_CONTINUOUSLY);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void run(){
+        super.run();
+        background.playSong(0);
     }
 
     @Override
     public void stop(){
         super.stop();
-        if (currMusic != null){
-            currMusic.stop();
-        }
+        background.stop();
     }
 
     @Override

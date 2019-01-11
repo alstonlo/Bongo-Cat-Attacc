@@ -1,8 +1,10 @@
 package client.ui;
 
+import javax.sound.sampled.Clip;
 import java.io.File;
 
 public class SongHandler {
+    Clip currMusic;
     static Song[] initialize(){
         File[] directories = new File("resources/songs").listFiles(File::isDirectory);
 
@@ -13,4 +15,6 @@ public class SongHandler {
         }
         return songs;
     }
+
+
 }

@@ -11,18 +11,12 @@ import java.io.File;
 public class Song implements Comparable<Song>{
 
     BufferedImage splashImage;
+    String fileName;
     Clip music;
 
     Song(String fileName) {
         splashImage = Utils.loadImage(fileName+"/background.jpg");
-        try {
-            File song = new File("resources/menu/music.wav");
-            AudioInputStream stream = AudioSystem.getAudioInputStream(song);
-            music = AudioSystem.getClip();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        this.fileName = fileName;
     }
 
     String getName() {
@@ -35,5 +29,17 @@ public class Song implements Comparable<Song>{
 
     public int compareTo(Song o) {
         return 0;
+    }
+
+    void play(Clip currMusic){
+        try {
+            File song = new File(fileName);
+            AudioInputStream stream = AudioSystem.getAudioInputStream(song);
+            currMusic = AudioSystem.getClip();
+            currMusic.open(stream);
+            currMusic.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
