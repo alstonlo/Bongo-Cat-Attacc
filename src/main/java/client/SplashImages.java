@@ -1,4 +1,4 @@
-package client.ui;
+package client;
 
 import client.utilities.Utils;
 
@@ -10,13 +10,13 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SplashImages {
     BufferedImage[] images = {Utils.loadImage("resources/songs/song1/background.jpg"),
             Utils.loadImage("resources/songs/song2/background2.jpg")};
     String[] songs = {"resources/songs/song1/music.wav", "resources/songs/song2/music2.wav"};
+    RectButton[] buttons = {new RectButton(Utils.loadImage("resources/songs/song1/album.jpg"), 50), new RectButton(Utils.loadImage("resources/songs/song2/album.jpg"), 710)};
 
     private Clip currMusic;
     private int currXPos;
@@ -31,13 +31,16 @@ public class SplashImages {
     private Runnable left = new Runnable() {
         @Override
         public void run() {
-            state = 2;
             long startTime = System.currentTimeMillis();
+            long prevTime = System.currentTimeMillis();
             do {
-                currXPos = 750 - (int) Math.round((System.currentTimeMillis()-startTime)*velocity);
-            } while (currXPos >= 0);
-            currXPos = 0;
-            playSong(currIndex);
+                int increment = (int) Math.round((System.currentTimeMillis()-prevTime)*velocity);
+                for (RectButton button : buttons) {
+                    button.setX(button.getX() - increment);
+                }
+                prevTime = System.currentTimeMillis();
+            } while ((System.currentTimeMillis()-startTime)*velocity <= 1320);
+            buttons[currIndex].setX(50);
             animating.set(false);
 
         }
@@ -45,14 +48,16 @@ public class SplashImages {
     private Runnable right = new Runnable() {
         @Override
         public void run() {
-            state = 1;
             long startTime = System.currentTimeMillis();
+            long prevTime = System.currentTimeMillis();
             do {
-                currXPos = -750 + (int) Math.round((System.currentTimeMillis()-startTime)*velocity);
-            } while (currXPos <= 0);
-            currXPos = 0;
-            state = 0;
-            playSong(currIndex);
+                int increment = (int) Math.round((System.currentTimeMillis()-prevTime)*velocity);
+                for (RectButton button : buttons) {
+                    button.setX(button.getX()+ increment);
+                }
+                prevTime = System.currentTimeMillis();
+            } while ((System.currentTimeMillis()-startTime)*velocity <= 1320);
+            buttons[currIndex].setX(50);
             animating.set(false);
         }
     };
@@ -87,7 +92,7 @@ public class SplashImages {
     void leftMove() {
         if (!animating.get()){
             animating.set(true);
-            //new Thread(right).start();
+            new Thread(right).start();
             new Thread(fadeIn).start();
         }
 
@@ -96,27 +101,21 @@ public class SplashImages {
     void rightMove() {
         if (!animating.get()) {
             animating.set(true);
-            //new Thread(left).start();
+            new Thread(left).start();
             new Thread(fadeIn).start();
         }
     }
 
     void draw(Graphics2D g2D, JPanel panel) {
-        if (state == 1) {
-            g2D.drawImage(images[currIndex], currXPos, 0, panel);
-            g2D.drawImage(images[prevIndex], currXPos + 750, 0, panel);
-        } else if (state == 2) {
-            g2D.drawImage(images[currIndex], currXPos, 0, panel);
-            g2D.drawImage(images[prevIndex], currXPos - 750, 0, panel);
-        } else {
-            g2D.drawImage(images[currIndex], currXPos, 0, panel);
-        }
-
         g2D.setComposite(AlphaComposite.SrcOver.derive(alpha));
         g2D.drawImage(images[currIndex], currXPos, 0, panel);
         g2D.setComposite(AlphaComposite.SrcOver.derive(1f - alpha));
         g2D.drawImage(images[prevIndex], currXPos, 0, panel);
 
+        g2D.setComposite(AlphaComposite.SrcOver.derive(1f));
+        for (RectButton button : buttons) {
+           button.draw(g2D);
+        }
     }
 
     public void playSong(int index){

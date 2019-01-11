@@ -1,4 +1,4 @@
-package client.ui;
+package client;
 
 /**
  * Represents an object that can be animated.

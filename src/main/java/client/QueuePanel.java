@@ -1,6 +1,5 @@
-package client.ui;
+package client;
 
-import com.esotericsoftware.kryonet.Connection;
 import protocol.Protocol;
 
 import java.awt.Graphics;

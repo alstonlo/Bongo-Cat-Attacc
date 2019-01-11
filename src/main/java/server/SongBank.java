@@ -1,6 +1,6 @@
 package server;
 
-import client.ui.Song;
+import client.Song;
 
 class SongBank {
 
