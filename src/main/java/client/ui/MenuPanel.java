@@ -3,13 +3,10 @@ package client.ui;
 import client.utilities.Utils;
 import protocol.Protocol;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 /**
  * Panel for the main menu.
@@ -70,15 +67,9 @@ class MenuPanel extends GamePanel {
         super.run();
 
         //playing background music
-        try {
-            File song = new File("resources/menu/music.wav");
-            AudioInputStream stream = AudioSystem.getAudioInputStream(song);
-            bgMusic = AudioSystem.getClip();
-            bgMusic.open(stream);
-            //bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        bgMusic = Utils.loadAudio("resources/menu/music.wav");
+        if (bgMusic != null) {
+            bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 

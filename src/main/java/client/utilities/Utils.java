@@ -1,6 +1,9 @@
 package client.utilities;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
@@ -12,18 +15,36 @@ import java.io.IOException;
 public class Utils {
 
     /**
-     * Retrieves a font and creates it
+     * Plays a {@link Clip} (.wav file) from the specified file path and returns it.
      *
-     * @param fileName the name of the font file
+     * @param filePath the file path of the audio
+     * @return the clip at the filePath argument; or null if an Exception occurs
+     */
+    public static Clip loadAudio(String filePath) {
+        try (AudioInputStream stream = AudioSystem.getAudioInputStream(new File(filePath))) {
+            Clip clip = AudioSystem.getClip();
+            clip.open(stream);
+            clip.start();
+            return clip;
+        } catch (Exception e) {
+            System.out.println("Failed to load audio at " + filePath);
+        }
+        return null;
+    }
+
+    /**
+     * Retrieves a font and creates it.
+     *
+     * @param filePath the name of the font file
      * @param size     the desired size of the font to be made
      * @return the created Font
      */
-    public static Font getFont(String fileName, float size) {
+    public static Font loadFont(String filePath, float size) {
         Font font;
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(size);
+            font = Font.createFont(Font.TRUETYPE_FONT, new File(filePath)).deriveFont(size);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.PLAIN, new File(fileName)));
+            ge.registerFont(Font.createFont(Font.PLAIN, new File(filePath)));
         } catch (IOException | FontFormatException e) {
             font = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(size)); //if it cannot find the font, defaults to sans-serif of the same size
         }
@@ -40,7 +61,7 @@ public class Utils {
         try {
             return ImageIO.read(new File(filePath));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Failed to load image at " + filePath);
             return null;
         }
     }
