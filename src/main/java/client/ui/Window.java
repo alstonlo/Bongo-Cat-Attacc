@@ -29,7 +29,6 @@ public class Window extends JFrame {
         new Window();
     }
 
-    static final int LOGIN_STATE = -1;
     static final int MENU_STATE = 0;
     static final int QUEUE_STATE = 1;
     static final int SONG_SELECT_STATE = 2;
@@ -71,7 +70,7 @@ public class Window extends JFrame {
         try {
             client.connect(5000, "127.0.0.1", Network.PORT); //connect to the server
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Failed to connect to server.");
         }
 
         //FRAME CODE -----------------------------------------------------------------------------
@@ -134,10 +133,6 @@ public class Window extends JFrame {
      */
     void switchState(int state) {
         switch (state) {
-            case LOGIN_STATE:
-                switchPanel(loginPanel);
-                break;
-
             case MENU_STATE:
                 switchPanel(menuPanel);
                 break;

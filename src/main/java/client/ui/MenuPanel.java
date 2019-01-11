@@ -31,6 +31,7 @@ class MenuPanel extends GamePanel {
      */
     MenuPanel(Window window) {
         super(window);
+        this.setLayout(null);
 
         cat = new BongoCat();
         background = Utils.loadImage("resources/menu/yellow.png");
@@ -38,7 +39,10 @@ class MenuPanel extends GamePanel {
         BufferedImage loginIcon = Utils.loadImage("resources/icons/login.png");
         CircleButton loginButton = new CircleButton(loginIcon, 670, 990, 50);
         loginButton.setOnSubmit(() -> {
-            window.switchState(Window.LOGIN_STATE);
+            LoginPanel panel = new LoginPanel(window);
+            panel.setSize(300, 300 );
+            panel.setLocation(0, 0);
+            add(panel);
         });
         buttons[0] = loginButton;
 
@@ -67,7 +71,7 @@ class MenuPanel extends GamePanel {
         super.run();
 
         //playing background music
-        bgMusic = Utils.loadAudio("resources/menu/music.wav");
+        //bgMusic = Utils.loadAudio("resources/menu/music.wav");
         if (bgMusic != null) {
             bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
         }

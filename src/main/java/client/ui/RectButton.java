@@ -36,7 +36,7 @@ class RectButton {
         super();
         this.x = centerX;
         this.y = centerY;
-        this.radius = radius;
+        //this.radius = radius;
         this.icon = icon;
     }
 
@@ -74,14 +74,14 @@ class RectButton {
      * @param g2D
      */
     void draw(Graphics2D g2D) {
-        g2D.setColor((selected) ? selectedColor : color);
-        g2D.fillOval(x - radius, y - radius, radius * 2, radius * 2);
-
-        g2D.setColor(outlineColor);
-        g2D.setStroke(outline);
-        g2D.drawOval(x - radius, y - radius, radius * 2, radius * 2);
-
-        g2D.drawImage(icon, x - radius, y - radius, radius * 2, radius * 2, null);
+//        g2D.setColor((selected) ? selectedColor : color);
+//        g2D.fillOval(x - radius, y - radius, radius * 2, radius * 2);
+//
+//        g2D.setColor(outlineColor);
+//        g2D.setStroke(outline);
+//        g2D.drawOval(x - radius, y - radius, radius * 2, radius * 2);
+//
+//        g2D.drawImage(icon, x - radius, y - radius, radius * 2, radius * 2, null);
     }
 
     //SETTERS -----------------------------------------------------------------------
