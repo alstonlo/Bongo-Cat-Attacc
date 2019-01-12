@@ -1,12 +1,10 @@
 package client.menu;
 
-import client.GamePanel;
 import client.Window;
-import protocol.Protocol;
 
 import java.awt.Graphics;
 
-class QueuePanel extends DrawerPanel {
+class QueuePanel extends PullDownPanel {
 
     QueuePanel(Window window) {
         super(window);

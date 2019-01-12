@@ -9,6 +9,7 @@ import protocol.Network;
 import protocol.Protocol;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -27,7 +28,7 @@ import java.io.IOException;
 public class Window extends JFrame {
 
     public static void main(String[] args) {
-        new Window();
+        SwingUtilities.invokeLater(() -> new Window());
     }
 
     public static final int MENU_STATE = 0;
@@ -96,6 +97,8 @@ public class Window extends JFrame {
         this.songPanel = new SongSelectionPanel(this);
         switchState(MENU_STATE);
 
+        this.setVisible(true);
+        this.requestFocus();
         this.pack();
         this.setVisible(true);
     }
@@ -115,10 +118,10 @@ public class Window extends JFrame {
     }
 
     /**
-     * @param x an integer
+     * @param x a number
      * @return the scaled value of x based on {@link Window#getScale()}, rounded to the nearest integer
      */
-    public int scale(int x) {
+    public int scale(double x) {
         return (int) Math.round(scale * x);
     }
 
@@ -169,10 +172,12 @@ public class Window extends JFrame {
         bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
         serverListener.setControllableObj(newPanel);
 
-        getContentPane().removeAll(); //removes previous panel and add new one
-        getContentPane().add(newPanel);
-        getContentPane().revalidate();
-        getContentPane().repaint();   //repaint
+        SwingUtilities.invokeLater(() -> {
+            getContentPane().removeAll(); //removes previous panel and add new one
+            getContentPane().add(newPanel);
+            getContentPane().revalidate();
+            getContentPane().repaint();   //repaint
+        });
 
         newPanel.run();               //run its animation
     }

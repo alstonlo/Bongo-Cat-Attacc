@@ -22,8 +22,8 @@ public class MenuPanel extends GamePanel {
     private BongoCat cat;
     private BufferedImage background;
 
-    private DrawerPanel loginPanel;
-    private DrawerPanel instructPanel;
+    private PullDownPanel loginPanel;
+    private PullDownPanel instructPanel;
 
     private int currSelected = 0;
     private CircleButton[] buttons = new CircleButton[3];
@@ -53,28 +53,20 @@ public class MenuPanel extends GamePanel {
         //create the buttons
         BufferedImage loginIcon = Utils.loadImage("resources/icons/login.png");
         CircleButton loginButton = new CircleButton(loginIcon, 670, 990, 50);
-        loginButton.setOnSubmit(() -> {
-            loginPanel.pullDown();
-        });
+        loginButton.setOnSubmit(() -> loginPanel.pullDown());
 
         BufferedImage playIcon = Utils.loadImage("resources/icons/play.png");
         CircleButton playButton = new CircleButton(playIcon, 670, 1120, 50);
-        playButton.setOnSubmit(() -> {
-            window.switchState(Window.SONG_SELECT_STATE);
-        });
+        playButton.setOnSubmit(() -> window.switchState(Window.SONG_SELECT_STATE));
 
         BufferedImage controlsIcon = Utils.loadImage("resources/icons/controls.png");
         CircleButton instructionButton = new CircleButton(controlsIcon, 670, 1250, 50);
-        instructionButton.setOnSubmit(() -> {
-            instructPanel.pullDown();
-        });
+        instructionButton.setOnSubmit(() -> instructPanel.pullDown());
 
         buttons[0] = loginButton;
         buttons[1] = playButton;
         buttons[2] = instructionButton;
         buttons[currSelected].select();
-
-        window.setFocusable(true);
     }
 
     /**
@@ -89,6 +81,13 @@ public class MenuPanel extends GamePanel {
         if (bgMusic != null) {
             bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
         }
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        loginPanel.relocate();
     }
 
     /**
@@ -114,7 +113,6 @@ public class MenuPanel extends GamePanel {
         buttons[currSelected].select();
 
         cat.leftPawDown();
-        repaint(); //repaint panel to ensure that the state change is animated (even if it violates fps)
     }
 
     /**
@@ -123,7 +121,6 @@ public class MenuPanel extends GamePanel {
     @Override
     public void notifyLeftRelease() {
         cat.leftPawUp();
-        repaint();
     }
 
     /**
@@ -136,7 +133,6 @@ public class MenuPanel extends GamePanel {
         buttons[currSelected].select();
 
         cat.rightPawDown();
-        repaint();
     }
 
     /**
@@ -145,7 +141,6 @@ public class MenuPanel extends GamePanel {
     @Override
     public void notifyRightRelease() {
         cat.rightPawUp();
-        repaint();
     }
 
     /**
@@ -153,7 +148,6 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyHold() {
-        repaint();
         buttons[currSelected].submit();
     }
 

@@ -20,7 +20,6 @@ public class BongoListener implements KeyListener {
     private Controllable obj = null;
     private final AtomicBoolean leftPress = new AtomicBoolean(false);
     private final AtomicBoolean rightPress = new AtomicBoolean(false);
-    private final AtomicBoolean holdPress = new AtomicBoolean(false);
 
     /**
      * Constructs a BongoListener.
@@ -49,10 +48,10 @@ public class BongoListener implements KeyListener {
     }
 
     /**
-     * Invoked when the left, right, or hold bongo key are pressed, which
-     * notifies the controlled object via {@link Controllable#notifyLeftPress()},
-     * {@link Controllable#notifyRightPress()}, and {@link Controllable#notifyHold()}
-     * respectively. keyPressed will only trigger once, when the key is first pressed.
+     * Invoked when the left or right bongo key are pressed, which
+     * notifies the controlled object via {@link Controllable#notifyLeftPress()}
+     * and {@link Controllable#notifyRightPress()} respectively. keyPressed(KeyEvent)
+     * will only trigger once, when the key is first pressed.
      *
      * @param e the key pressed
      */
@@ -67,12 +66,6 @@ public class BongoListener implements KeyListener {
         if (e.getKeyCode() == RIGHT_BONGO_KEY) { //detect right bongo press
             if (rightPress.compareAndSet(false, true) && obj != null) {
                 obj.notifyRightPress();
-            }
-        }
-
-        if (e.getKeyCode() == HOLD_BONGO_KEY) {
-            if (holdPress.compareAndSet(false, true) && obj != null) {
-                obj.notifyHold();
             }
         }
     }
@@ -102,7 +95,7 @@ public class BongoListener implements KeyListener {
         }
 
         if (e.getKeyCode() == HOLD_BONGO_KEY) {
-            holdPress.set(false);
+            obj.notifyHold();
         }
     }
 }

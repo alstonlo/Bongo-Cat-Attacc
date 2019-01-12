@@ -1,8 +1,7 @@
 package client;
 
 import javax.swing.JPanel;
-import java.util.Timer;
-import java.util.TimerTask;
+import javax.swing.Timer;
 
 /**
  * Representation of the type of JPanels used by this game.
@@ -12,7 +11,8 @@ import java.util.TimerTask;
  */
 public abstract class GamePanel extends JPanel implements Animatable, Controllable {
 
-    private int fps = 30;
+    private final int FPS = 30; //the preferred FPS for the game
+
     private Timer animationTimer;
     protected final Window window;
 
@@ -23,26 +23,7 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
      */
     public GamePanel(Window window) {
         this.window = window;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return the fps of this GamePanel, which is initialized at 30
-     */
-    @Override
-    public int getFps() {
-        return fps;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param fps the upper bound of the animation's fps
-     */
-    @Override
-    public void setFps(int fps) {
-        this.fps = fps;
+        this.animationTimer = new Timer(FPS / 30, (e) -> update());
     }
 
     /**
@@ -50,17 +31,7 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
      */
     @Override
     public void run() {
-        if (animationTimer == null) { //ensure that the animation isn't running (there would be a Timer)
-            animationTimer = new Timer();
-            animationTimer.scheduleAtFixedRate(new TimerTask() {
-
-                @Override
-                public void run() {
-                    update();
-                }
-
-            }, 1000 / fps, 100); //continuously repaint at a fixed fps
-        }
+        animationTimer.start();
     }
 
     /**
@@ -76,9 +47,6 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
      */
     @Override
     public void stop() {
-        if (animationTimer != null) { //ensure that the animation isn't stopped (there wouldn't be a Timer)
-            animationTimer.cancel();
-            animationTimer = null;
-        }
+        animationTimer.stop();
     }
 }

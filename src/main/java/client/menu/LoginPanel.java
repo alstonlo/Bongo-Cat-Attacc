@@ -17,13 +17,14 @@ import java.awt.Graphics;
  * @author Alston
  * last updated 1/9/2018
  */
-class LoginPanel extends DrawerPanel {
+class LoginPanel extends PullDownPanel {
 
     private JTextField usernameField;
     private JTextField passwordField;
     private JRadioButton loginButton;
     private JRadioButton registerButton;
     private JButton submitButton;
+    private JButton backButton;
 
     /**
      * Constructs a LoginPanel.
@@ -45,15 +46,19 @@ class LoginPanel extends DrawerPanel {
         group.add(loginButton);
         group.add(registerButton);
 
-        //submit button
+        //buttons
         submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> submit());
+
+        backButton = new JButton("Back");
+        backButton.addActionListener(e -> pullUp());
 
         add(usernameField);
         add(passwordField);
         add(loginButton);
         add(registerButton);
         add(submitButton);
+        add(backButton);
 
         setVisible(true);
     }

@@ -35,8 +35,7 @@ public interface Controllable {
     void notifyRightRelease();
 
     /**
-     * Notify to this object that both the left and right bongo keys have
-     * been held or pressed for {@link BongoListener#HOLD_DURATION} milliseconds.
+     * Notify to this object that both the hold bongo key has been triggered.
      */
     void notifyHold();
 
