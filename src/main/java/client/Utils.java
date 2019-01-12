@@ -25,7 +25,8 @@ public class Utils {
     }
 
     /**
-     * Plays a {@link Clip} (.wav file) from the specified file path and returns it.
+     * Returns a {@link Clip} (.wav file) from the specified file path (but does
+     * not play it).
      *
      * @param filePath the file path of the audio
      * @return the clip at the filePath argument; or null if an Exception occurs
@@ -34,7 +35,6 @@ public class Utils {
         try (AudioInputStream stream = AudioSystem.getAudioInputStream(new File(filePath))) {
             Clip clip = AudioSystem.getClip();
             clip.open(stream);
-            clip.start();
             return clip;
         } catch (Exception e) {
             System.out.println("Failed to load audio at " + filePath);

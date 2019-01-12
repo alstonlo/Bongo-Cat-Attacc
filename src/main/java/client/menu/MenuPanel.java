@@ -78,6 +78,7 @@ public class MenuPanel extends GamePanel {
         //playing background music
         //bgMusic = Utils.loadAudio("resources/menu/music.wav");
         if (bgMusic != null) {
+            bgMusic.start();
             bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }

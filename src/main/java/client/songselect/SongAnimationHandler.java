@@ -1,15 +1,13 @@
 package client.songselect;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
-import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
-import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SongAnimationHandler {
+
+    private static final long SLIDE_DURATION = 500;
 
     private Song[] songs;
 
@@ -19,8 +17,6 @@ public class SongAnimationHandler {
     private int currIndex;
     private float alpha = 1f;
 
-    private int state = 0; // if 0 not animating, if 1 it is animating
-    private double velocity = 1.7; //pixels per millisecond
     private AtomicBoolean animating = new AtomicBoolean(false);
 
     private Runnable left = new Runnable() {
@@ -140,5 +136,9 @@ public class SongAnimationHandler {
             currMusic.stop();
         }
     }
+
+    //ANIMATION METHODS ----------------------------------------------------------------
+
+
 }
 

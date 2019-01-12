@@ -56,8 +56,8 @@ abstract class DropDownPanel extends JPanel {
     }
 
     /**
-     * Starts the pull or drop down animation of this panel. pullDown()
-     * will only work if the panel is currently in {@link DropDownPanel#UP_STATE}.
+     * Starts the pull or drop down animation of this panel on a new Thread.
+     * pullDown() will only work if the panel is currently in {@link DropDownPanel#UP_STATE}.
      */
     void pullDown() {
         if (state.compareAndSet(UP_STATE, ANIMATION_STATE)) {
@@ -67,8 +67,8 @@ abstract class DropDownPanel extends JPanel {
     }
 
     /**
-     * Starts the animation that returns the panel back to its invisible state.
-     * retract() will only work if the panel is currently in the {@link DropDownPanel#DOWN_STATE}.
+     * Starts the animation that retracts the panel back to its initial state on a new Thread.
+     * retract() will only work if the panel is currently in {@link DropDownPanel#DOWN_STATE}.
      */
     void retract() {
         if (state.compareAndSet(DOWN_STATE, ANIMATION_STATE)) {
