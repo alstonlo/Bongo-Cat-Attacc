@@ -17,7 +17,7 @@ import java.awt.Graphics;
  * @author Alston
  * last updated 1/9/2018
  */
-class LoginPanel extends PullDownPanel {
+class LoginPanel extends DropDownPanel {
 
     private JTextField usernameField;
     private JTextField passwordField;

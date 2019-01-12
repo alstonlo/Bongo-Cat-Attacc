@@ -5,7 +5,7 @@ import com.esotericsoftware.kryonet.Listener;
 import protocol.Protocol;
 
 /**
- * An implementation of {@link Listener}.
+ * An implementation of {@link Listener} from the KyroNet library.
  *
  * @author Alston
  * last updated 1/9/2019

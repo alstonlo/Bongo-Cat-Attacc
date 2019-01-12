@@ -22,8 +22,8 @@ public class MenuPanel extends GamePanel {
     private BongoCat cat;
     private BufferedImage background;
 
-    private PullDownPanel loginPanel;
-    private PullDownPanel instructPanel;
+    private DropDownPanel loginPanel;
+    private DropDownPanel instructPanel;
 
     private int currSelected = 0;
     private CircleButton[] buttons = new CircleButton[3];
@@ -87,7 +87,10 @@ public class MenuPanel extends GamePanel {
     public void update() {
         super.update();
 
+        //since update() is called as a part of the EDT thread,
+        //we relocate the panels inside update (for convenience instead of invoking later)
         loginPanel.relocate();
+        instructPanel.relocate();
     }
 
     /**
@@ -185,7 +188,7 @@ public class MenuPanel extends GamePanel {
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-        g2D.scale(window.getScale(), window.getScale()); //we set the scaling
+        g2D.scale(window.scale, window.scale); //we set the scaling
 
         g2D.drawImage(background, 0, 0, this);
         g2D.drawImage(cat.getImage(), 0, 0, this);

@@ -14,6 +14,10 @@ import java.io.IOException;
 
 public class Utils {
 
+    public static int round(double x) {
+        return (int)Math.round(x);
+    }
+
     /**
      * Plays a {@link Clip} (.wav file) from the specified file path and returns it.
      *

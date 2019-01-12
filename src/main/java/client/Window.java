@@ -34,7 +34,8 @@ public class Window extends JFrame {
     public static final int MENU_STATE = 0;
     public static final int SONG_SELECT_STATE = 1;
 
-    private double scale;
+    public final double scale;
+    public final int scaledWidth, scaledHeight;
 
     private Client client;
     private BongoListener bongoListener = new BongoListener();
@@ -75,9 +76,11 @@ public class Window extends JFrame {
         //the height of the content pane should be 80% the height of the screen
         int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
         this.scale = (screenHeight * 0.8) / 1334;
+        this.scaledWidth = scale(750);
+        this.scaledHeight = scale(1334);
 
         Dimension paneSize = new Dimension();
-        paneSize.setSize(750 * scale, 1334 * scale);
+        paneSize.setSize(scaledWidth, scaledHeight);
         this.getContentPane().setPreferredSize(paneSize);
 
         //create the JFrame
@@ -111,15 +114,8 @@ public class Window extends JFrame {
     }
 
     /**
-     * @return the scale factor of this Window
-     */
-    public double getScale() {
-        return scale;
-    }
-
-    /**
      * @param x a number
-     * @return the scaled value of x based on {@link Window#getScale()}, rounded to the nearest integer
+     * @return the scaled value of x based on {@link Window#scale}, rounded to the nearest integer
      */
     public int scale(double x) {
         return (int) Math.round(scale * x);

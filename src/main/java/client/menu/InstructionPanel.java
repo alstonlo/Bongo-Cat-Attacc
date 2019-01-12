@@ -5,7 +5,7 @@ import client.Window;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-public class InstructionPanel extends PullDownPanel {
+public class InstructionPanel extends DropDownPanel {
 
     InstructionPanel(Window window) {
         super(window);

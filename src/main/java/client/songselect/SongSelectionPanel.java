@@ -20,7 +20,7 @@ public class SongSelectionPanel extends GamePanel {
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-        g2D.scale(window.getScale(), window.getScale()); //we set the scaling
+        g2D.scale(window.scale, window.scale); //we set the scaling
 
         background.draw(g2D, this);
 

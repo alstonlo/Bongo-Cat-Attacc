@@ -4,7 +4,7 @@ import client.Window;
 
 import java.awt.Graphics;
 
-class QueuePanel extends PullDownPanel {
+class QueuePanel extends DropDownPanel {
 
     QueuePanel(Window window) {
         super(window);
