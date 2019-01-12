@@ -37,7 +37,6 @@ public class MenuPanel extends GamePanel {
      */
     public MenuPanel(Window window) {
         super(window);
-
         this.setLayout(null);
 
         //load the image assets

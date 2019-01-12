@@ -14,8 +14,14 @@ import java.io.IOException;
 
 public class Utils {
 
-    public static int round(double x) {
-        return (int)Math.round(x);
+    /**
+     * Rounds a number n to the nearest integer.
+     *
+     * @param n a number
+     * @return the nearest integer to n
+     */
+    public static int round(double n) {
+        return (int) Math.round(n);
     }
 
     /**

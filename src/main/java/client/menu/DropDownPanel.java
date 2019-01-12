@@ -27,13 +27,13 @@ abstract class DropDownPanel extends JPanel {
 
     Window window;
 
-    private double y;
+    private double y; //preferred y position of the panel
     private AtomicInteger state = new AtomicInteger(UP_STATE);
     private Runnable pullDownAnimation = new PullDown();
     private Runnable pullUpAnimation = new PullUp();
 
     /**
-     * Constructs a DropDownPanel.
+     * Constructs a DropDownPanel initialized in {@link DropDownPanel#UP_STATE}.
      *
      * @param window the window the panel belongs to
      */
@@ -46,26 +46,44 @@ abstract class DropDownPanel extends JPanel {
         this.setVisible(true);
     }
 
+    /**
+     * Relocates this panel if it has moved from the previous call
+     * of relocate() due to {@link DropDownPanel#pullDown()} or
+     * {@link DropDownPanel#pullUp()}.
+     */
     void relocate() {
         if (this.getLocation().getY() != Utils.round(y)) {
             this.setLocation(0, Utils.round(y));
         }
     }
 
+    /**
+     * Starts the pull or drop down animation of this panel. pullDown()
+     * will only work if the panel is currently in {@link DropDownPanel#UP_STATE}.
+     */
     void pullDown() {
         if (state.compareAndSet(UP_STATE, ANIMATION_STATE)) {
-            SwingUtilities.invokeLater(() -> requestFocus());
-            new Thread(pullDownAnimation).start();
+            SwingUtilities.invokeLater(() -> requestFocus()); //shift focus to the panel
+            new Thread(pullDownAnimation).start();            //start animation
         }
     }
 
+    /**
+     * Starts the animation that returns the panel back to its invisible state.
+     * pullUp() will only work if the panel is currently in the {@link DropDownPanel#DOWN_STATE}.
+     */
     void pullUp() {
         if (state.compareAndSet(DOWN_STATE, ANIMATION_STATE)) {
-            SwingUtilities.invokeLater(() -> window.requestFocus());
+            SwingUtilities.invokeLater(() -> window.requestFocus()); //return the focus to the window
             new Thread(pullUpAnimation).start();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param g
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -73,7 +91,15 @@ abstract class DropDownPanel extends JPanel {
         g.fillRect(0, 0, 750, 1334);
     }
 
+    /**
+     * Runnable task that deals with the pull down animation of this panel.
+     */
     private class PullDown implements Runnable {
+
+        /**
+         * Continuously changes y from {@link Window#scaledHeight} to 0 in the span
+         * of {@link DropDownPanel#SLIDE_DURATION} ms.
+         */
         @Override
         public void run() {
             long startTime = System.currentTimeMillis();
@@ -87,7 +113,15 @@ abstract class DropDownPanel extends JPanel {
         }
     }
 
+    /**
+     * Runnable task that deals with the pull up animation of this panel.
+     */
     private class PullUp implements Runnable {
+
+        /**
+         * Continuously changes y from 0 to {@link Window#scaledHeight} in the span
+         * of {@link DropDownPanel#SLIDE_DURATION} ms.
+         */
         @Override
         public void run() {
             long startTime = System.currentTimeMillis();

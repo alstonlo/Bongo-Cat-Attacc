@@ -34,8 +34,9 @@ public class Window extends JFrame {
     public static final int MENU_STATE = 0;
     public static final int SONG_SELECT_STATE = 1;
 
-    public final double scale;
-    public final int scaledWidth, scaledHeight;
+    public final double scale;     //the scale factor of this window
+    public final int scaledWidth;  //the scaled width of this window's content pane 
+    public final int scaledHeight; //the scaled height of this window's content pane
 
     private Client client;
     private BongoListener bongoListener = new BongoListener();
