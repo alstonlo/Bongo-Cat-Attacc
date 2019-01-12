@@ -1,7 +1,7 @@
 package client;
 
 import client.menu.MenuPanel;
-import client.songselect.SongSelectionPanel;
+import client.songselect.SongSelectPanel;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -35,7 +35,7 @@ public class Window extends JFrame {
     public static final int SONG_SELECT_STATE = 1;
 
     public final double scale;     //the scale factor of this window
-    public final int scaledWidth;  //the scaled width of this window's content pane 
+    public final int scaledWidth;  //the scaled width of this window's content pane
     public final int scaledHeight; //the scaled height of this window's content pane
 
     private Client client;
@@ -44,7 +44,7 @@ public class Window extends JFrame {
 
     private GamePanel currPanel;
     private MenuPanel menuPanel;
-    private SongSelectionPanel songPanel;
+    private SongSelectPanel songPanel;
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
@@ -98,7 +98,7 @@ public class Window extends JFrame {
 
         //create JPanels
         this.menuPanel = new MenuPanel(this);
-        this.songPanel = new SongSelectionPanel(this);
+        this.songPanel = new SongSelectPanel(this);
         switchState(MENU_STATE);
 
         this.setVisible(true);

@@ -2,44 +2,42 @@ package client.songselect;
 
 import client.Utils;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
-public class Song implements Comparable<Song>{
+public class Song {
 
-    BufferedImage splashImage;
-    String fileName;
-    Clip music;
+    private String dirPath;
+    private String name;
+    private int difficulty;
+    private SongTile tile;
+    private BufferedImage splash;
 
-    Song(String fileName) {
-        splashImage = Utils.loadImage(fileName+"/background.jpg");
-        this.fileName = fileName;
+    Song(String dirPath) {
+        this.dirPath = dirPath;
+        this.splash = Utils.loadImage(dirPath + "/background.jpg");
+
+        BufferedImage album = Utils.loadImage(dirPath + "/album.jpg");
+        this.tile = new SongTile(album, -1);
     }
 
-    String getName() {
-        return null;
+    public String getName() {
+        return name;
     }
 
-    double[] getNotes() {
-        return null;
+    public int getDifficulty() {
+        return difficulty;
     }
 
-    public int compareTo(Song o) {
-        return 0;
+    public SongTile getTile() {
+        return tile;
     }
 
-    void play(Clip currMusic){
-        try {
-            File song = new File(fileName);
-            AudioInputStream stream = AudioSystem.getAudioInputStream(song);
-            currMusic = AudioSystem.getClip();
-            currMusic.open(stream);
-            currMusic.loop(Clip.LOOP_CONTINUOUSLY);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public BufferedImage getSplash() {
+        return splash;
+    }
+
+    public Clip playSong() {
+        return Utils.loadAudio(dirPath + "/music.wav");
     }
 }

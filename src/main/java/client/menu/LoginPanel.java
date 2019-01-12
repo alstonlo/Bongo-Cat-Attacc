@@ -51,7 +51,7 @@ class LoginPanel extends DropDownPanel {
         submitButton.addActionListener(e -> submit());
 
         backButton = new JButton("Back");
-        backButton.addActionListener(e -> pullUp());
+        backButton.addActionListener(e -> retract());
 
         add(usernameField);
         add(passwordField);

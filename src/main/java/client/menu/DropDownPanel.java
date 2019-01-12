@@ -29,8 +29,6 @@ abstract class DropDownPanel extends JPanel {
 
     private double y; //preferred y position of the panel
     private AtomicInteger state = new AtomicInteger(UP_STATE);
-    private Runnable pullDownAnimation = new PullDown();
-    private Runnable pullUpAnimation = new PullUp();
 
     /**
      * Constructs a DropDownPanel initialized in {@link DropDownPanel#UP_STATE}.
@@ -49,7 +47,7 @@ abstract class DropDownPanel extends JPanel {
     /**
      * Relocates this panel if it has moved from the previous call
      * of relocate() due to {@link DropDownPanel#pullDown()} or
-     * {@link DropDownPanel#pullUp()}.
+     * {@link DropDownPanel#retract()}.
      */
     void relocate() {
         if (this.getLocation().getY() != Utils.round(y)) {
@@ -64,18 +62,18 @@ abstract class DropDownPanel extends JPanel {
     void pullDown() {
         if (state.compareAndSet(UP_STATE, ANIMATION_STATE)) {
             SwingUtilities.invokeLater(() -> requestFocus()); //shift focus to the panel
-            new Thread(pullDownAnimation).start();            //start animation
+            new Thread(this::animatePullDown).start();
         }
     }
 
     /**
      * Starts the animation that returns the panel back to its invisible state.
-     * pullUp() will only work if the panel is currently in the {@link DropDownPanel#DOWN_STATE}.
+     * retract() will only work if the panel is currently in the {@link DropDownPanel#DOWN_STATE}.
      */
-    void pullUp() {
+    void retract() {
         if (state.compareAndSet(DOWN_STATE, ANIMATION_STATE)) {
             SwingUtilities.invokeLater(() -> window.requestFocus()); //return the focus to the window
-            new Thread(pullUpAnimation).start();
+            new Thread(this::animateRetract).start();
         }
     }
 
@@ -91,48 +89,37 @@ abstract class DropDownPanel extends JPanel {
         g.fillRect(0, 0, 750, 1334);
     }
 
-    /**
-     * Runnable task that deals with the pull down animation of this panel.
-     */
-    private class PullDown implements Runnable {
 
-        /**
-         * Continuously changes y from {@link Window#scaledHeight} to 0 in the span
-         * of {@link DropDownPanel#SLIDE_DURATION} ms.
-         */
-        @Override
-        public void run() {
-            long startTime = System.currentTimeMillis();
-            double deltaTime = System.currentTimeMillis() - startTime;
-            while (deltaTime < SLIDE_DURATION) {
-                y = window.scaledHeight * (deltaTime / SLIDE_DURATION - 1);
-                deltaTime = System.currentTimeMillis() - startTime;
-            }
-            y = 0;
-            state.set(DOWN_STATE);
+    //ANIMATION METHODS ----------------------------------------------------------------
+
+    /**
+     * Continuously changes y from 0 to {@link Window#scaledHeight} in the span
+     * of {@link DropDownPanel#SLIDE_DURATION} ms.
+     */
+    private void animatePullDown() {
+        long startTime = System.currentTimeMillis();
+        double deltaTime = System.currentTimeMillis() - startTime;
+        while (deltaTime < SLIDE_DURATION) {
+            y = window.scaledHeight * (deltaTime / SLIDE_DURATION - 1);
+            deltaTime = System.currentTimeMillis() - startTime;
         }
+        y = 0;
+        state.set(DOWN_STATE);
     }
 
     /**
-     * Runnable task that deals with the pull up animation of this panel.
+     * Continuously changes y from 0 to {@link Window#scaledHeight} in the span
+     * of {@link DropDownPanel#SLIDE_DURATION} ms.
      */
-    private class PullUp implements Runnable {
-
-        /**
-         * Continuously changes y from 0 to {@link Window#scaledHeight} in the span
-         * of {@link DropDownPanel#SLIDE_DURATION} ms.
-         */
-        @Override
-        public void run() {
-            long startTime = System.currentTimeMillis();
-            double deltaTime = System.currentTimeMillis() - startTime;
-            while (deltaTime < SLIDE_DURATION) {
-                y = window.scaledHeight * (-deltaTime / SLIDE_DURATION);
-                deltaTime = System.currentTimeMillis() - startTime;
-            }
-            y = -window.scaledHeight;
-            state.set(UP_STATE);
+    private void animateRetract() {
+        long startTime = System.currentTimeMillis();
+        double deltaTime = System.currentTimeMillis() - startTime;
+        while (deltaTime < SLIDE_DURATION) {
+            y = window.scaledHeight * (-deltaTime / SLIDE_DURATION);
+            deltaTime = System.currentTimeMillis() - startTime;
         }
+        y = -window.scaledHeight;
+        state.set(UP_STATE);
     }
 }
 

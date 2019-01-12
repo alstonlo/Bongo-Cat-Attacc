@@ -7,12 +7,16 @@ import protocol.Protocol;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-public class SongSelectionPanel extends GamePanel {
-    private SplashImages background = new SplashImages();
+public class SongSelectPanel extends GamePanel {
+
+    private Song[] songs;
+    private SongAnimationHandler handler;
     private int currIndex;
 
-    public SongSelectionPanel(Window window){
+    public SongSelectPanel(Window window){
         super(window);
+        this.songs = SongBank.getSongs();
+        this.handler = new SongAnimationHandler(songs);
     }
 
     @Override
@@ -21,23 +25,18 @@ public class SongSelectionPanel extends GamePanel {
 
         Graphics2D g2D = (Graphics2D) g;
         g2D.scale(window.scale, window.scale); //we set the scaling
-
-        background.draw(g2D, this);
-
+        handler.draw(g2D, this);
     }
 
 
     @Override
     public void notifyRightPress() {
-        if (!background.isAnimating()) {
-            if (currIndex < background.length() - 1) {
+        if (!handler.isAnimating()) {
+            if (currIndex < handler.length() - 1) {
                 currIndex++;
-                background.setCurrIndex(currIndex);
-                background.rightMove();
-
-
+                handler.setCurrIndex(currIndex);
+                handler.rightMove();
             }
-            //background.moveRight()
         }
     }
 
@@ -48,14 +47,12 @@ public class SongSelectionPanel extends GamePanel {
 
     @Override
     public void notifyLeftPress() {
-        if (!background.isAnimating()) {
+        if (!handler.isAnimating()) {
             if (currIndex > 0) {
                 currIndex--;
-                background.setCurrIndex(currIndex);
-                background.leftMove();
-
+                handler.setCurrIndex(currIndex);
+                handler.leftMove();
             }
-
         }
     }
 
@@ -72,13 +69,13 @@ public class SongSelectionPanel extends GamePanel {
     @Override
     public void run(){
         super.run();
-        background.playSong(0);
+        handler.playSong(0);
     }
 
     @Override
     public void stop(){
         super.stop();
-        background.stop();
+        handler.stop();
     }
 
     @Override

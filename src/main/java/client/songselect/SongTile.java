@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
  * @author Katelyn and Alston
  * last updated 1/9/2019
  */
-class RectButton {
+class SongTile {
 
     private BufferedImage icon;
     private java.awt.Color color = new Color(212, 212, 212);
@@ -33,7 +33,7 @@ class RectButton {
      *
      * @param icon    the icon displayed on this button
      */
-    RectButton(BufferedImage icon, int xPos) {
+    SongTile(BufferedImage icon, int xPos) {
         this.icon = icon;
         this.xPos = xPos;
     }
