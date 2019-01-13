@@ -13,7 +13,6 @@ import protocol.Protocol;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -40,8 +39,6 @@ public class Window extends JFrame {
     private ServerListener serverListener = new ServerListener();
 
     private GamePanel currPanel;
-    private MenuPanel menuPanel;
-    private SongSelectPanel songPanel;
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
@@ -85,9 +82,7 @@ public class Window extends JFrame {
             }
         });
 
-        //create JPanels
-        this.menuPanel = new MenuPanel(this);
-        this.songPanel = new SongSelectPanel(this);
+
         switchState(MENU_STATE);
 
         this.setVisible(true);
@@ -121,13 +116,18 @@ public class Window extends JFrame {
      * @throws IndexOutOfBoundsException if the state argument is invalid
      */
     public void switchState(int state) {
+
+        /*
+         * The reason new panels are created each time is because I want to
+         * release the sprites and resources by allowing them to be collected.
+         */
         switch (state) {
             case MENU_STATE:
-                switchPanel(menuPanel);
+                switchPanel(new MenuPanel(this));
                 break;
 
             case SONG_SELECT_STATE:
-                switchPanel(songPanel);
+                switchPanel(new SongSelectPanel(this));
                 break;
 
             default:
@@ -146,7 +146,6 @@ public class Window extends JFrame {
             currPanel.stop();
         }
         currPanel = newPanel;         //set it as the currently displayed panel
-        newPanel.run();               //run its animation
 
         bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
         serverListener.setControllableObj(newPanel);
@@ -157,5 +156,7 @@ public class Window extends JFrame {
             getContentPane().revalidate();
             getContentPane().repaint();   //repaint
         });
+
+        newPanel.run();               //run its animation
     }
 }

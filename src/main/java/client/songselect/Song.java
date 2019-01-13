@@ -8,37 +8,28 @@ import java.awt.image.BufferedImage;
 public class Song {
 
     private String dirPath;
-    private String name;
-    private int difficulty;
-    private BufferedImage album;
-    private BufferedImage splash;
 
     Song(String dirPath) {
         this.dirPath = dirPath;
     }
 
-    public void loadResources() {
-        this.splash = Utils.loadScaledImage(dirPath + "/background.jpg");
-        this.album = Utils.loadImage(dirPath + "/album.jpg");
-    }
-
     public String getName() {
-        return name;
+        return "Dummy";
     }
 
     public int getDifficulty() {
-        return difficulty;
+        return -1;
     }
 
     public BufferedImage getAlbum() {
-        return album;
+        return Utils.loadImage(dirPath + "/album.jpg");
     }
 
     public BufferedImage getSplash() {
-        return splash;
+        return Utils.loadScaledImage(dirPath + "/background.jpg");
     }
 
-    public Clip playSong() {
+    public Clip getAudio() {
         return Utils.loadAudio(dirPath + "/music.wav");
     }
 }
