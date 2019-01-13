@@ -2,8 +2,8 @@ package client.menu;
 
 import client.CircleButton;
 import client.GamePanel;
-import client.Utils;
 import client.Window;
+import client.utilities.Utils;
 import protocol.Protocol;
 
 import javax.sound.sampled.Clip;
@@ -15,7 +15,7 @@ import java.awt.image.BufferedImage;
  * Panel for the main menu.
  *
  * @author Katelyn Wang and Alston
- * last updated 1/9/2019
+ * last updated 1/12/2019
  */
 public class MenuPanel extends GamePanel {
 
@@ -41,7 +41,7 @@ public class MenuPanel extends GamePanel {
 
         //load the image assets
         this.cat = new BongoCat();
-        this.background = Utils.loadImage("resources/menu/yellow.png");
+        this.background = Utils.loadScaledImage("resources/menu/yellow.png");
 
         //create the drawer panels
         this.loginPanel = new LoginPanel(window);
@@ -51,20 +51,20 @@ public class MenuPanel extends GamePanel {
 
         //create the buttons
         BufferedImage loginIcon = Utils.loadImage("resources/icons/login.png");
-        CircleButton loginButton = new CircleButton(loginIcon, 670, 990, 50);
+        CircleButton loginButton = new CircleButton(loginIcon, Utils.scale(670), Utils.scale(990), Utils.scale(50));
         loginButton.setOnSubmit(() -> loginPanel.pullDown());
 
         BufferedImage playIcon = Utils.loadImage("resources/icons/play.png");
-        CircleButton playButton = new CircleButton(playIcon, 670, 1120, 50);
+        CircleButton playButton = new CircleButton(playIcon, Utils.scale(670), Utils.scale(1120), Utils.scale(50));
         playButton.setOnSubmit(() -> window.switchState(Window.SONG_SELECT_STATE));
 
         BufferedImage controlsIcon = Utils.loadImage("resources/icons/controls.png");
-        CircleButton instructionButton = new CircleButton(controlsIcon, 670, 1250, 50);
-        instructionButton.setOnSubmit(() -> instructPanel.pullDown());
+        CircleButton controlsButton = new CircleButton(controlsIcon, Utils.scale(670), Utils.scale(1250), Utils.scale(50));
+        controlsButton.setOnSubmit(() -> instructPanel.pullDown());
 
         buttons[0] = loginButton;
         buttons[1] = playButton;
-        buttons[2] = instructionButton;
+        buttons[2] = controlsButton;
         buttons[currSelected].select();
     }
 
@@ -76,7 +76,7 @@ public class MenuPanel extends GamePanel {
         super.run();
 
         //playing background music
-        //bgMusic = Utils.loadAudio("resources/menu/music.wav");
+//        bgMusic = Utils.loadAudio("resources/menu/music.wav");
         if (bgMusic != null) {
             bgMusic.start();
             bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
@@ -188,7 +188,6 @@ public class MenuPanel extends GamePanel {
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-        g2D.scale(window.scale, window.scale); //we set the scaling
 
         g2D.drawImage(background, 0, 0, this);
         g2D.drawImage(cat.getImage(), 0, 0, this);

@@ -2,6 +2,8 @@ package client;
 
 import client.menu.MenuPanel;
 import client.songselect.SongSelectPanel;
+import client.utilities.Settings;
+import client.utilities.Utils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -12,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -33,10 +34,6 @@ public class Window extends JFrame {
 
     public static final int MENU_STATE = 0;
     public static final int SONG_SELECT_STATE = 1;
-
-    public final double scale;     //the scale factor of this window
-    public final int scaledWidth;  //the scaled width of this window's content pane
-    public final int scaledHeight; //the scaled height of this window's content pane
 
     private Client client;
     private BongoListener bongoListener = new BongoListener();
@@ -73,22 +70,17 @@ public class Window extends JFrame {
         }
 
         //FRAME CODE -----------------------------------------------------------------------------
-        //resolve scaling and sizing
-        //the height of the content pane should be 80% the height of the screen
-        int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-        this.scale = (screenHeight * 0.8) / 1334;
-        this.scaledWidth = scale(750);
-        this.scaledHeight = scale(1334);
-
-        Dimension paneSize = new Dimension();
-        paneSize.setSize(scaledWidth, scaledHeight);
-        this.getContentPane().setPreferredSize(paneSize);
 
         //create the JFrame
+        Dimension paneSize = new Dimension();
+        paneSize.setSize(Settings.SCALE * 750, Settings.SCALE * 1334);
+        this.getContentPane().setPreferredSize(paneSize);
+        pack();
+
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.addKeyListener(bongoListener);
-        this.setIconImage(Utils.loadImage("resources/icons/app icon.png"));
+        this.setIconImage(Utils.loadScaledImage("resources/icons/app icon.png"));
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
@@ -112,14 +104,6 @@ public class Window extends JFrame {
      */
     public void close() {
         client.close();
-    }
-
-    /**
-     * @param x a number
-     * @return the scaled value of x based on {@link Window#scale}, rounded to the nearest integer
-     */
-    public int scale(double x) {
-        return (int) Math.round(scale * x);
     }
 
     /**

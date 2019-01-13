@@ -1,6 +1,6 @@
 package client.songselect;
 
-import client.Utils;
+import client.utilities.Utils;
 
 import javax.sound.sampled.Clip;
 import java.awt.image.BufferedImage;
@@ -15,9 +15,9 @@ public class Song {
 
     Song(String dirPath) {
         this.dirPath = dirPath;
-        this.splash = Utils.loadImage(dirPath + "/background.jpg");
+        this.splash = Utils.loadScaledImage(dirPath + "/background.jpg");
 
-        BufferedImage album = Utils.loadImage(dirPath + "/album.jpg");
+        BufferedImage album = Utils.loadScaledImage(dirPath + "/album.jpg");
         this.tile = new SongTile(album, -1);
     }
 

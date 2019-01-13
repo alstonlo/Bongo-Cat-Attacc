@@ -1,11 +1,12 @@
 package client.menu;
 
-import client.Utils;
+import client.utilities.Utils;
 import client.Window;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -37,9 +38,9 @@ abstract class DropDownPanel extends JPanel {
      */
     DropDownPanel(Window window) {
         this.window = window;
-        this.y = -window.scaledHeight;
+        this.setSize(window.getContentPane().getSize());
+        this.y = -getHeight();
         relocate();
-        this.setSize(window.scaledWidth, window.scaledHeight);
         this.setOpaque(false);
         this.setVisible(true);
     }
@@ -86,21 +87,22 @@ abstract class DropDownPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.fillRect(0, 0, 750, 1334);
+        Graphics2D g2D = (Graphics2D)g;
+        g2D.fillRect(0, 0, getWidth(), getHeight());
     }
 
 
     //ANIMATION METHODS ----------------------------------------------------------------
 
     /**
-     * Continuously changes y from 0 to {@link Window#scaledHeight} in the span
+     * Continuously changes y from -getHeight() to 0 in the span
      * of {@link DropDownPanel#SLIDE_DURATION} ms.
      */
     private void animatePullDown() {
         long startTime = System.currentTimeMillis();
         double deltaTime = System.currentTimeMillis() - startTime;
         while (deltaTime < SLIDE_DURATION) {
-            y = window.scaledHeight * (deltaTime / SLIDE_DURATION - 1);
+            y = getHeight() * (deltaTime / SLIDE_DURATION - 1);
             deltaTime = System.currentTimeMillis() - startTime;
         }
         y = 0;
@@ -108,17 +110,17 @@ abstract class DropDownPanel extends JPanel {
     }
 
     /**
-     * Continuously changes y from 0 to {@link Window#scaledHeight} in the span
+     * Continuously changes y from 0 to -getHeight() in the span
      * of {@link DropDownPanel#SLIDE_DURATION} ms.
      */
     private void animateRetract() {
         long startTime = System.currentTimeMillis();
         double deltaTime = System.currentTimeMillis() - startTime;
         while (deltaTime < SLIDE_DURATION) {
-            y = window.scaledHeight * (-deltaTime / SLIDE_DURATION);
+            y = getHeight() * (-deltaTime / SLIDE_DURATION);
             deltaTime = System.currentTimeMillis() - startTime;
         }
-        y = -window.scaledHeight;
+        y = -getHeight();
         state.set(UP_STATE);
     }
 }

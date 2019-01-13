@@ -1,5 +1,7 @@
 package client;
 
+import client.utilities.Settings;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -12,10 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * last updated 1/9/2019
  */
 public class BongoListener implements KeyListener {
-
-    static final int LEFT_BONGO_KEY = KeyEvent.VK_A;
-    static final int RIGHT_BONGO_KEY = KeyEvent.VK_L;
-    static final int HOLD_BONGO_KEY = KeyEvent.VK_ENTER;
 
     private Controllable obj = null;
     private final AtomicBoolean leftPress = new AtomicBoolean(false);
@@ -57,19 +55,18 @@ public class BongoListener implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == LEFT_BONGO_KEY) { //detect left bongo key press
+        if (e.getKeyCode() == Settings.LEFT_BONGO_KEY) { //detect left bongo key press
             if (leftPress.compareAndSet(false, true) && obj != null) {
                 obj.notifyLeftPress();
             }
         }
 
-        if (e.getKeyCode() == RIGHT_BONGO_KEY) { //detect right bongo press
+        if (e.getKeyCode() == Settings.RIGHT_BONGO_KEY) { //detect right bongo press
             if (rightPress.compareAndSet(false, true) && obj != null) {
                 obj.notifyRightPress();
             }
         }
     }
-
 
     /**
      * Invoked when the left or right bongo key are released, which
@@ -80,21 +77,21 @@ public class BongoListener implements KeyListener {
      */
     @Override
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == LEFT_BONGO_KEY) { //detect left bongo release
+        if (e.getKeyCode() == Settings.LEFT_BONGO_KEY) { //detect left bongo release
             leftPress.set(false);
             if (obj != null) {
                 obj.notifyLeftRelease();
             }
         }
 
-        if (e.getKeyCode() == RIGHT_BONGO_KEY) { //detect right bongo release
+        if (e.getKeyCode() == Settings.RIGHT_BONGO_KEY) { //detect right bongo release
             rightPress.set(false);
             if (obj != null) {
                 obj.notifyRightRelease();
             }
         }
 
-        if (e.getKeyCode() == HOLD_BONGO_KEY) {
+        if (e.getKeyCode() == Settings.HOLD_BONGO_KEY) {
             obj.notifyHold();
         }
     }

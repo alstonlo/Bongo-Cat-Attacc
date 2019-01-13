@@ -15,7 +15,7 @@ import java.awt.Graphics;
  * register new accounts.
  *
  * @author Alston
- * last updated 1/9/2018
+ * last updated 1/12/2018
  */
 class LoginPanel extends DropDownPanel {
 
@@ -38,7 +38,7 @@ class LoginPanel extends DropDownPanel {
         usernameField = new JTextField("Username");
         passwordField = new JTextField("Password");
 
-        //radio buttons (to toggle between registering and loggin in)
+        //radio buttons (to toggle between registering and logging in)
         loginButton = new JRadioButton("Login", true);
         registerButton = new JRadioButton("Register");
 
