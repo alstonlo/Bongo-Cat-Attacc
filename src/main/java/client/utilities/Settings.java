@@ -1,5 +1,7 @@
 package client.utilities;
 
+import javax.rmi.CORBA.Util;
+import java.awt.Dimension;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -16,6 +18,9 @@ public class Settings {
 
     //the scale factor of the game - the game frame should be ~80% the height of the computer screen
     public static final double SCALE = (Toolkit.getDefaultToolkit().getScreenSize().height * 0.8) / 1334;
+
+    //the dimensions of a full panel in the game
+    public static final Dimension PANEL_SIZE = new Dimension(Utils.scale(750), Utils.scale(1334));
 
     //key mappings for controls
     public static final int LEFT_BONGO_KEY = KeyEvent.VK_A;

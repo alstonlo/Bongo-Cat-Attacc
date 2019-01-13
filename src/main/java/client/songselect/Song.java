@@ -10,15 +10,16 @@ public class Song {
     private String dirPath;
     private String name;
     private int difficulty;
-    private SongTile tile;
+    private BufferedImage album;
     private BufferedImage splash;
 
     Song(String dirPath) {
         this.dirPath = dirPath;
-        this.splash = Utils.loadScaledImage(dirPath + "/background.jpg");
+    }
 
-        BufferedImage album = Utils.loadScaledImage(dirPath + "/album.jpg");
-        this.tile = new SongTile(album, -1);
+    public void loadResources() {
+        this.splash = Utils.loadScaledImage(dirPath + "/background.jpg");
+        this.album = Utils.loadImage(dirPath + "/album.jpg");
     }
 
     public String getName() {
@@ -29,8 +30,8 @@ public class Song {
         return difficulty;
     }
 
-    public SongTile getTile() {
-        return tile;
+    public BufferedImage getAlbum() {
+        return album;
     }
 
     public BufferedImage getSplash() {

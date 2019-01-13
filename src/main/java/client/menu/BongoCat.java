@@ -23,9 +23,22 @@ class BongoCat {
      * The column represents the configuration of the hit marks.
      * 0 = none, none | 1 = none, mark | 2 = mark, none | 3 = mark, mark
      */
-    private static BufferedImage[][] sprites = new BufferedImage[4][4];
+    private BufferedImage[][] sprites = new BufferedImage[4][4];
 
-    static {
+    /*
+     * Represents the state of the bongo cat.
+     * state[0] = last time in ms that leftPawDown() was called, and -1 if leftPawUp() was called most recently
+     * state[1] = last time in ms that rightPawDown() was called, and -1 if rightPawUp() was called most recently
+     */
+    private long[] state = new long[2];
+
+    //duration that the hit lines will stay (in ms)
+    private long hitMarkDuration = 150;
+
+    /**
+     * Constructs a BongoCat. The sprites are loaded and made.
+     */
+    BongoCat() {
         BufferedImage body = Utils.loadScaledImage("resources/bongo cat/body.png");
         BufferedImage leftPawDown = Utils.loadScaledImage("resources/bongo cat/left paw down.png");
         BufferedImage leftPawHit = Utils.loadScaledImage("resources/bongo cat/left paw hit.png");
@@ -47,22 +60,7 @@ class BongoCat {
         sprites[3][1] = Utils.mergeImages(new BufferedImage[]{body, leftPawDown, rightPawDown, rightPawHit});
         sprites[3][2] = Utils.mergeImages(new BufferedImage[]{body, leftPawDown, leftPawHit, rightPawDown});
         sprites[3][3] = Utils.mergeImages(new BufferedImage[]{body, leftPawDown, leftPawHit, rightPawDown, rightPawHit});
-    }
 
-    /*
-     * Represents the state of the bongo cat.
-     * state[0] = last time in ms that leftPawDown() was called, and -1 if leftPawUp() was called most recently
-     * state[1] = last time in ms that rightPawDown() was called, and -1 if rightPawUp() was called most recently
-     */
-    private long[] state = new long[2];
-
-    //duration that the hit lines will stay (in ms)
-    private long hitMarkDuration = 150;
-
-    /**
-     * Constructs a BongoCat. The sprites are loaded and made.
-     */
-    BongoCat() {
         leftPawUp();
         rightPawUp();
     }

@@ -27,7 +27,7 @@ public class CircleButton {
     private int centerX;
     private int centerY;
     private int radius;
-    private final int deltaRadius = Utils.scale(5);
+    private final int deltaRadius = Utils.scale(6);
 
     private BufferedImage icon;
     private Color color = new Color(212, 212, 212);

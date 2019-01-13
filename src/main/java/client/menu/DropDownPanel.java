@@ -1,5 +1,6 @@
 package client.menu;
 
+import client.utilities.Settings;
 import client.utilities.Utils;
 import client.Window;
 
@@ -38,7 +39,7 @@ abstract class DropDownPanel extends JPanel {
      */
     DropDownPanel(Window window) {
         this.window = window;
-        this.setSize(window.getContentPane().getSize());
+        this.setSize(Settings.PANEL_SIZE);
         this.y = -getHeight();
         relocate();
         this.setOpaque(false);

@@ -10,13 +10,14 @@ import java.awt.Graphics2D;
 public class SongSelectPanel extends GamePanel {
 
     private Song[] songs;
+    private int currSelected;
     private SongAnimationHandler handler;
-    private int currIndex;
 
     public SongSelectPanel(Window window){
         super(window);
         this.songs = SongBank.getSongs();
-        this.handler = new SongAnimationHandler(songs);
+        this.currSelected = 0;
+        this.handler = new SongAnimationHandler();
     }
 
     @Override
@@ -24,20 +25,21 @@ public class SongSelectPanel extends GamePanel {
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-        //g2D.scale(window.scale, window.scale); //we set the scaling
         handler.draw(g2D, this);
     }
 
+    @Override
+    public void run(){
+        super.run();
+    }
+
+    @Override
+    public void stop(){
+        super.stop();
+    }
 
     @Override
     public void notifyRightPress() {
-        if (!handler.isAnimating()) {
-            if (currIndex < handler.length() - 1) {
-                currIndex++;
-                handler.setCurrIndex(currIndex);
-                handler.rightMove();
-            }
-        }
     }
 
     @Override
@@ -47,35 +49,14 @@ public class SongSelectPanel extends GamePanel {
 
     @Override
     public void notifyLeftPress() {
-        if (!handler.isAnimating()) {
-            if (currIndex > 0) {
-                currIndex--;
-                handler.setCurrIndex(currIndex);
-                handler.leftMove();
-            }
-        }
     }
 
     @Override
     public void notifyLeftRelease() {
-
     }
 
     @Override
     public void notifyHold() {
-
-    }
-
-    @Override
-    public void run(){
-        super.run();
-        handler.playSong(0);
-    }
-
-    @Override
-    public void stop(){
-        super.stop();
-        handler.stop();
     }
 
     @Override

@@ -72,11 +72,8 @@ public class Window extends JFrame {
         //FRAME CODE -----------------------------------------------------------------------------
 
         //create the JFrame
-        Dimension paneSize = new Dimension();
-        paneSize.setSize(Settings.SCALE * 750, Settings.SCALE * 1334);
-        this.getContentPane().setPreferredSize(paneSize);
+        this.getContentPane().setPreferredSize(Settings.PANEL_SIZE);
         pack();
-
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.addKeyListener(bongoListener);
@@ -148,7 +145,8 @@ public class Window extends JFrame {
         if (currPanel != null) { //stop the animation running on the currently displayed panel
             currPanel.stop();
         }
-        currPanel = newPanel;                     //set it as the currently displayed panel
+        currPanel = newPanel;         //set it as the currently displayed panel
+        newPanel.run();               //run its animation
 
         bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
         serverListener.setControllableObj(newPanel);
@@ -159,7 +157,5 @@ public class Window extends JFrame {
             getContentPane().revalidate();
             getContentPane().repaint();   //repaint
         });
-
-        newPanel.run();               //run its animation
     }
 }
