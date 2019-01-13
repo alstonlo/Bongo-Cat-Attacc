@@ -8,17 +8,20 @@ import java.awt.image.BufferedImage;
 public class Song {
 
     private String dirPath;
+    private String name;
+    private int difficulty;
+    private int start, end;
 
     Song(String dirPath) {
         this.dirPath = dirPath;
     }
 
     public String getName() {
-        return "Dummy";
+        return name;
     }
 
     public int getDifficulty() {
-        return -1;
+        return difficulty;
     }
 
     public BufferedImage getAlbum() {
@@ -31,5 +34,11 @@ public class Song {
 
     public Clip getAudio() {
         return Utils.loadAudio(dirPath + "/music.wav");
+    }
+
+    public Clip getAudioExcerpt() {
+        Clip excerpt = getAudio();
+        excerpt.setLoopPoints(start, end);
+        return excerpt;
     }
 }

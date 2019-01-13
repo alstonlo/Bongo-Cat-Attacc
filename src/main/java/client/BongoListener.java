@@ -1,9 +1,13 @@
 package client;
 
 import client.utilities.Settings;
+import client.utilities.ThreadPool;
 
+import javax.swing.SwingUtilities;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -19,11 +23,14 @@ public class BongoListener implements KeyListener {
     private final AtomicBoolean leftPress = new AtomicBoolean(false);
     private final AtomicBoolean rightPress = new AtomicBoolean(false);
 
+    private ExecutorService pool = ThreadPool.getPool();
+
     /**
      * Constructs a BongoListener.
      */
     BongoListener() {
     }
+
 
     /**
      * Sets the object that is controlled by this listener.
@@ -57,13 +64,13 @@ public class BongoListener implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == Settings.LEFT_BONGO_KEY) { //detect left bongo key press
             if (leftPress.compareAndSet(false, true) && obj != null) {
-                obj.notifyLeftPress();
+                pool.execute(() -> obj.notifyLeftPress());
             }
         }
 
         if (e.getKeyCode() == Settings.RIGHT_BONGO_KEY) { //detect right bongo press
             if (rightPress.compareAndSet(false, true) && obj != null) {
-                obj.notifyRightPress();
+                pool.execute(() -> obj.notifyRightPress());
             }
         }
     }
@@ -80,19 +87,19 @@ public class BongoListener implements KeyListener {
         if (e.getKeyCode() == Settings.LEFT_BONGO_KEY) { //detect left bongo release
             leftPress.set(false);
             if (obj != null) {
-                obj.notifyLeftRelease();
+                pool.execute(() -> obj.notifyLeftRelease());
             }
         }
 
         if (e.getKeyCode() == Settings.RIGHT_BONGO_KEY) { //detect right bongo release
             rightPress.set(false);
             if (obj != null) {
-                obj.notifyRightRelease();
+                pool.execute(() -> obj.notifyRightRelease());
             }
         }
 
         if (e.getKeyCode() == Settings.HOLD_BONGO_KEY) {
-            obj.notifyHold();
+            pool.execute(() -> obj.notifyHold());
         }
     }
 }

@@ -64,7 +64,16 @@ abstract class DropDownPanel extends JPanel {
     void pullDown() {
         if (state.compareAndSet(UP_STATE, ANIMATION_STATE)) {
             SwingUtilities.invokeLater(() -> requestFocus()); //shift focus to the panel
-            new Thread(this::animatePullDown).start();
+
+            long startTime = System.currentTimeMillis();
+            double deltaTime = System.currentTimeMillis() - startTime;
+            while (deltaTime < SLIDE_DURATION) {
+                y = getHeight() * (deltaTime / SLIDE_DURATION - 1);
+                deltaTime = System.currentTimeMillis() - startTime;
+            }
+            y = 0;
+
+            state.set(DOWN_STATE);
         }
     }
 
@@ -75,7 +84,16 @@ abstract class DropDownPanel extends JPanel {
     void retract() {
         if (state.compareAndSet(DOWN_STATE, ANIMATION_STATE)) {
             SwingUtilities.invokeLater(() -> window.requestFocus()); //return the focus to the window
-            new Thread(this::animateRetract).start();
+
+            long startTime = System.currentTimeMillis();
+            double deltaTime = System.currentTimeMillis() - startTime;
+            while (deltaTime < SLIDE_DURATION) {
+                y = getHeight() * (-deltaTime / SLIDE_DURATION);
+                deltaTime = System.currentTimeMillis() - startTime;
+            }
+            y = -getHeight();
+
+            state.set(UP_STATE);
         }
     }
 
@@ -90,39 +108,6 @@ abstract class DropDownPanel extends JPanel {
 
         Graphics2D g2D = (Graphics2D)g;
         g2D.fillRect(0, 0, getWidth(), getHeight());
-    }
-
-
-    //ANIMATION METHODS ----------------------------------------------------------------
-
-    /**
-     * Continuously changes y from -getHeight() to 0 in the span
-     * of {@link DropDownPanel#SLIDE_DURATION} ms.
-     */
-    private void animatePullDown() {
-        long startTime = System.currentTimeMillis();
-        double deltaTime = System.currentTimeMillis() - startTime;
-        while (deltaTime < SLIDE_DURATION) {
-            y = getHeight() * (deltaTime / SLIDE_DURATION - 1);
-            deltaTime = System.currentTimeMillis() - startTime;
-        }
-        y = 0;
-        state.set(DOWN_STATE);
-    }
-
-    /**
-     * Continuously changes y from 0 to -getHeight() in the span
-     * of {@link DropDownPanel#SLIDE_DURATION} ms.
-     */
-    private void animateRetract() {
-        long startTime = System.currentTimeMillis();
-        double deltaTime = System.currentTimeMillis() - startTime;
-        while (deltaTime < SLIDE_DURATION) {
-            y = getHeight() * (-deltaTime / SLIDE_DURATION);
-            deltaTime = System.currentTimeMillis() - startTime;
-        }
-        y = -getHeight();
-        state.set(UP_STATE);
     }
 }
 

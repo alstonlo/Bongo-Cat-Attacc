@@ -1,6 +1,7 @@
 package client.menu;
 
 import client.Window;
+import client.utilities.ThreadPool;
 import protocol.AuthenticateProtocol;
 import protocol.RegisterProtocol;
 
@@ -51,7 +52,7 @@ class LoginPanel extends DropDownPanel {
         submitButton.addActionListener(e -> submit());
 
         backButton = new JButton("Back");
-        backButton.addActionListener(e -> retract());
+        backButton.addActionListener(e -> ThreadPool.execute(() -> retract()));
 
         add(usernameField);
         add(passwordField);
