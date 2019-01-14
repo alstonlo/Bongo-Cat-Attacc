@@ -1,12 +1,15 @@
 package client.songselect;
 
 import client.GamePanel;
+import client.Song;
 import client.Window;
 import client.utilities.Settings;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import protocol.Protocol;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,7 +27,15 @@ public class SongSelectPanel extends GamePanel {
     public SongSelectPanel(Window window) {
         super(window);
 
-        Song[] songs = SongBank.getSongs();
+        Song[] songs;
+        try {
+            songs = Song.getSongs();
+        } catch (IOException e) {
+            System.out.println("Could not load songs");
+            System.exit(1);
+            return;
+        }
+
         this.songTiles = new SongTile[songs.length];
         for (int i = 0; i < songs.length; i++) {
             songTiles[i] = new SongTile(songs[i]);

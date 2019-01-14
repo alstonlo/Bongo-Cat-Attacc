@@ -3,19 +3,18 @@ package client;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 
-import javax.swing.SwingUtilities;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * A modified KeyListener that only listens to the left and right bongo keys.
- * This is analogous to the left and right bongos.
+ * A modified KeyListener that only listens to the left, right, and hold bongo keys.
+ * These keys are mapped in {@link Settings}. So that the key listener's methods are not
+ * executed on the EDT, they are executed using a thread pool, implemented in {@link ThreadPool}.
  *
  * @author Alston
- * last updated 1/9/2019
+ * last updated 1/12/2019
  */
 public class BongoListener implements KeyListener {
 
@@ -30,7 +29,6 @@ public class BongoListener implements KeyListener {
      */
     BongoListener() {
     }
-
 
     /**
      * Sets the object that is controlled by this listener.
