@@ -4,7 +4,6 @@ import client.GamePanel;
 import client.Song;
 import client.Window;
 import client.utilities.Settings;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import protocol.Protocol;
 
 import java.awt.Graphics;
@@ -14,20 +13,37 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Panel where the user selects their song.
+ *
+ * @author Alston
+ * last updated 1/13/2019
+ */
 public class SongSelectPanel extends GamePanel {
 
     private static final long SLIDE_DURATION = 500;
 
     private AtomicBoolean isAnimating = new AtomicBoolean(false);
 
-    private int selected = 0;
+    private int selected = 0; //the index of the focused song tile
     private SongTile[] songTiles;
+
+    /*
+     *
+     */
     private final Deque<SongTile> viewFrame = new LinkedList<>();
 
+    /**
+     * Constructs the SongSelectPanel by loading the songs stored
+     * in the resources folder. If the resources fail to be loaded,
+     * the program is killed.
+     *
+     * @param window the window that the panel belongs to
+     */
     public SongSelectPanel(Window window) {
         super(window);
 
-        Song[] songs;
+        Song[] songs; //load the songs
         try {
             songs = Song.getSongs();
         } catch (IOException e) {
@@ -36,12 +52,13 @@ public class SongSelectPanel extends GamePanel {
             return;
         }
 
-        this.songTiles = new SongTile[songs.length];
+        this.songTiles = new SongTile[songs.length]; //create the tiles
         for (int i = 0; i < songs.length; i++) {
             songTiles[i] = new SongTile(songs[i]);
             songTiles[i].loadTile();
         }
 
+        //set the view frame
         SongTile focus = songTiles[selected];
         focus.setX(0);
         synchronized (viewFrame) {
@@ -53,6 +70,7 @@ public class SongSelectPanel extends GamePanel {
     public void notifyLeftPress() {
         moveRight();
     }
+
 
     @Override
     public void notifyLeftRelease() {
