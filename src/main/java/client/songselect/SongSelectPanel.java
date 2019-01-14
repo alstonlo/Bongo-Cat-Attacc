@@ -2,12 +2,13 @@ package client.songselect;
 
 import client.GamePanel;
 import client.Window;
+import client.utilities.Settings;
 import protocol.Protocol;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SongSelectPanel extends GamePanel {
@@ -18,7 +19,7 @@ public class SongSelectPanel extends GamePanel {
 
     private int selected = 0;
     private SongTile[] songTiles;
-    private final Deque<SongTile> viewFrame = new ArrayDeque<>();
+    private final Deque<SongTile> viewFrame = new LinkedList<>();
 
     public SongSelectPanel(Window window) {
         super(window);
@@ -32,7 +33,6 @@ public class SongSelectPanel extends GamePanel {
 
         SongTile focus = songTiles[selected];
         focus.setX(0);
-
         synchronized (viewFrame) {
             viewFrame.addFirst(focus);
         }
@@ -82,21 +82,20 @@ public class SongSelectPanel extends GamePanel {
 
         Graphics2D g2D = (Graphics2D) g;
 
-//        if (center != null) {
-//            center.clamp();
-//            center.drawBackground(g2D);
-//        }
-//        if (side != null) {
-//            side.clamp();
-//            side.drawBackground(g2D);
-//        }
-//
-//        if (center != null) {
-//            center.drawForeground(g2D);
-//        }
-//        if (side != null) {
-//            side.drawForeground(g2D);
-//        }
+        SongTile[] toRender;
+        synchronized (viewFrame) {
+            toRender = viewFrame.toArray(new SongTile[0]);
+        }
+
+        for (SongTile tile : toRender) {
+            tile.clamp();
+        }
+        for (SongTile tile : toRender) {
+            tile.drawBackground(g2D);
+        }
+        for (SongTile tile : toRender) {
+            tile.drawForeground(g2D);
+        }
     }
 
     private SongTile getTile(int i) {
@@ -108,56 +107,71 @@ public class SongSelectPanel extends GamePanel {
 
     private void moveLeft() {
         if (isAnimating.compareAndSet(false, true)) {
+
+            SongTile center;
             SongTile right = getTile(selected + 1);
-            new Thread(() -> animateMoveLeft(right)).start();
+
+            synchronized (viewFrame) {
+                center = viewFrame.getFirst();
+                viewFrame.addLast(right);
+            }
+
+            center.setX(0);
+            right.setX(Settings.PANEL_SIZE.getWidth());
+
+            long startTime = System.currentTimeMillis();
+            long deltaTime = System.currentTimeMillis() - startTime;
+            while (deltaTime < SLIDE_DURATION) {
+                double shift = Settings.PANEL_SIZE.getWidth() * deltaTime / SLIDE_DURATION;
+                center.setX(-shift);
+                right.setX(Settings.PANEL_SIZE.getWidth() - shift);
+                deltaTime = System.currentTimeMillis() - startTime;
+            }
+            center.setX(-Settings.PANEL_SIZE.getWidth());
+            right.setX(0);
+
+            synchronized (viewFrame) {
+                viewFrame.pollFirst();
+            }
+
+            selected--;
+            isAnimating.set(false);
         }
     }
 
-    private void animateMoveLeft(SongTile right) {
-
-//        viewFrame.addFir
-//
-//        long startTime = System.currentTimeMillis();
-//        long deltaTime = System.currentTimeMillis() - startTime;
-//        while (deltaTime < SLIDE_DURATION) {
-//            double shift = Settings.PANEL_SIZE.getWidth() * deltaTime / SLIDE_DURATION;
-//            center.setX(-shift);
-//            side.setX(Settings.PANEL_SIZE.getWidth() - shift);
-//            deltaTime = System.currentTimeMillis() - startTime;
-//        }
-//
-//        center = side;
-//        center.setX(0);
-//        //side = null;
-//        selected--;
-//        isAnimating.set(false);
-    }
 
     private void moveRight() {
         if (isAnimating.compareAndSet(false, true)) {
+
+            SongTile center;
             SongTile left = getTile(selected - 1);
-            new Thread(() -> animateMoveRight(left)).start();
+
+            synchronized (viewFrame) {
+                center = viewFrame.getFirst();
+                viewFrame.addFirst(left);
+            }
+
+            center.setX(0);
+            left.setX(-Settings.PANEL_SIZE.getWidth());
+
+            long startTime = System.currentTimeMillis();
+            long deltaTime = System.currentTimeMillis() - startTime;
+            while (deltaTime < SLIDE_DURATION) {
+                double shift = Settings.PANEL_SIZE.getWidth() * deltaTime / SLIDE_DURATION;
+                center.setX(shift);
+                left.setX(-Settings.PANEL_SIZE.getWidth() + shift);
+                deltaTime = System.currentTimeMillis() - startTime;
+            }
+            center.setX(Settings.PANEL_SIZE.getWidth());
+            left.setX(0);
+
+            synchronized (viewFrame) {
+                viewFrame.pollLast();
+            }
+
+            selected++;
+            isAnimating.set(false);
         }
     }
 
-    private void animateMoveRight(SongTile left) {
-//        center.setX(0);
-//        left.setX(-Settings.PANEL_SIZE.getWidth());
-//        side = left;
-//
-//        long startTime = System.currentTimeMillis();
-//        long deltaTime = System.currentTimeMillis() - startTime;
-//        while (deltaTime < SLIDE_DURATION) {
-//            double shift = Settings.PANEL_SIZE.getWidth() * deltaTime / SLIDE_DURATION;
-//            center.setX(shift);
-//            side.setX(-Settings.PANEL_SIZE.getWidth() + shift);
-//            deltaTime = System.currentTimeMillis() - startTime;
-//        }
-//
-//        center = side;
-//        center.setX(0);
-//        side = null;
-//        selected++;
-//        isAnimating.set(false);
-    }
 }
