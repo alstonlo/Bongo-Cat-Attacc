@@ -29,7 +29,10 @@ public class SongSelectPanel extends GamePanel {
     private SongTile[] songTiles;
 
     /*
-     *
+     * Contains the tiles that are in the frame of viewing, and therefore,
+     * should be rendered. As, both the painting and animating threads access
+     * this collection, adding and removing from it always occurs in a synchronized
+     * block.
      */
     private final Deque<SongTile> viewFrame = new LinkedList<>();
 
@@ -111,22 +114,29 @@ public class SongSelectPanel extends GamePanel {
 
         Graphics2D g2D = (Graphics2D) g;
 
-        SongTile[] toRender;
+        SongTile[] toRender; //the tiles that must be rendered
         synchronized (viewFrame) {
             toRender = viewFrame.toArray(new SongTile[0]);
         }
 
-        for (SongTile tile : toRender) {
+        for (SongTile tile : toRender) { //clamp all the tiles to draw them
             tile.clamp();
         }
-        for (SongTile tile : toRender) {
+        for (SongTile tile : toRender) { //draw all the tiles' backgrounds
             tile.drawBackground(g2D);
         }
-        for (SongTile tile : toRender) {
+        for (SongTile tile : toRender) { //draw all the tiles' foregrounds
             tile.drawForeground(g2D);
         }
     }
 
+    /**
+     * Retrieves from the array at index i. The array is treated as a closed loop
+     * such that A[-1] = A[A.length - 1].
+     *
+     * @param i the index of the tile
+     * @return the tile at index i
+     */
     private SongTile getTile(int i) {
         while (i < 0) {
             i += songTiles.length;
@@ -134,20 +144,25 @@ public class SongSelectPanel extends GamePanel {
         return songTiles[i % songTiles.length];
     }
 
+    /**
+     * Moves the viewFrame one tile to the left over the span of {@link SongSelectPanel#SLIDE_DURATION}.
+     * moveLeft() only triggers if the panel is not currently in an animating state.
+     */
     private void moveLeft() {
         if (isAnimating.compareAndSet(false, true)) {
 
-            SongTile center;
-            SongTile right = getTile(selected + 1);
-
-            synchronized (viewFrame) {
+            SongTile center; //the tile at the center
+            SongTile right = getTile(selected + 1); //the off-screen tile to the right
+            synchronized (viewFrame) { //set the view frame
                 center = viewFrame.getFirst();
                 viewFrame.addLast(right);
             }
 
+            //set the positions of the center and right tiles
             center.setX(0);
             right.setX(Settings.PANEL_SIZE.getWidth());
 
+            //move the tiles
             long startTime = System.currentTimeMillis();
             long deltaTime = System.currentTimeMillis() - startTime;
             while (deltaTime < SLIDE_DURATION) {
@@ -159,30 +174,35 @@ public class SongSelectPanel extends GamePanel {
             center.setX(-Settings.PANEL_SIZE.getWidth());
             right.setX(0);
 
-            synchronized (viewFrame) {
+            synchronized (viewFrame) { //remove offscreen center tile from view frame
                 viewFrame.pollFirst();
             }
 
+            //decrement index
             selected--;
             isAnimating.set(false);
         }
     }
 
-
+    /**
+     * Moves the viewFrame one tile to the right over the span of {@link SongSelectPanel#SLIDE_DURATION}.
+     * moveRight() only triggers if the panel is not currently in an animating state.
+     */
     private void moveRight() {
         if (isAnimating.compareAndSet(false, true)) {
 
-            SongTile center;
-            SongTile left = getTile(selected - 1);
-
-            synchronized (viewFrame) {
+            SongTile center;  //the tile at the center
+            SongTile left = getTile(selected - 1); //the off-screen tile to the left
+            synchronized (viewFrame) { //set the view frame
                 center = viewFrame.getFirst();
                 viewFrame.addFirst(left);
             }
 
+            //set the positions of the center and right tiles
             center.setX(0);
             left.setX(-Settings.PANEL_SIZE.getWidth());
 
+            //move the tiles
             long startTime = System.currentTimeMillis();
             long deltaTime = System.currentTimeMillis() - startTime;
             while (deltaTime < SLIDE_DURATION) {
@@ -194,10 +214,11 @@ public class SongSelectPanel extends GamePanel {
             center.setX(Settings.PANEL_SIZE.getWidth());
             left.setX(0);
 
-            synchronized (viewFrame) {
+            synchronized (viewFrame) { //remove offscreen center tile from view frame
                 viewFrame.pollLast();
             }
 
+            //increment index 
             selected++;
             isAnimating.set(false);
         }
