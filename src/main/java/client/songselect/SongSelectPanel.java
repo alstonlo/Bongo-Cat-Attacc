@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Panel where the user selects their song.
  *
- * @author Alston
+ * @author Alston and Katelyn
  * last updated 1/13/2019
  */
 public class SongSelectPanel extends GamePanel {
@@ -218,7 +218,7 @@ public class SongSelectPanel extends GamePanel {
                 viewFrame.pollLast();
             }
 
-            //increment index 
+            //increment index
             selected++;
             isAnimating.set(false);
         }
