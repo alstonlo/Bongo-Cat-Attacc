@@ -68,7 +68,6 @@ public class Window extends JFrame {
 
         //FRAME CODE -----------------------------------------------------------------------------
 
-        //create the JFrame
         this.getContentPane().setPreferredSize(Settings.PANEL_SIZE);
         pack();
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -81,10 +80,7 @@ public class Window extends JFrame {
                 close();
             }
         });
-
-
         switchState(MENU_STATE);
-
         this.setVisible(true);
         this.requestFocus();
         this.pack();

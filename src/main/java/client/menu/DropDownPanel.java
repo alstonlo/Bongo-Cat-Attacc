@@ -96,18 +96,5 @@ abstract class DropDownPanel extends JPanel {
             state.set(UP_STATE);
         }
     }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param g
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D g2D = (Graphics2D)g;
-        g2D.fillRect(0, 0, getWidth(), getHeight());
-    }
 }
 
