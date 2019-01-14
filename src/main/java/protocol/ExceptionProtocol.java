@@ -6,6 +6,7 @@ package protocol;
  *
  * @author Alston
  * last updated 12/26/2018
+ * @see exceptions.GameException
  */
 public class ExceptionProtocol extends Protocol {
 
@@ -15,12 +16,12 @@ public class ExceptionProtocol extends Protocol {
     /**
      * Constructs an ExceptionProtocol.
      *
-     * @param response   the {@link Protocol#id} of the protocol that this is in response to
+     * @param response   the {@link Protocol} that this is in response to
      * @param errorState the state of the GameException, as detailed in its JavaDocs
      * @see exceptions.GameException
      */
-    public ExceptionProtocol(String response, int errorState) {
-        this.response = response;
+    public ExceptionProtocol(Protocol response, int errorState) {
+        this.response = response.id;
         this.errorState = errorState;
     }
 

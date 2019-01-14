@@ -14,10 +14,10 @@ public class ResponseProtocol extends Protocol {
     /**
      * Constructs a ResponseProtocol.
      *
-     * @param response the {@link Protocol#id} of the protocol that this is in response to
+     * @param response the {@link Protocol} that this is in response to
      */
-    public ResponseProtocol(String response) {
-        this.response = response;
+    public ResponseProtocol(Protocol response) {
+        this.response = response.id;
     }
 
     /**

@@ -123,24 +123,28 @@ class GameServer {
      */
 
     private void process(Player player, JoinQueueProtocol protocol) {
+        if (!player.loggedIn()) { //ensure player is logged in in order to join queue room
+            player.sendTCP(new ExceptionProtocol(protocol, GameException.NOT_LOGGED_IN_STATE));
+        }
 
+        
     }
 
     private void process(Player player, RegisterProtocol protocol) {
         try {
             database.register(protocol.username, protocol.password); //attempt to register account
         } catch (GameException e) {
-            player.sendTCP(new ExceptionProtocol(protocol.id, e.getState()));
+            player.sendTCP(new ExceptionProtocol(protocol, e.getState()));
             return;
         }
 
-        player.sendTCP(new ResponseProtocol(protocol.id)); //no error was thrown, so send ResponseProtocol
+        player.sendTCP(new ResponseProtocol(protocol)); //no error was thrown, so send ResponseProtocol
     }
 
     private void process(Player player, AuthenticateProtocol protocol) {
 
         if (player.loggedIn()) { //if player has already logged in, send an ExceptionProtocol
-            player.sendTCP(new ExceptionProtocol(protocol.id, 3));
+            player.sendTCP(new ExceptionProtocol(protocol, GameException.DOUBLE_LOGIN_STATE));
             return;
         }
 
@@ -148,9 +152,9 @@ class GameServer {
 
         if (authenticated) { //authentication successful, so send ResponseProtocol
             player.registerUsername(protocol.username);
-            player.sendTCP(new ResponseProtocol(protocol.id));
+            player.sendTCP(new ResponseProtocol(protocol));
         } else {
-            player.sendTCP(new ExceptionProtocol(protocol.id, 4));
+            player.sendTCP(new ExceptionProtocol(protocol, GameException.INVALID_LOGIN_STATE));
         }
     }
 }

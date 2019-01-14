@@ -68,12 +68,14 @@ class Database {
             //check for null value (state 23502)
             //check for |username| or |password| > 20 (state 22001)
             if (e.getSQLState().equals("23505") || e.getSQLState().equals("23502") ||
-                    e.getSQLState().equals("22001")) {
-                throw new GameException(2);
+                e.getSQLState().equals("22001")) {
+                throw new GameException(GameException.INVALID_REGISTER_STATE);
             }
 
             e.printStackTrace();
-            throw new GameException(1); //otherwise, the error is an unexpected database error
+
+            //otherwise, the error is an unexpected database error
+            throw new GameException(GameException.DATABASE_ERROR_STATE);
         }
     }
 

@@ -4,6 +4,8 @@ import client.CircleButton;
 import client.GamePanel;
 import client.Window;
 import client.utilities.Utils;
+import protocol.AuthenticateProtocol;
+import protocol.ExceptionProtocol;
 import protocol.Protocol;
 
 import javax.sound.sampled.Clip;
@@ -166,7 +168,6 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyReceived(Protocol protocol) {
-
     }
 
     /**
