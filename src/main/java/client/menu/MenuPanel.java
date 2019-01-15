@@ -70,6 +70,10 @@ public class MenuPanel extends GamePanel {
         buttons[currSelected].select();
     }
 
+    public void sendMessage(Protocol message) {
+        window.sendMessage(message);
+    }
+
     /**
      * {@inheritDoc}
      */

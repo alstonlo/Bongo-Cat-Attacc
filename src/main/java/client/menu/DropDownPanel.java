@@ -1,13 +1,11 @@
 package client.menu;
 
+import client.Window;
 import client.utilities.Settings;
 import client.utilities.Utils;
-import client.Window;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
