@@ -3,7 +3,6 @@ package client.menu;
 import client.Window;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
-import java.awt.Color;
 import protocol.AuthenticateProtocol;
 import protocol.RegisterProtocol;
 
@@ -11,14 +10,16 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.text.StyledDocument;
+import javax.swing.border.Border;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 
 /**
@@ -30,6 +31,7 @@ import java.awt.image.BufferedImage;
  */
 class LoginPanel extends DropDownPanel {
 
+    private final Color OUTLINE_COLOR = new Color(60, 51, 28);
     private BufferedImage loginDrape = Utils.loadScaledImage("resources/menu/login drape.png");
 
     private MenuPanel menuPanel;
@@ -42,13 +44,10 @@ class LoginPanel extends DropDownPanel {
     private JButton backButton;
     private JTextField errorMessageArea;
 
-    private boolean usernameClicked = false;
-    private boolean passwordClicked = false;
-
     /**
      * Constructs a LoginPanel.
      *
-     * @param window the Window this panel belongs to
+     * @param window    the Window this panel belongs to
      * @param menuPanel the menu panel that this panel belongs to
      */
     LoginPanel(Window window, MenuPanel menuPanel) {
@@ -58,56 +57,24 @@ class LoginPanel extends DropDownPanel {
 
         //text field for username
         usernameField = new JTextField("Username");
-        usernameField.setSize(Utils.scale(400), Utils.scale(90));
         usernameField.setLocation(Utils.scale(175), Utils.scale(400));
-        usernameField.setBackground(new Color(247, 195, 210));
-        usernameField.setBorder(null);
-        usernameField.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                if (!usernameClicked) {
-                    usernameClicked = true;
-                    usernameField.setText("");
-                }
-            }
-        });
-        usernameField.setBorder(BorderFactory.createCompoundBorder(
-                usernameField.getBorder(),
-                BorderFactory.createEmptyBorder(Utils.scale(5), Utils.scale(10), Utils.scale(5), Utils.scale(10))));
-        usernameField.setFont(Utils.loadFont("resources/mon.otf", Utils.scale(40)));
-        usernameField.setForeground(new Color(60,51,28));
+        stylizeTextField(usernameField);
 
         //text field for password
         passwordField = new JTextField("Password");
-        passwordField.setSize(Utils.scale(400), Utils.scale(90));
         passwordField.setLocation(Utils.scale(175), Utils.scale(520));
-        passwordField.setBackground(new Color(247, 195, 210));
-        passwordField.setBorder(null);
-        passwordField.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                if (!passwordClicked) {
-                    passwordClicked = true;
-                    passwordField.setText("");
-                }
-            }
-        });
-        passwordField.setBorder(BorderFactory.createCompoundBorder(
-                passwordField.getBorder(),
-                BorderFactory.createEmptyBorder(Utils.scale(5), Utils.scale(10), Utils.scale(5), Utils.scale(10))));
-        passwordField.setFont(Utils.loadFont("resources/mon.otf", Utils.scale(40)));
-        passwordField.setForeground(new Color(60,51,28));
+        stylizeTextField(passwordField);
 
         //radio buttons (to toggle between registering and logging in)
         loginButton = new JRadioButton("Login", true);
         loginButton.setSize(Utils.scale(150), Utils.scale(90));
         loginButton.setLocation(Utils.scale(225), Utils.scale(615));
-        loginButton.setBackground(new Color(255,255,255));
+        loginButton.setBackground(new Color(255, 255, 255));
 
         registerButton = new JRadioButton("Register");
         registerButton.setSize(Utils.scale(150), Utils.scale(90));
         registerButton.setLocation(Utils.scale(375), Utils.scale(615));
-        registerButton.setBackground(new Color(255,255,255));
+        registerButton.setBackground(new Color(255, 255, 255));
 
         ButtonGroup group = new ButtonGroup();
         group.add(loginButton);
@@ -120,7 +87,7 @@ class LoginPanel extends DropDownPanel {
         submitButton.addActionListener(e -> ThreadPool.execute(() -> submit()));
         submitButton.setBorder(null);
         submitButton.setBackground(new Color(255, 221, 216));
-        submitButton.setForeground(new Color(60,51,28));
+        submitButton.setForeground(new Color(60, 51, 28));
         submitButton.setFocusPainted(false);
 
         backButton = new JButton("Back");
@@ -129,17 +96,17 @@ class LoginPanel extends DropDownPanel {
         backButton.addActionListener(e -> ThreadPool.execute(() -> retract()));
         backButton.setBorder(null);
         backButton.setBackground(new Color(255, 221, 216));
-        backButton.setForeground(new Color(60,51,28));
+        backButton.setForeground(new Color(60, 51, 28));
         backButton.setFocusPainted(false);
 
         errorMessageArea = new JTextField();
         errorMessageArea.setEditable(false);
         errorMessageArea.setHorizontalAlignment(JTextField.CENTER);
         errorMessageArea.setBorder(null);
-        errorMessageArea.setBackground(new Color(255,255,255));
-        errorMessageArea.setForeground(new Color(60,51,28));
+        errorMessageArea.setBackground(new Color(255, 255, 255));
+        errorMessageArea.setForeground(new Color(60, 51, 28));
         errorMessageArea.setSize(Utils.scale(200), Utils.scale(80));
-        errorMessageArea.setLocation(Utils.scale(275),Utils.scale(330));
+        errorMessageArea.setLocation(Utils.scale(275), Utils.scale(330));
 
         add(usernameField);
         add(passwordField);
@@ -181,21 +148,67 @@ class LoginPanel extends DropDownPanel {
         }
     }
 
-    public void isSuccess(){
+    public void isSuccess() {
         retract();
     }
 
-    public void failed(String message){
+    public void failed(String message) {
         errorMessageArea.setText(message);
     }
 
     @Override
     void retract() {
         super.retract();
-        usernameClicked = false;
-        passwordClicked = false;
         usernameField.setText("Username");
         passwordField.setText("Password");
         errorMessageArea.setText("");
+    }
+
+    //STYLIZATION METHODS (for readability)
+
+    private void stylizeTextField(JTextField field) {
+        String defaultText = field.getText();
+
+        field.setSize(Utils.scale(400), Utils.scale(90));
+        field.setForeground(OUTLINE_COLOR);
+        field.setBackground(new Color(247, 195, 210));
+        field.setFont(Utils.loadFont("resources/mon.otf", Utils.scale(40)));
+
+        Border outline = BorderFactory.createLineBorder(OUTLINE_COLOR, Utils.scale(3), true);
+        int padSize = Utils.scale(10);
+        Border padding = BorderFactory.createEmptyBorder(0, padSize, 0, padSize);
+        field.setBorder(BorderFactory.createCompoundBorder(outline, padding));
+
+        //bound field to 15 characters
+        field.setDocument(new PlainDocument() {
+            @Override
+            public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                if (str == null) {
+                    return;
+                }
+                if ((getLength() + str.length()) <= 15) {
+                    super.insertString(offs, str, a);
+                }
+            }
+        });
+
+        //add focus listener to modify prompting
+        field.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (field.getText().equals(defaultText)) {
+                    field.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (field.getText().isEmpty()) {
+                    field.setText(defaultText);
+                }
+            }
+        });
+
+        field.setText(defaultText);
     }
 }
