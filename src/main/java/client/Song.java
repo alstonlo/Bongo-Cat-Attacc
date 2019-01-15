@@ -4,8 +4,13 @@ import client.utilities.Utils;
 
 import javax.sound.sampled.Clip;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A class containing information and audio of a song.
@@ -44,6 +49,7 @@ public class Song {
      * to properly represent a song, it must have the following files in the following format.
      * </br>
      * <p>
+     * config.txt - a .txt file holding information about the song
      * music.wav - a file holding the audio of the song
      * album.png - a png depicting the song's album with a square aspect ratio
      * background.png - a png depicting splash art associated with the song (750px x 1334px)
@@ -52,6 +58,21 @@ public class Song {
      */
     private Song(String dirPath) {
         this.dirPath = dirPath;
+
+        //read the config file
+        Map<String, String> configDetails = new HashMap<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(dirPath + "/config.txt")))){
+            String line = reader.readLine();
+            while (line != null) {
+                String[] property = line.split(":");
+                configDetails.put(property[0].trim().toLowerCase(), property[1].trim());
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            System.out.println(dirPath + "/config.txt cannot be found.");
+        }
+
+        this.name = configDetails.get("name");
     }
 
     /**
