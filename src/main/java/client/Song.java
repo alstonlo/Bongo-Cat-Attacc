@@ -59,7 +59,7 @@ public class Song {
     private Song(String dirPath) {
         this.dirPath = dirPath;
 
-        //read the config file
+        //read the config file and configure properties
         Map<String, String> configDetails = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(dirPath + "/config.txt")))){
             String line = reader.readLine();
@@ -71,7 +71,6 @@ public class Song {
         } catch (IOException e) {
             System.out.println(dirPath + "/config.txt cannot be found.");
         }
-
         this.name = configDetails.get("name");
     }
 
