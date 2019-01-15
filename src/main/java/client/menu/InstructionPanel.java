@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 
 public class InstructionPanel extends DropDownPanel {
 
-    InstructionPanel(Window window) {
+    InstructionPanel(Window window, MenuPanel menuPanel) {
         super(window);
     }
 

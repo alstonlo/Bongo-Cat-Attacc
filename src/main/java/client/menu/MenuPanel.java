@@ -4,7 +4,12 @@ import client.CircleButton;
 import client.GamePanel;
 import client.Window;
 import client.utilities.Utils;
+import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
+import org.lwjgl.system.CallbackI;
+import protocol.ExceptionProtocol;
 import protocol.Protocol;
+import protocol.ResponseProtocol;
+import sun.rmi.runtime.Log;
 
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
@@ -24,6 +29,7 @@ public class MenuPanel extends GamePanel {
 
     private DropDownPanel loginPanel;
     private DropDownPanel instructPanel;
+    private DropDownPanel settingPanel;
 
     private int currSelected = 0;
     private CircleButton[] buttons = new CircleButton[3];
@@ -45,9 +51,11 @@ public class MenuPanel extends GamePanel {
 
         //create the drawer panels
         this.loginPanel = new LoginPanel(window, this);
-        this.instructPanel = new InstructionPanel(window);
+        this.instructPanel = new InstructionPanel(window, this);
+        this.settingPanel = new SettingPanel(window, this);
         this.add(loginPanel);
         this.add(instructPanel);
+        this.add(settingPanel);
 
         //create the buttons
         BufferedImage loginIcon = Utils.loadImage("resources/icons/login.png");
@@ -60,7 +68,7 @@ public class MenuPanel extends GamePanel {
 
         BufferedImage controlsIcon = Utils.loadImage("resources/icons/controls.png");
         CircleButton controlsButton = new CircleButton(controlsIcon, Utils.scale(670), Utils.scale(1250), Utils.scale(50));
-        controlsButton.setOnSubmit(() -> instructPanel.pullDown());
+        controlsButton.setOnSubmit(() -> settingPanel.pullDown());
 
         buttons[0] = loginButton;
         buttons[1] = playButton;
@@ -94,6 +102,7 @@ public class MenuPanel extends GamePanel {
         //we relocate the panels inside update (for convenience instead of invoking later)
         loginPanel.relocate();
         instructPanel.relocate();
+        settingPanel.relocate();
     }
 
     /**
@@ -170,6 +179,38 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyReceived(Protocol protocol) {
+        if (protocol instanceof ResponseProtocol){
+            ((LoginPanel) loginPanel).isSuccess();
+        } else if (protocol instanceof ExceptionProtocol){
+            int error = ((ExceptionProtocol) protocol).errorState;
+            String message;
+            switch (error){
+                case 1:
+                    message = "The database ran into an issue. Please try again.";
+                    break;
+
+                case 2:
+                    message = "Your account could not be registered. Invalid username or password";
+                    break;
+
+                case 3:
+                    message = "You are already logged in! Please log out before trying again.";
+                    break;
+
+                case 4:
+                    message = "Incorrect username or password.";
+                    break;
+
+                case 5:
+                    message = "You were unsuccessfully signed in. Please try again.";
+                    break;
+
+                default:
+                    message = "An error has occured. Please try again.";
+            }
+            ((LoginPanel)loginPanel).failed(message);
+        }
+
     }
 
     /**

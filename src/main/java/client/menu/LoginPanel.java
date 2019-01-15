@@ -11,7 +11,10 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.StyledDocument;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
@@ -37,6 +40,7 @@ class LoginPanel extends DropDownPanel {
     private JRadioButton registerButton;
     private JButton submitButton;
     private JButton backButton;
+    private JTextField errorMessageArea;
 
     private boolean usernameClicked = false;
     private boolean passwordClicked = false;
@@ -126,12 +130,23 @@ class LoginPanel extends DropDownPanel {
         backButton.setForeground(new Color(60,51,28));
         backButton.setFocusPainted(false);
 
+
+        errorMessageArea = new JTextField();
+        errorMessageArea.setEditable(false);
+        errorMessageArea.setHorizontalAlignment(JTextField.CENTER);
+        errorMessageArea.setBorder(null);
+        errorMessageArea.setBackground(new Color(255,255,255));
+        errorMessageArea.setForeground(new Color(60,51,28));
+        errorMessageArea.setSize(Utils.scale(200), Utils.scale(80));
+        errorMessageArea.setLocation(Utils.scale(275),Utils.scale(330));
+
         add(usernameField);
         add(passwordField);
         add(loginButton);
         add(registerButton);
         add(submitButton);
         add(backButton);
+        add(errorMessageArea);
 
         setVisible(true);
     }
@@ -165,6 +180,14 @@ class LoginPanel extends DropDownPanel {
         }
     }
 
+    public void isSuccess(){
+        retract();
+    }
+
+    public void failed(String message){
+        errorMessageArea.setText(message);
+    }
+
     @Override
     void retract() {
         super.retract();
@@ -172,5 +195,6 @@ class LoginPanel extends DropDownPanel {
         passwordClicked = false;
         usernameField.setText("Username");
         passwordField.setText("Password");
+        errorMessageArea.setText("");
     }
 }
