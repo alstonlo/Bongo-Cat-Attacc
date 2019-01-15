@@ -4,12 +4,9 @@ import client.CircleButton;
 import client.GamePanel;
 import client.Window;
 import client.utilities.Utils;
-import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
-import org.lwjgl.system.CallbackI;
 import protocol.ExceptionProtocol;
 import protocol.Protocol;
 import protocol.ResponseProtocol;
-import sun.rmi.runtime.Log;
 
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
@@ -179,12 +176,12 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyReceived(Protocol protocol) {
-        if (protocol instanceof ResponseProtocol){
+        if (protocol instanceof ResponseProtocol) {
             ((LoginPanel) loginPanel).isSuccess();
-        } else if (protocol instanceof ExceptionProtocol){
+        } else if (protocol instanceof ExceptionProtocol) {
             int error = ((ExceptionProtocol) protocol).errorState;
             String message;
-            switch (error){
+            switch (error) {
                 case 1:
                     message = "The database ran into an issue. Please try again.";
                     break;
@@ -208,7 +205,7 @@ public class MenuPanel extends GamePanel {
                 default:
                     message = "An error has occured. Please try again.";
             }
-            ((LoginPanel)loginPanel).failed(message);
+            ((LoginPanel) loginPanel).failed(message);
         }
 
     }
