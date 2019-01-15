@@ -44,6 +44,10 @@ abstract class DropDownPanel extends JPanel {
         this.setVisible(true);
     }
 
+    boolean isDown() {
+        return state.get() == DOWN_STATE;
+    }
+
     /**
      * Relocates this panel if it has moved from the previous call
      * of relocate() due to {@link DropDownPanel#pullDown()} or

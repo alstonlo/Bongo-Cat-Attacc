@@ -29,6 +29,8 @@ class LoginPanel extends DropDownPanel {
 
     private BufferedImage loginDrape = Utils.loadScaledImage("resources/menu/login drape.png");
 
+    private MenuPanel menuPanel;
+
     private JTextField usernameField;
     private JTextField passwordField;
     private JRadioButton loginButton;
@@ -43,9 +45,11 @@ class LoginPanel extends DropDownPanel {
      * Constructs a LoginPanel.
      *
      * @param window the Window this panel belongs to
+     * @param menuPanel the menu panel that this panel belongs to
      */
-    LoginPanel(Window window) {
+    LoginPanel(Window window, MenuPanel menuPanel) {
         super(window);
+        this.menuPanel = menuPanel;
         this.setLayout(null);
 
         //text field for username
@@ -154,12 +158,11 @@ class LoginPanel extends DropDownPanel {
         String password = passwordField.getText().trim().toLowerCase();
 
         if (registerButton.isSelected()) {      //if user is registering a new account
-            window.sendMessage(new RegisterProtocol(username, password));
+            menuPanel.sendMessage(new RegisterProtocol(username, password));
 
         } else if (loginButton.isSelected()) {   //if user is logging into an account
-            window.sendMessage(new AuthenticateProtocol(username, password));
+            menuPanel.sendMessage(new AuthenticateProtocol(username, password));
         }
-        retract();
     }
 
     @Override

@@ -4,8 +4,6 @@ import client.CircleButton;
 import client.GamePanel;
 import client.Window;
 import client.utilities.Utils;
-import protocol.AuthenticateProtocol;
-import protocol.ExceptionProtocol;
 import protocol.Protocol;
 
 import javax.sound.sampled.Clip;
@@ -46,7 +44,7 @@ public class MenuPanel extends GamePanel {
         this.background = Utils.loadScaledImage("resources/menu/yellow.png");
 
         //create the drawer panels
-        this.loginPanel = new LoginPanel(window);
+        this.loginPanel = new LoginPanel(window, this);
         this.instructPanel = new InstructionPanel(window);
         this.add(loginPanel);
         this.add(instructPanel);
@@ -70,7 +68,7 @@ public class MenuPanel extends GamePanel {
         buttons[currSelected].select();
     }
 
-    public void sendMessage(Protocol message) {
+    void sendMessage(Protocol message) {
         window.sendMessage(message);
     }
 
