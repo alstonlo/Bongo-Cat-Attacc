@@ -101,11 +101,13 @@ class LoginPanel extends DropDownPanel {
         //radio buttons (to toggle between registering and logging in)
         loginButton = new JRadioButton("Login", true);
         loginButton.setSize(Utils.scale(150), Utils.scale(90));
-        loginButton.setLocation(Utils.scale(225), Utils.scale(640));
+        loginButton.setLocation(Utils.scale(225), Utils.scale(615));
+        loginButton.setBackground(new Color(255,255,255));
 
         registerButton = new JRadioButton("Register");
         registerButton.setSize(Utils.scale(150), Utils.scale(90));
-        registerButton.setLocation(Utils.scale(375), Utils.scale(640));
+        registerButton.setLocation(Utils.scale(375), Utils.scale(615));
+        registerButton.setBackground(new Color(255,255,255));
 
         ButtonGroup group = new ButtonGroup();
         group.add(loginButton);
@@ -129,7 +131,6 @@ class LoginPanel extends DropDownPanel {
         backButton.setBackground(new Color(255, 221, 216));
         backButton.setForeground(new Color(60,51,28));
         backButton.setFocusPainted(false);
-
 
         errorMessageArea = new JTextField();
         errorMessageArea.setEditable(false);
