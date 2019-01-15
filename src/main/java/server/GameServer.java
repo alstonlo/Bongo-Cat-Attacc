@@ -27,6 +27,7 @@ class GameServer {
     }
 
     private Server server;
+    private QueueRoom matchMakingRoom = new QueueRoom();
     private Database database = Database.getInstance();
 
     /**
@@ -76,7 +77,9 @@ class GameServer {
             }));
 
             server.bind(Network.PORT); //bind to TCP port 5000
+
             server.start();
+            matchMakingRoom.run();
 
         } catch (IOException e) { //server fails to be started...
             e.printStackTrace();
@@ -127,7 +130,8 @@ class GameServer {
             player.sendTCP(new ExceptionProtocol(protocol, GameException.NOT_LOGGED_IN_STATE));
         }
 
-        
+        matchMakingRoom.queue(player);
+        player.sendTCP(new ResponseProtocol(protocol));
     }
 
     private void process(Player player, RegisterProtocol protocol) {
@@ -142,15 +146,14 @@ class GameServer {
     }
 
     private void process(Player player, AuthenticateProtocol protocol) {
-
-        if (player.loggedIn()) { //if player has already logged in, send an ExceptionProtocol
+        if (player.loggedIn()) {
             player.sendTCP(new ExceptionProtocol(protocol, GameException.DOUBLE_LOGIN_STATE));
             return;
         }
 
         boolean authenticated = database.authenticate(protocol.username, protocol.password);
 
-        if (authenticated) { //authentication successful, so send ResponseProtocol
+        if (!authenticated) { //authentication successful, so send ResponseProtocol
             player.registerUsername(protocol.username);
             player.sendTCP(new ResponseProtocol(protocol));
         } else {

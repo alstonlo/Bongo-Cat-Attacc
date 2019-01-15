@@ -1,5 +1,6 @@
 package client;
 
+import client.utilities.ThreadPool;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import protocol.Protocol;
@@ -32,7 +33,7 @@ public class ServerListener extends Listener {
     @Override
     public void connected(Connection connection) {
         if (obj != null) {
-            obj.notifyConnected();
+            ThreadPool.execute(() -> obj.notifyConnected());
         }
     }
 
@@ -45,7 +46,7 @@ public class ServerListener extends Listener {
     @Override
     public void received(Connection connection, Object o) {
         if (obj != null && o instanceof Protocol) { //only notify if the Object is actually a Protocol
-            obj.notifyReceived((Protocol) o);
+            ThreadPool.execute(() -> obj.notifyReceived((Protocol) o));
         }
     }
 
@@ -57,7 +58,7 @@ public class ServerListener extends Listener {
     @Override
     public void disconnected(Connection connection) {
         if (obj != null) {
-            obj.notifyDisconnected();
+            ThreadPool.execute(() -> obj.notifyDisconnected());
         }
     }
 
