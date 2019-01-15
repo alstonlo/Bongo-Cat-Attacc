@@ -153,7 +153,7 @@ class GameServer {
 
         boolean authenticated = database.authenticate(protocol.username, protocol.password);
 
-        if (!authenticated) { //authentication successful, so send ResponseProtocol
+        if (authenticated) { //authentication successful, so send ResponseProtocol
             player.registerUsername(protocol.username);
             player.sendTCP(new ResponseProtocol(protocol));
         } else {
