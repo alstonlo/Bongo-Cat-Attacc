@@ -29,7 +29,7 @@ public class MenuPanel extends GamePanel {
     private BufferedImage background;
 
     private DropDownPanel loginPanel;
-    private DropDownPanel instructPanel;
+    private DropDownPanel queuePanel;
     private DropDownPanel settingPanel;
 
     private int currSelected = 0;
@@ -55,10 +55,10 @@ public class MenuPanel extends GamePanel {
 
         //create the drawer panels
         this.loginPanel = new LoginPanel(window, this);
-        this.instructPanel = new InstructionPanel(window, this);
+        this.queuePanel = new QueuePanel(window);
         this.settingPanel = new SettingPanel(window, this);
         this.add(loginPanel);
-        this.add(instructPanel);
+        this.add(queuePanel);
         this.add(settingPanel);
 
         //create the buttons
@@ -68,7 +68,7 @@ public class MenuPanel extends GamePanel {
 
         BufferedImage playIcon = Utils.loadImage("resources/icons/play.png");
         CircleButton playButton = new CircleButton(playIcon, Utils.scale(670), Utils.scale(1120), Utils.scale(50));
-        playButton.setOnSubmit(() -> window.switchState(Window.SONG_SELECT_STATE));
+        playButton.setOnSubmit(() -> queuePanel.pullDown());
 
         BufferedImage controlsIcon = Utils.loadImage("resources/icons/controls.png");
         CircleButton controlsButton = new CircleButton(controlsIcon, Utils.scale(670), Utils.scale(1250), Utils.scale(50));
@@ -108,7 +108,7 @@ public class MenuPanel extends GamePanel {
         //since update() is called as a part of the EDT thread,
         //we relocate the panels inside update (for convenience instead of invoking later)
         loginPanel.relocate();
-        instructPanel.relocate();
+        queuePanel.relocate();
         settingPanel.relocate();
     }
 

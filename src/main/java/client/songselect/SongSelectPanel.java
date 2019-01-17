@@ -3,11 +3,13 @@ package client.songselect;
 import client.GamePanel;
 import client.Song;
 import client.Window;
+import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
 import protocol.Protocol;
 import protocol.TimeOverProtocol;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -142,9 +144,11 @@ public class SongSelectPanel extends GamePanel {
         for (SongTile tile : toRender) { //draw all the tiles' foregrounds
             tile.drawForeground(g2D);
         }
-        g2D.setColor(new Color(182, 239, 242));
+        g2D.setColor(new Color(249, 255, 253));
         g2D.fillRect(0,0,Utils.scale(750),Utils.scale(150));
-        g2D.setColor(new Color(60, 51, 2));
+        g2D.setColor(Pallette.OUTLINE_COLOR);
+        g2D.setStroke(new BasicStroke(2));
+        g2D.drawRect(0,0,Utils.scale(750), Utils.scale(150));
         g2D.setFont(Utils.loadFont("resources/mon.otf",20));
         g2D.drawString("Select Song",40,50);
 
