@@ -4,7 +4,6 @@ import client.Window;
 import client.utilities.Pallette;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
-import org.lwjgl.system.CallbackI;
 import protocol.AuthenticateProtocol;
 import protocol.RegisterProtocol;
 
@@ -76,7 +75,7 @@ class LoginPanel extends DropDownPanel {
         loginButton.setForeground(Pallette.OUTLINE_COLOR);
         loginButton.setSize(Utils.scale(150), Utils.scale(90));
         loginButton.setLocation(Utils.scale(205), Utils.scale(615));
-        loginButton.setBackground(new Color(255,255,255));
+        loginButton.setBackground(new Color(255, 255, 255));
         loginButton.setHorizontalAlignment(JButton.CENTER);
 
         registerButton = new JRadioButton("Register");
@@ -85,7 +84,7 @@ class LoginPanel extends DropDownPanel {
         registerButton.setForeground(Pallette.OUTLINE_COLOR);
         registerButton.setSize(Utils.scale(150), Utils.scale(90));
         registerButton.setLocation(Utils.scale(360), Utils.scale(615));
-        registerButton.setBackground(new Color(255,255,255));
+        registerButton.setBackground(new Color(255, 255, 255));
         registerButton.setHorizontalAlignment(JButton.CENTER);
 
         ButtonGroup group = new ButtonGroup();
@@ -105,7 +104,7 @@ class LoginPanel extends DropDownPanel {
         submitButton.setFocusPainted(false);
 
         backButton = new JButton("Back");
-        backButton.setFont(Utils.loadFont("moon.otf",Utils.scale(25)));
+        backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));
         backButton.addActionListener(e -> ThreadPool.execute(() -> retract()));
@@ -165,6 +164,8 @@ class LoginPanel extends DropDownPanel {
      * based on what is inputted in the fields and buttons.
      */
     private void submit() {
+        errorMessageArea.setText("");
+
         String username = usernameField.getText().trim().toLowerCase();
         String password = passwordField.getText().trim().toLowerCase();
 

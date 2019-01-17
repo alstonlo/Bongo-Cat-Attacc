@@ -9,7 +9,6 @@ import protocol.AuthenticateProtocol;
 import protocol.ExceptionProtocol;
 import protocol.Protocol;
 import protocol.RegisterProtocol;
-import protocol.ResponseProtocol;
 
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
@@ -29,9 +28,9 @@ public class MenuPanel extends GamePanel {
     private BongoCat cat;
     private BufferedImage background;
 
-    private DropDownPanel loginPanel;
-    private DropDownPanel queuePanel;
-    private DropDownPanel settingPanel;
+    private LoginPanel loginPanel;
+    private QueuePanel queuePanel;
+    private SettingPanel settingPanel;
 
     private int currSelected = 0;
     private CircleButton[] buttons = new CircleButton[3];
@@ -95,6 +94,9 @@ public class MenuPanel extends GamePanel {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update() {
         super.update();
@@ -213,55 +215,43 @@ public class MenuPanel extends GamePanel {
     /**
      * Sends a message to the server
      *
-     * @param message
+     * @param message the message to be sent
      */
     void sendMessage(Protocol message) {
-        String id = String.valueOf(idCounter.incrementAndGet());
-        message.id = id;
-        requests.put(id, message);
+        message.id = String.valueOf(idCounter.incrementAndGet());
+        requests.put(message.id, message);
         window.sendMessage(message);
     }
 
 
     private void processMessage(Protocol message) {
-        if (message instanceof ResponseProtocol) {
-            System.out.println(((ResponseProtocol) protocol).response);
-            Protocol completed = requests.remove(((ResponseProtocol) protocol).response);
-            if ((completed instanceof AuthenticateProtocol) || (completed instanceof RegisterProtocol)) {
-                loginPanel.retract();
-            }
-        } else if (message instanceof ExceptionProtocol) {
+        if (message instanceof ExceptionProtocol) {
             processMessage((ExceptionProtocol)message);
         }
     }
 
-    private void processMessage(ExceptionProtocol message){
-        Protocol response = requests.get(message.response);
-
+    private void processMessage(ExceptionProtocol message) {
         switch (message.errorState) {
             case GameException.DATABASE_ERROR_STATE:
-                loginPanel.displayErrorMessage("");
+                loginPanel.displayErrorMessage("Our database ran into an issue. Please try again.");
                 break;
 
-            case 2:
-                response = "Username already taken. Please try again.";
+            case GameException.INVALID_REGISTER_STATE:
+                loginPanel.displayErrorMessage("Username taken. Please try again.");
                 break;
 
-            case 3:
-                response = "You are already logged in! Please log out before trying again.";
+            case GameException.DOUBLE_LOGIN_STATE:
+                loginPanel.displayErrorMessage("You are already logged in.");
                 break;
 
-            case 4:
-                response = "Incorrect username or password.";
-                break;
-
-            case 5:
-                response = "You were unsuccessfully signed in. Please try again.";
+            case GameException.INVALID_LOGIN_STATE:
+                loginPanel.displayErrorMessage("Incorrect username or password.");
                 break;
 
             default:
-                response = "An error has occured. Please try again.";
+               System.out.println("Received error with state " + message.errorState);
         }
+
     }
 
 }
