@@ -4,14 +4,18 @@ import client.CircleButton;
 import client.GamePanel;
 import client.Window;
 import client.utilities.Utils;
+import protocol.AuthenticateProtocol;
 import protocol.ExceptionProtocol;
 import protocol.Protocol;
+import protocol.RegisterProtocol;
 import protocol.ResponseProtocol;
 
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Panel for the main menu.
@@ -32,6 +36,9 @@ public class MenuPanel extends GamePanel {
     private CircleButton[] buttons = new CircleButton[3];
 
     private Clip bgMusic;
+
+    private AtomicInteger idCounter = new AtomicInteger(0);
+    private ConcurrentHashMap<String, Protocol> requests = new ConcurrentHashMap<>();
 
     /**
      * Constructs a MenuPanel.
@@ -74,6 +81,9 @@ public class MenuPanel extends GamePanel {
     }
 
     void sendMessage(Protocol message) {
+        String id = String.valueOf(idCounter.incrementAndGet());
+        message.id = id;
+        requests.put(id, message);
         window.sendMessage(message);
     }
 
@@ -177,7 +187,11 @@ public class MenuPanel extends GamePanel {
     @Override
     public void notifyReceived(Protocol protocol) {
         if (protocol instanceof ResponseProtocol) {
-            ((LoginPanel) loginPanel).isSuccess();
+            System.out.println(((ResponseProtocol) protocol).response);
+            Protocol completed = requests.remove(((ResponseProtocol) protocol).response);
+            if ((completed instanceof AuthenticateProtocol) || (completed instanceof RegisterProtocol)) {
+                loginPanel.retract();
+            }
         } else if (protocol instanceof ExceptionProtocol) {
             int error = ((ExceptionProtocol) protocol).errorState;
             String message;
@@ -187,7 +201,7 @@ public class MenuPanel extends GamePanel {
                     break;
 
                 case 2:
-                    message = "Your account could not be registered. Invalid username or password";
+                    message = "Username already taken. Please try again.";
                     break;
 
                 case 3:

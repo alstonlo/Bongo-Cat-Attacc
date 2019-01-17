@@ -4,8 +4,11 @@ import client.GamePanel;
 import client.Song;
 import client.Window;
 import client.utilities.Settings;
+import client.utilities.Utils;
 import protocol.Protocol;
+import protocol.TimeOverProtocol;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.IOException;
@@ -27,6 +30,7 @@ public class SongSelectPanel extends GamePanel {
 
     private int selected = 0; //the index of the focused song tile
     private SongTile[] songTiles;
+    private Clock clock;
 
     /*
      * Contains the tiles that are in the frame of viewing, and therefore,
@@ -67,6 +71,14 @@ public class SongSelectPanel extends GamePanel {
         synchronized (viewFrame) {
             viewFrame.addFirst(focus);
         }
+
+        clock = new Clock(Utils.scale(650),Utils.scale(250),60,Utils.scale(60));
+    }
+
+    @Override
+    public void run() {
+        super.run();
+        clock.start();
     }
 
     @Override
@@ -100,7 +112,9 @@ public class SongSelectPanel extends GamePanel {
 
     @Override
     public void notifyReceived(Protocol protocol) {
+        if (protocol instanceof TimeOverProtocol){
 
+        }
     }
 
     @Override
@@ -128,6 +142,13 @@ public class SongSelectPanel extends GamePanel {
         for (SongTile tile : toRender) { //draw all the tiles' foregrounds
             tile.drawForeground(g2D);
         }
+        g2D.setColor(new Color(182, 239, 242));
+        g2D.fillRect(0,0,Utils.scale(750),Utils.scale(150));
+        g2D.setColor(new Color(60, 51, 2));
+        g2D.setFont(Utils.loadFont("resources/mon.otf",20));
+        g2D.drawString("Select Song",40,50);
+
+        clock.draw(g2D);
     }
 
     /**

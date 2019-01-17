@@ -28,7 +28,8 @@ public class Network {
             Date.class,
             Protocol.class, ExceptionProtocol.class, ResponseProtocol.class,
             AuthenticateProtocol.class, RegisterProtocol.class,
-            JoinQueueProtocol.class
+            JoinQueueProtocol.class,
+            RequestSongProtocol.class, TimeOverProtocol.class
     };
 
     /**
