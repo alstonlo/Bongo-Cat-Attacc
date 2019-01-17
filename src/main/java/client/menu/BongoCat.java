@@ -73,13 +73,15 @@ class BongoCat {
      */
     BufferedImage getImage() {
 
+        long[] drawState = {state[0], state[1]};
+
         //retrieve the row index of the sprite table
         int row;
-        if (state[0] == -1 && state[1] == -1) {
+        if (drawState[0] == -1 && drawState[1] == -1) {
             row = 0;
-        } else if (state[0] == -1) {
+        } else if (drawState[0] == -1) {
             row = 1;
-        } else if (state[1] == -1) {
+        } else if (drawState[1] == -1) {
             row = 2;
         } else {
             row = 3;
@@ -88,8 +90,8 @@ class BongoCat {
         //retrieve the column index of the sprite table
         int col;
         long time = System.currentTimeMillis();
-        long leftDelta = time - state[0];
-        long rightDelta = time - state[1];
+        long leftDelta = time - drawState[0];
+        long rightDelta = time - drawState[1];
         if (leftDelta > hitMarkDuration && rightDelta > hitMarkDuration) {
             col = 0;
         } else if (leftDelta > hitMarkDuration) {

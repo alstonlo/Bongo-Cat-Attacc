@@ -75,7 +75,7 @@ public class SongSelectPanel extends GamePanel {
             viewFrame.addFirst(focus);
         }
 
-        clock = new Clock(Utils.scale(650),Utils.scale(250),60,Utils.scale(60));
+        clock = new Clock(Utils.scale(650), Utils.scale(250), 60, Utils.scale(60));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class SongSelectPanel extends GamePanel {
 
     @Override
     public void notifyReceived(Protocol protocol) {
-        if (protocol instanceof TimeOverProtocol){
+        if (protocol instanceof TimeOverProtocol) {
 
         }
     }
@@ -136,13 +136,14 @@ public class SongSelectPanel extends GamePanel {
         for (SongTile tile : toRender) { //draw all the tiles' foregrounds
             tile.drawForeground(g2D);
         }
+
         g2D.setColor(new Color(249, 255, 253));
-        g2D.fillRect(0,0,Utils.scale(750),Utils.scale(150));
+        g2D.fillRect(0, 0, Utils.scale(750), Utils.scale(150));
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setStroke(new BasicStroke(2));
-        g2D.drawRect(0,0,Utils.scale(750), Utils.scale(150));
-        g2D.setFont(Utils.loadFont("resources/mon.otf",20));
-        g2D.drawString("Select Song",40,50);
+        g2D.drawRect(0, 0, Utils.scale(750), Utils.scale(150));
+        g2D.setFont(Utils.loadFont("resources/mon.otf", 20));
+        g2D.drawString("Select Song", 40, 50);
 
         clock.draw(g2D);
     }

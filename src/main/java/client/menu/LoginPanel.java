@@ -23,7 +23,6 @@ import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Login panel where players can log into their accounts or
@@ -154,7 +153,6 @@ class LoginPanel extends DropDownPanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.drawImage(loginDrape, 0, 0, null);
     }
-
 
     void displayErrorMessage(String message) {
         errorMessageArea.setText(message);

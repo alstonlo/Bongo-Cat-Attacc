@@ -5,7 +5,6 @@ import client.GamePanel;
 import client.Window;
 import client.utilities.Utils;
 import exceptions.GameException;
-import org.omg.CORBA.RepositoryIdHelper;
 import protocol.AuthenticateProtocol;
 import protocol.ExceptionProtocol;
 import protocol.Protocol;
@@ -128,9 +127,8 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyLeftPress() {
-        buttons[currSelected].deselect();
-        currSelected = (3 + currSelected - 1) % buttons.length;
-        buttons[currSelected].select();
+        currSelected = (currSelected + 2) % buttons.length;
+        selectButton(currSelected);
 
         cat.leftPawDown();
     }
@@ -148,9 +146,8 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyRightPress() {
-        buttons[currSelected].deselect();
         currSelected = (currSelected + 1) % buttons.length;
-        buttons[currSelected].select();
+        selectButton(currSelected);
 
         cat.rightPawDown();
     }
@@ -209,7 +206,6 @@ public class MenuPanel extends GamePanel {
         window.sendMessage(message);
     }
 
-
     private void processMessage(Protocol message) {
         if (message instanceof ExceptionProtocol) {
             processMessage((ExceptionProtocol) message);
@@ -247,9 +243,17 @@ public class MenuPanel extends GamePanel {
                 break;
 
             default:
-               System.out.println("Received error with state " + message.errorState);
+                System.out.println("Received error with state " + message.errorState);
         }
-
     }
 
+    private synchronized void selectButton(int index) {
+        for (int i = 0; i < buttons.length; i++) {
+            if (i == index) {
+                buttons[i].select();
+            } else {
+                buttons[i].deselect();
+            }
+        }
+    }
 }
