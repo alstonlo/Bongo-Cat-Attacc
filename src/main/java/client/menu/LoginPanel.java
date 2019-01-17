@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Login panel where players can log into their accounts or
@@ -133,6 +134,14 @@ class LoginPanel extends DropDownPanel {
         setVisible(true);
     }
 
+    @Override
+    void retract() {
+        super.retract();
+        usernameField.setText("Username");
+        passwordField.setText("Password");
+        errorMessageArea.setText("");
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -149,14 +158,6 @@ class LoginPanel extends DropDownPanel {
 
     void displayErrorMessage(String message) {
         errorMessageArea.setText(message);
-    }
-
-    @Override
-    void retract() {
-        super.retract();
-        usernameField.setText("Username");
-        passwordField.setText("Password");
-        errorMessageArea.setText("");
     }
 
     /**

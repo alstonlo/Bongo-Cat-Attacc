@@ -39,7 +39,7 @@ class Player extends Connection {
      *
      * @param username the new username of the player
      */
-    void registerUsername(String username) {
+    synchronized void registerUsername(String username) {
         if (!loggedIn()) {
             this.username = username;
         }

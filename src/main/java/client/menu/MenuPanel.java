@@ -5,10 +5,12 @@ import client.GamePanel;
 import client.Window;
 import client.utilities.Utils;
 import exceptions.GameException;
+import org.omg.CORBA.RepositoryIdHelper;
 import protocol.AuthenticateProtocol;
 import protocol.ExceptionProtocol;
 import protocol.Protocol;
 import protocol.RegisterProtocol;
+import protocol.ResponseProtocol;
 
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
@@ -173,24 +175,8 @@ public class MenuPanel extends GamePanel {
      * {@inheritDoc}
      */
     @Override
-    public void notifyConnected() {
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void notifyReceived(Protocol protocol) {
         processMessage(protocol);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyDisconnected() {
-
     }
 
     /**
@@ -226,7 +212,19 @@ public class MenuPanel extends GamePanel {
 
     private void processMessage(Protocol message) {
         if (message instanceof ExceptionProtocol) {
-            processMessage((ExceptionProtocol)message);
+            processMessage((ExceptionProtocol) message);
+        } else if (message instanceof ResponseProtocol) {
+            processMessage((ResponseProtocol) message);
+        }
+    }
+
+    private void processMessage(ResponseProtocol message) {
+        Protocol response = requests.get(message.response);
+
+        if (response instanceof AuthenticateProtocol) {
+
+        } else if (response instanceof RegisterProtocol) {
+
         }
     }
 

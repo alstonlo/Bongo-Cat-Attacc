@@ -43,19 +43,9 @@ public interface Controllable {
     //notifies this object of connections and messages from the server
 
     /**
-     * Notify to this object that the client connected to the server.
-     */
-    void notifyConnected();
-
-    /**
      * Notify to this object that a message was received from the server.
      *
      * @param protocol the protocol that was received
      */
     void notifyReceived(Protocol protocol);
-
-    /**
-     * Notify to this object that the client disconnected from the server.
-     */
-    void notifyDisconnected();
 }

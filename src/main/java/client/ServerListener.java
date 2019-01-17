@@ -32,9 +32,6 @@ public class ServerListener extends Listener {
      */
     @Override
     public void connected(Connection connection) {
-        if (obj != null) {
-            ThreadPool.execute(() -> obj.notifyConnected());
-        }
     }
 
     /**
@@ -57,9 +54,6 @@ public class ServerListener extends Listener {
      */
     @Override
     public void disconnected(Connection connection) {
-        if (obj != null) {
-            ThreadPool.execute(() -> obj.notifyDisconnected());
-        }
     }
 
 }

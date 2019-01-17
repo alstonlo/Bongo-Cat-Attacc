@@ -108,21 +108,12 @@ public class SongSelectPanel extends GamePanel {
     public void notifyHold() {
     }
 
-    @Override
-    public void notifyConnected() {
-
-    }
 
     @Override
     public void notifyReceived(Protocol protocol) {
         if (protocol instanceof TimeOverProtocol){
 
         }
-    }
-
-    @Override
-    public void notifyDisconnected() {
-
     }
 
     @Override
