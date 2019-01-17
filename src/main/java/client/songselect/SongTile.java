@@ -5,6 +5,7 @@ import client.utilities.Settings;
 import client.utilities.Utils;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -93,7 +94,10 @@ class SongTile {
      * @param g2D the Graphics context in which to paint
      */
     void drawForeground(Graphics2D g2D) {
+        g2D.setColor(new Color(68, 68, 68));
         g2D.fillRoundRect(Utils.round(drawX) + (panelWidth - WIDTH) / 2, Y_POS,
                 WIDTH, HEIGHT, 30, 30);
+        g2D.setColor(Color.WHITE);
+        g2D.drawString(song.getName(),Utils.round(drawX)+ (panelWidth - WIDTH) / 2 + Utils.scale(30), Y_POS + 30);
     }
 }

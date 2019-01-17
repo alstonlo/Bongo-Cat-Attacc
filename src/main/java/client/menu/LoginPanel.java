@@ -67,6 +67,7 @@ class LoginPanel extends DropDownPanel {
 
         //radio buttons (to toggle between registering and logging in)
         loginButton = new JRadioButton("Login", true);
+        loginButton.setFont(Utils.loadFont("moon.otf", Utils.scale(15)));
         loginButton.setSize(Utils.scale(150), Utils.scale(90));
         loginButton.setLocation(Utils.scale(225), Utils.scale(615));
         loginButton.setBackground(new Color(255,255,255));
@@ -107,8 +108,8 @@ class LoginPanel extends DropDownPanel {
         errorMessageArea.setBorder(null);
         errorMessageArea.setBackground(new Color(255, 255, 255));
         errorMessageArea.setForeground(new Color(60, 51, 28));
-        errorMessageArea.setSize(Utils.scale(200), Utils.scale(80));
-        errorMessageArea.setLocation(Utils.scale(275), Utils.scale(330));
+        errorMessageArea.setSize(Utils.scale(600), Utils.scale(80));
+        errorMessageArea.setLocation(Utils.scale(75), Utils.scale(330));
 
         add(usernameField);
         add(passwordField);
@@ -148,10 +149,6 @@ class LoginPanel extends DropDownPanel {
         } else if (loginButton.isSelected()) {   //if user is logging into an account
             menuPanel.sendMessage(new AuthenticateProtocol(username, password));
         }
-    }
-
-    public void isSuccess() {
-        retract();
     }
 
     public void failed(String message) {
