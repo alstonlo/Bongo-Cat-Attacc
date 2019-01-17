@@ -4,6 +4,7 @@ import client.Window;
 import client.utilities.Pallette;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
+import org.lwjgl.system.CallbackI;
 import protocol.AuthenticateProtocol;
 import protocol.RegisterProtocol;
 
@@ -17,6 +18,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
@@ -65,17 +67,24 @@ class LoginPanel extends DropDownPanel {
         passwordField.setLocation(Utils.scale(175), Utils.scale(520));
         stylizeTextField(passwordField);
 
+        Font buttonFont = Utils.loadFont("moon.otf", Utils.scale(30));
+
         //radio buttons (to toggle between registering and logging in)
         loginButton = new JRadioButton("Login", true);
-        loginButton.setFont(Utils.loadFont("moon.otf", Utils.scale(15)));
+        loginButton.setFont(buttonFont);
+        loginButton.setFocusPainted(false);
+        loginButton.setForeground(Pallette.OUTLINE_COLOR);
         loginButton.setSize(Utils.scale(150), Utils.scale(90));
-        loginButton.setLocation(Utils.scale(225), Utils.scale(615));
+        loginButton.setLocation(Utils.scale(205), Utils.scale(615));
         loginButton.setBackground(new Color(255,255,255));
         loginButton.setHorizontalAlignment(JButton.CENTER);
 
         registerButton = new JRadioButton("Register");
+        registerButton.setFont(buttonFont);
+        registerButton.setFocusPainted(false);
+        registerButton.setForeground(Pallette.OUTLINE_COLOR);
         registerButton.setSize(Utils.scale(150), Utils.scale(90));
-        registerButton.setLocation(Utils.scale(375), Utils.scale(615));
+        registerButton.setLocation(Utils.scale(360), Utils.scale(615));
         registerButton.setBackground(new Color(255,255,255));
         registerButton.setHorizontalAlignment(JButton.CENTER);
 
@@ -85,21 +94,24 @@ class LoginPanel extends DropDownPanel {
 
         //buttons
         submitButton = new JButton("Submit");
-        submitButton.setSize(Utils.scale(200), Utils.scale(70));
-        submitButton.setLocation(Utils.scale(275), Utils.scale(760));
+        submitButton.setFont(buttonFont);
+        submitButton.setSize(Utils.scale(250), Utils.scale(90));
+        submitButton.setLocation(Utils.scale(250), Utils.scale(750));
         submitButton.addActionListener(e -> ThreadPool.execute(() -> submit()));
-        submitButton.setBorder(null);
+        Border outline = BorderFactory.createLineBorder(Pallette.OUTLINE_COLOR, Utils.scale(3), true);
+        submitButton.setBorder(outline);
         submitButton.setBackground(new Color(255, 221, 216));
-        submitButton.setForeground(new Color(60, 51, 28));
+        submitButton.setForeground(Pallette.OUTLINE_COLOR);
         submitButton.setFocusPainted(false);
 
         backButton = new JButton("Back");
+        backButton.setFont(Utils.loadFont("moon.otf",Utils.scale(25)));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));
         backButton.addActionListener(e -> ThreadPool.execute(() -> retract()));
         backButton.setBorder(null);
         backButton.setBackground(new Color(255, 221, 216));
-        backButton.setForeground(new Color(60, 51, 28));
+        backButton.setForeground(Pallette.OUTLINE_COLOR);
         backButton.setFocusPainted(false);
 
         errorMessageArea = new JTextField();
@@ -107,7 +119,7 @@ class LoginPanel extends DropDownPanel {
         errorMessageArea.setHorizontalAlignment(JTextField.CENTER);
         errorMessageArea.setBorder(null);
         errorMessageArea.setBackground(new Color(255, 255, 255));
-        errorMessageArea.setForeground(new Color(60, 51, 28));
+        errorMessageArea.setForeground(Pallette.OUTLINE_COLOR);
         errorMessageArea.setSize(Utils.scale(600), Utils.scale(80));
         errorMessageArea.setLocation(Utils.scale(75), Utils.scale(330));
 

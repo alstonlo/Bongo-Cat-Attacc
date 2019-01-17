@@ -1,5 +1,6 @@
 package client.songselect;
 
+import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
@@ -21,10 +22,10 @@ public class Clock {
     private int radius;
     private int armRadius;
 
-    public AtomicBoolean timeIsOn = new AtomicBoolean(true);
+    private AtomicBoolean timeIsOn = new AtomicBoolean(true);
 
 
-    Clock(int x, int y, int seconds, int radius){
+    public Clock(int x, int y, int seconds, int radius){
         this.x = x;
         this.y = y;
         this.seconds = seconds;
@@ -33,22 +34,28 @@ public class Clock {
         this.currY = y - radius;
     }
 
-    void draw(Graphics2D g2D){
+    public void draw(Graphics2D g2D){
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.setColor(new Color(255,255,255));
         g2D.fillOval(x-radius+1, y-radius+1, radius*2-1, radius*2-1);
-        g2D.setColor(new Color(60, 51, 2));
+        g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setStroke(new BasicStroke(Utils.scale(3)));
         g2D.drawLine(x,y,currX, currY);
         g2D.setStroke(new BasicStroke(Utils.scale(4)));
         g2D.drawOval(x-radius,y-radius,radius*2,radius*2);
     }
 
-    void start(){
+    public void start(){
+        timeIsOn.set(true);
         ThreadPool.execute(() -> updatePosition());
     }
 
-    void updatePosition(){
+    public void stop(){
+        timeIsOn.set(false);
+        currY = y - radius;
+    }
+
+    private void updatePosition(){
         long startTime = System.currentTimeMillis();
         while(timeIsOn.get()){
             double theta = 2.0 * Math.PI *(System.currentTimeMillis()-startTime)/(1000.0*seconds);
