@@ -3,6 +3,7 @@ package client.songselect;
 import client.GamePanel;
 import client.Song;
 import client.Window;
+import client.components.Clock;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
