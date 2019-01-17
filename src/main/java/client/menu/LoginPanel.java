@@ -72,13 +72,11 @@ class LoginPanel extends DropDownPanel {
         loginButton.setBackground(new Color(255,255,255));
         loginButton.setHorizontalAlignment(JButton.CENTER);
 
-
         registerButton = new JRadioButton("Register");
         registerButton.setSize(Utils.scale(150), Utils.scale(90));
         registerButton.setLocation(Utils.scale(375), Utils.scale(615));
         registerButton.setBackground(new Color(255,255,255));
         registerButton.setHorizontalAlignment(JButton.CENTER);
-
 
         ButtonGroup group = new ButtonGroup();
         group.add(loginButton);
