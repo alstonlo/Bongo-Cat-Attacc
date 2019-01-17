@@ -1,6 +1,7 @@
 package client.menu;
 
 import client.Window;
+import client.utilities.Pallette;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
 import protocol.AuthenticateProtocol;
@@ -32,7 +33,6 @@ import java.awt.image.BufferedImage;
  */
 class LoginPanel extends DropDownPanel {
 
-    private final Color OUTLINE_COLOR = new Color(60, 51, 28);
     private BufferedImage loginDrape = Utils.loadScaledImage("resources/menu/login drape.png");
 
     private MenuPanel menuPanel;
@@ -77,7 +77,6 @@ class LoginPanel extends DropDownPanel {
         loginButton.setBackground(new Color(255,255,255));
         loginButton.setHorizontalAlignment(JButton.CENTER);
 
-
         registerButton = new JRadioButton("Register");
         registerButton.setFont(buttonFont);
         registerButton.setFocusPainted(false);
@@ -85,7 +84,6 @@ class LoginPanel extends DropDownPanel {
         registerButton.setLocation(Utils.scale(360), Utils.scale(615));
         registerButton.setBackground(new Color(255,255,255));
         registerButton.setHorizontalAlignment(JButton.CENTER);
-
 
         ButtonGroup group = new ButtonGroup();
         group.add(loginButton);
@@ -177,11 +175,11 @@ class LoginPanel extends DropDownPanel {
         String defaultText = field.getText();
 
         field.setSize(Utils.scale(400), Utils.scale(90));
-        field.setForeground(OUTLINE_COLOR);
+        field.setForeground(Pallette.OUTLINE_COLOR);
         field.setBackground(new Color(247, 195, 210));
         field.setFont(Utils.loadFont("resources/mon.otf", Utils.scale(40)));
 
-        Border outline = BorderFactory.createLineBorder(OUTLINE_COLOR, Utils.scale(3), true);
+        Border outline = BorderFactory.createLineBorder(Pallette.OUTLINE_COLOR, Utils.scale(3), true);
         int padSize = Utils.scale(10);
         Border padding = BorderFactory.createEmptyBorder(0, padSize, 0, padSize);
         field.setBorder(BorderFactory.createCompoundBorder(outline, padding));
