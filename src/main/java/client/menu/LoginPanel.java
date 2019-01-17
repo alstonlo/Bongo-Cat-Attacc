@@ -163,8 +163,6 @@ class LoginPanel extends DropDownPanel {
      * based on what is inputted in the fields and buttons.
      */
     private void submit() {
-        errorMessageArea.setText("");
-
         String username = usernameField.getText().trim().toLowerCase();
         String password = passwordField.getText().trim().toLowerCase();
 
