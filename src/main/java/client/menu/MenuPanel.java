@@ -4,6 +4,7 @@ import client.CircleButton;
 import client.GamePanel;
 import client.Window;
 import client.utilities.Utils;
+import exceptions.GameException;
 import protocol.AuthenticateProtocol;
 import protocol.ExceptionProtocol;
 import protocol.Protocol;
@@ -28,9 +29,8 @@ public class MenuPanel extends GamePanel {
     private BongoCat cat;
     private BufferedImage background;
 
-    private DropDownPanel loginPanel;
-    private DropDownPanel instructPanel;
-    private DropDownPanel settingPanel;
+    private LoginPanel loginPanel;
+    private SettingPanel settingPanel;
 
     private int currSelected = 0;
     private CircleButton[] buttons = new CircleButton[3];
@@ -54,11 +54,9 @@ public class MenuPanel extends GamePanel {
         this.background = Utils.loadScaledImage("resources/menu/yellow.png");
 
         //create the drawer panels
-        this.loginPanel = new LoginPanel(window, this);
-        this.instructPanel = new InstructionPanel(window, this);
+        this.loginPanel = new LoginPanel(window, this);;
         this.settingPanel = new SettingPanel(window, this);
         this.add(loginPanel);
-        this.add(instructPanel);
         this.add(settingPanel);
 
         //create the buttons
@@ -78,13 +76,6 @@ public class MenuPanel extends GamePanel {
         buttons[1] = playButton;
         buttons[2] = controlsButton;
         buttons[currSelected].select();
-    }
-
-    void sendMessage(Protocol message) {
-        String id = String.valueOf(idCounter.incrementAndGet());
-        message.id = id;
-        requests.put(id, message);
-        window.sendMessage(message);
     }
 
     /**
@@ -108,7 +99,6 @@ public class MenuPanel extends GamePanel {
         //since update() is called as a part of the EDT thread,
         //we relocate the panels inside update (for convenience instead of invoking later)
         loginPanel.relocate();
-        instructPanel.relocate();
         settingPanel.relocate();
     }
 
@@ -186,42 +176,7 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyReceived(Protocol protocol) {
-        if (protocol instanceof ResponseProtocol) {
-            System.out.println(((ResponseProtocol) protocol).response);
-            Protocol completed = requests.remove(((ResponseProtocol) protocol).response);
-            if ((completed instanceof AuthenticateProtocol) || (completed instanceof RegisterProtocol)) {
-                loginPanel.retract();
-            }
-        } else if (protocol instanceof ExceptionProtocol) {
-            int error = ((ExceptionProtocol) protocol).errorState;
-            String message;
-            switch (error) {
-                case 1:
-                    message = "The database ran into an issue. Please try again.";
-                    break;
-
-                case 2:
-                    message = "Username already taken. Please try again.";
-                    break;
-
-                case 3:
-                    message = "You are already logged in! Please log out before trying again.";
-                    break;
-
-                case 4:
-                    message = "Incorrect username or password.";
-                    break;
-
-                case 5:
-                    message = "You were unsuccessfully signed in. Please try again.";
-                    break;
-
-                default:
-                    message = "An error has occured. Please try again.";
-            }
-            ((LoginPanel) loginPanel).failed(message);
-        }
-
+        processMessage(protocol);
     }
 
     /**
@@ -250,4 +205,59 @@ public class MenuPanel extends GamePanel {
             button.draw(g2D);
         }
     }
+
+    /**
+     * Sends a message to the server
+     *
+     * @param message
+     */
+    void sendMessage(Protocol message) {
+        String id = String.valueOf(idCounter.incrementAndGet());
+        message.id = id;
+        requests.put(id, message);
+        window.sendMessage(message);
+    }
+
+
+    private void processMessage(Protocol message) {
+        if (message instanceof ResponseProtocol) {
+            System.out.println(((ResponseProtocol) protocol).response);
+            Protocol completed = requests.remove(((ResponseProtocol) protocol).response);
+            if ((completed instanceof AuthenticateProtocol) || (completed instanceof RegisterProtocol)) {
+                loginPanel.retract();
+            }
+        } else if (message instanceof ExceptionProtocol) {
+            processMessage((ExceptionProtocol)message);
+        }
+    }
+
+    private void processMessage(ExceptionProtocol message){
+        Protocol response = requests.get(message.response);
+
+        switch (message.errorState) {
+            case GameException.DATABASE_ERROR_STATE:
+                loginPanel.displayErrorMessage("");
+                break;
+
+            case 2:
+                response = "Username already taken. Please try again.";
+                break;
+
+            case 3:
+                response = "You are already logged in! Please log out before trying again.";
+                break;
+
+            case 4:
+                response = "Incorrect username or password.";
+                break;
+
+            case 5:
+                response = "You were unsuccessfully signed in. Please try again.";
+                break;
+
+            default:
+                response = "An error has occured. Please try again.";
+        }
+    }
+
 }

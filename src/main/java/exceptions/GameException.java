@@ -9,11 +9,11 @@ package exceptions;
  */
 public class GameException extends Exception {
 
-    public static int DATABASE_ERROR_STATE = 1; //database access error
-    public static int INVALID_REGISTER_STATE = 2; //player attempted to register with an invalid username or password
-    public static int DOUBLE_LOGIN_STATE = 3; //player who is already logged in tried to log into a another account (without logging out first)
-    public static int INVALID_LOGIN_STATE = 4; //player tried to log in with an incorrect username or password
-    public static int NOT_LOGGED_IN_STATE = 5; //player wasn't logged in
+    public final static int DATABASE_ERROR_STATE = 1; //database access error
+    public final static int INVALID_REGISTER_STATE = 2; //player attempted to register with an invalid username or password
+    public final static int DOUBLE_LOGIN_STATE = 3; //player who is already logged in tried to log into a another account (without logging out first)
+    public final static int INVALID_LOGIN_STATE = 4; //player tried to log in with an incorrect username or password
+    public final static int NOT_LOGGED_IN_STATE = 5; //player wasn't logged in
 
     private int state;
 

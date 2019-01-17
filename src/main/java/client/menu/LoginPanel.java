@@ -135,6 +135,19 @@ class LoginPanel extends DropDownPanel {
         g2D.drawImage(loginDrape, 0, 0, null);
     }
 
+
+    void displayErrorMessage(String message) {
+        errorMessageArea.setText(message);
+    }
+
+    @Override
+    void retract() {
+        super.retract();
+        usernameField.setText("Username");
+        passwordField.setText("Password");
+        errorMessageArea.setText("");
+    }
+
     /**
      * Submits the form and sends the appropriate message to the server
      * based on what is inputted in the fields and buttons.
@@ -149,18 +162,6 @@ class LoginPanel extends DropDownPanel {
         } else if (loginButton.isSelected()) {   //if user is logging into an account
             menuPanel.sendMessage(new AuthenticateProtocol(username, password));
         }
-    }
-
-    public void failed(String message) {
-        errorMessageArea.setText(message);
-    }
-
-    @Override
-    void retract() {
-        super.retract();
-        usernameField.setText("Username");
-        passwordField.setText("Password");
-        errorMessageArea.setText("");
     }
 
     //STYLIZATION METHODS (for readability)
