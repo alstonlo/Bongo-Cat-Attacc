@@ -13,6 +13,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
@@ -24,6 +25,12 @@ public class QueuePanel extends DropDownPanel {
     int currY = 1334;
 
     double speed = 8.0; //pixels per millisecond
+
+    String[] message = {"Finding Match", "Finding Match.", "Finding Match..", "Finding Match..."};
+
+    int currState = 0;
+
+    AtomicBoolean running = new AtomicBoolean(true);
 
     QueuePanel(Window window, MenuPanel menuPanel){
         super(window);
@@ -43,6 +50,7 @@ public class QueuePanel extends DropDownPanel {
         add(backButton);
         setVisible(true);
 
+        ThreadPool.execute(() -> run());
 
     }
 
@@ -58,11 +66,19 @@ public class QueuePanel extends DropDownPanel {
         clock.stop();
     }
 
+    void run(){
+        long startTime = System.currentTimeMillis();
+        while (running.get()){
+            currState = (int) Math.round((System.currentTimeMillis()-startTime)/(1000.0*2)%3);
+        }
+    }
+
     void matchMade(){
         ThreadPool.execute(() -> updatePosition());
     }
 
     void updatePosition(){
+        running.set(false);
         long startTime = System.currentTimeMillis();
         while (currY > 0){
             currY = 1334 - (int) Math.round((System.currentTimeMillis()-startTime)*speed);
@@ -86,7 +102,7 @@ public class QueuePanel extends DropDownPanel {
 
         g2D.setFont(Utils.loadFont("moon.otf",30));
         FontMetrics fontMetrics = g2D.getFontMetrics();
-        g2D.drawString("Loading...", Utils.scale(375)-fontMetrics.stringWidth("Loading")/2, Utils.scale(690));
+        g2D.drawString(message[currState], Utils.scale(375)-fontMetrics.stringWidth("Finding Match")/2, Utils.scale(690));
 
         g2D.setColor(new Color(245, 132, 148));
         g2D.fillRect(0,Utils.scale(-currY),Utils.scale(375),Utils.scale(1334));
