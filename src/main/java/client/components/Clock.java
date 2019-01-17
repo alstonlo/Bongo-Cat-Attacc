@@ -1,4 +1,4 @@
-package client.songselect;
+package client.components;
 
 import client.utilities.Pallette;
 import client.utilities.Settings;
