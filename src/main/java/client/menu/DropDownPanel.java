@@ -6,6 +6,7 @@ import client.utilities.Utils;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -44,10 +45,6 @@ abstract class DropDownPanel extends JPanel {
         this.setVisible(true);
     }
 
-    boolean isDown() {
-        return state.get() == DOWN_STATE;
-    }
-
     /**
      * Relocates this panel if it has moved from the previous call
      * of relocate() due to {@link DropDownPanel#pullDown()} or
@@ -65,7 +62,13 @@ abstract class DropDownPanel extends JPanel {
      */
     void pullDown() {
         if (state.compareAndSet(UP_STATE, ANIMATION_STATE)) {
+
             SwingUtilities.invokeLater(() -> requestFocus()); //shift focus to the panel
+            try {
+                SwingUtilities.invokeAndWait(() -> setVisible(true));
+            } catch (InterruptedException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
 
             long startTime = System.currentTimeMillis();
             double deltaTime = System.currentTimeMillis() - startTime;
@@ -96,6 +99,8 @@ abstract class DropDownPanel extends JPanel {
             y = -getHeight();
 
             state.set(UP_STATE);
+
+            SwingUtilities.invokeLater(() -> setVisible(false));
         }
     }
 }

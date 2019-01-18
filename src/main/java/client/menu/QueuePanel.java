@@ -8,6 +8,7 @@ import client.utilities.ThreadPool;
 import client.utilities.Utils;
 
 import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,63 +16,58 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
   
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
 
-    private Clock clock;
 
-    private boolean loading = false;
+    private AtomicBoolean lock = new AtomicBoolean(false);
+    private AtomicBoolean matchMade = new AtomicBoolean(false);
+
+    private Clock clock;
     private int messageState = 0;
     private double secondsPerDot = 0.8;
     private String[] message = {"Finding Match", "Finding Match.", "Finding Match..", "Finding Match..."};
 
-    private boolean animating = false;
     private final long SLIDE_DURATION = 500;
     private final long VS_ANIMATION_DURATION = 500;
     private float opacity = 0f;
 
-    private QueueRectangle leftPanel = new QueueRectangle(
-            0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
-            new Color(245, 132, 148));
-    private QueueRectangle rightPanel = new QueueRectangle(
-            Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
-            new Color(125, 151, 230));
+    private QueueRectangle leftPanel;
+    private QueueRectangle rightPanel;
 
     private Font vsFont = Utils.loadFont("resources/cloud.ttf", Utils.scale(80));
 
     QueuePanel(Window window) {
         super(window);
-        clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
 
         JButton backButton = new JButton("Back");
         backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));
-        backButton.addActionListener(e -> ThreadPool.execute(() -> matchMade()));
+        backButton.addActionListener(e -> ThreadPool.execute(this::matchMade));
         backButton.setBorder(null);
         backButton.setBackground(new Color(255, 221, 216));
         backButton.setForeground(Pallette.OUTLINE_COLOR);
         backButton.setFocusPainted(false);
         add(backButton);
 
-        setVisible(true);
+        setVisible(false);
     }
 
     @Override
     void pullDown() {
-        ThreadPool.execute(this::load);
-        super.pullDown();
-    }
-
-    @Override
-    void retract() {
-        super.retract();
+        if (lock.compareAndSet(false, true)) {
+            ThreadPool.execute(this::animate);
+            super.pullDown();
+        }
     }
 
     void matchMade() {
-        ThreadPool.execute(this::enterMatch);
+        matchMade.set(true);
     }
 
     /**
@@ -86,44 +82,49 @@ public class QueuePanel extends DropDownPanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.drawImage(settingDrape, 0, 0, null);
 
-        if (loading) {
+        if (clock != null) {
             clock.draw(g2D);
-            g2D.setFont(Utils.loadFont("moon.otf", Utils.scale(50)));
-            FontMetrics fontMetrics = g2D.getFontMetrics();
-            g2D.drawString(message[messageState], Utils.scale(375) - fontMetrics.stringWidth("Finding Match") / 2, Utils.scale(690));
         }
 
-        if (animating) {
-            leftPanel.draw(g2D);
-            rightPanel.draw(g2D);
+        g2D.setFont(Utils.loadFont("moon.otf", Utils.scale(50)));
+        FontMetrics fontMetrics = g2D.getFontMetrics();
+        g2D.drawString(message[messageState], Utils.scale(375) - fontMetrics.stringWidth("Finding Match") / 2, Utils.scale(690));
 
-            if (opacity != 0f) {
-                g2D.setComposite(AlphaComposite.SrcOver.derive(opacity));
-                g2D.setFont(vsFont);
-                g2D.setColor(Pallette.OUTLINE_COLOR);
-                FontMetrics fontMetrics = g2D.getFontMetrics();
-                g2D.drawString("vs.", Utils.scale(375) - fontMetrics.stringWidth("vs.") / 2, Utils.scale(690));
-                g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-            }
+        if (leftPanel != null) {
+            leftPanel.draw(g2D);
+        }
+        if (rightPanel != null) {
+            rightPanel.draw(g2D);
+        }
+
+        if (opacity != 0f) {
+            g2D.setComposite(AlphaComposite.SrcOver.derive(opacity));
+            g2D.setFont(vsFont);
+            g2D.setColor(Pallette.OUTLINE_COLOR);
+            fontMetrics = g2D.getFontMetrics();
+            g2D.drawString("vs.", Utils.scale(375) - fontMetrics.stringWidth("vs.") / 2, Utils.scale(690));
+            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
         }
     }
 
-    private void load() {
+    private void animate() {
+
+        clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
         clock.start();
-        loading = true;
 
         long startTime = System.currentTimeMillis();
-        while (loading) {
+        while (!matchMade.get()) {
             messageState = Utils.round((System.currentTimeMillis() - startTime) / (1000.0 * secondsPerDot)) % 3;
         }
 
-        clock.stop();
-    }
+        leftPanel = new QueueRectangle(
+                0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
+                new Color(245, 132, 148));
+        rightPanel = new QueueRectangle(
+                Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
+                new Color(125, 151, 230));
 
-    private void enterMatch() {
-        animating = true;
-
-        long startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         double deltaTime = 0;
         while (deltaTime < SLIDE_DURATION) {
             double y = Settings.PANEL_SIZE.height * (deltaTime / SLIDE_DURATION);
@@ -143,6 +144,7 @@ public class QueuePanel extends DropDownPanel {
         }
         opacity = 1f;
 
-        loading = false;
+        clock.stop();
     }
+
 }
