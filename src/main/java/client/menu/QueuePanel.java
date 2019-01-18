@@ -17,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
+    private Window window;
+
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
 
     private Clock clock;
@@ -38,6 +40,7 @@ public class QueuePanel extends DropDownPanel {
 
     QueuePanel(Window window){
         super(window);
+        this.window = window;
         clock = new Clock(Utils.scale(375), Utils.scale(500),80);
 
         JButton backButton = new JButton("Back");
@@ -67,7 +70,6 @@ public class QueuePanel extends DropDownPanel {
     }
 
     void matchMade(){
-
         ThreadPool.execute(() -> updateAnimation());
     }
 
@@ -122,5 +124,10 @@ public class QueuePanel extends DropDownPanel {
             opacity = (System.currentTimeMillis()-startTime)*0.003f;
         }
         opacity = 1f;
+        startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis()-startTime < 5000){
+
+        }
+        window.switchState(Window.SONG_SELECT_STATE);
     }
 }
