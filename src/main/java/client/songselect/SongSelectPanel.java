@@ -10,6 +10,7 @@ import client.utilities.Utils;
 import protocol.Protocol;
 import protocol.TimeOverProtocol;
 
+import javax.sound.sampled.Clip;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -43,6 +44,8 @@ public class SongSelectPanel extends GamePanel {
     private final Deque<SongTile> viewFrame = new LinkedList<>();
 
     private Clock clock;
+
+    private Clip currSong;
 
 
     /**
@@ -84,6 +87,8 @@ public class SongSelectPanel extends GamePanel {
     public void run() {
         super.run();
         clock.start();
+        currSong = songTiles[selected].getAudio();
+        currSong.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     @Override
@@ -116,6 +121,14 @@ public class SongSelectPanel extends GamePanel {
         if (protocol instanceof TimeOverProtocol) {
 
         }
+    }
+
+    private void switchSong(Clip song){
+        if (currSong != null){
+            currSong.stop();
+        }
+        currSong = song;
+        currSong.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     @Override
@@ -200,6 +213,7 @@ public class SongSelectPanel extends GamePanel {
 
             //decrement index
             selected--;
+            switchSong(getTile(selected).getAudio());
             isAnimating.set(false);
         }
     }
@@ -240,6 +254,7 @@ public class SongSelectPanel extends GamePanel {
 
             //increment index
             selected++;
+            switchSong(getTile(selected).getAudio());
             isAnimating.set(false);
         }
     }

@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
-  
+
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
 
 

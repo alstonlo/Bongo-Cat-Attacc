@@ -4,6 +4,7 @@ import client.Song;
 import client.utilities.Settings;
 import client.utilities.Utils;
 
+import javax.sound.sampled.Clip;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -26,6 +27,7 @@ class SongTile {
     private double x = 0; //the actual and time-accurate x-coordinate
     private double drawX = 0; //the x-coordinate the tile should be drawn at
 
+    private Clip audio;
     private BufferedImage splash;
 
     private final int panelWidth = Settings.PANEL_SIZE.width; //for convenience
@@ -67,6 +69,11 @@ class SongTile {
      */
     void loadTile() {
         this.splash = song.getSplash();
+        this.audio = song.getAudioExcerpt();
+    }
+
+    Clip getAudio(){
+        return this.audio;
     }
 
     /**
