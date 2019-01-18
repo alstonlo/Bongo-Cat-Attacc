@@ -10,16 +10,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-public class SettingPanel extends DropDownPanel{
+public class SettingPanel extends DropDownPanel {
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
-
-    private MenuPanel menuPanel;
 
     private JButton backButton;
 
-    SettingPanel(Window window, MenuPanel menuPanel){
+    SettingPanel(Window window) {
         super(window);
-        this.menuPanel = menuPanel;
         this.setLayout(null);
 
         backButton = new JButton("Back");
@@ -28,9 +25,8 @@ public class SettingPanel extends DropDownPanel{
         backButton.addActionListener(e -> ThreadPool.execute(() -> retract()));
         backButton.setBorder(null);
         backButton.setBackground(new Color(190, 207, 255));
-        backButton.setForeground(new Color(60,51,28));
+        backButton.setForeground(new Color(60, 51, 28));
         backButton.setFocusPainted(false);
-
         add(backButton);
 
         setVisible(true);

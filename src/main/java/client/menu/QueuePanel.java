@@ -51,7 +51,6 @@ public class QueuePanel extends DropDownPanel {
 
     @Override
     void pullDown() {
-        clock.start();
         ThreadPool.execute(() -> run());
         
         super.pullDown();
