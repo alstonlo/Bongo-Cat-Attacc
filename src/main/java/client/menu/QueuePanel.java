@@ -3,6 +3,7 @@ package client.menu;
 import client.Window;
 import client.components.Clock;
 import client.utilities.Pallette;
+import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
 
@@ -14,31 +15,35 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
+
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
 
     private Clock clock;
 
-    private int currY = Utils.scale(1335);
-    private double speed = (double) Utils.scale(4.0); //pixels per millisecond
+    private boolean loading = false;
+    private int messageState = 0;
+    private double secondsPerDot = 0.8;
     private String[] message = {"Finding Match", "Finding Match.", "Finding Match..", "Finding Match..."};
-    private int currState = 0;
-    private double secondsPerDot = (double) Utils.scale(0.8);
 
-    AtomicBoolean running = new AtomicBoolean(true);
-    private boolean showVS = false;
+    private boolean animating = false;
+    private final long SLIDE_DURATION = 500;
+    private final long VS_ANIMATION_DURATION = 500;
     private float opacity = 0f;
 
-    private QueueRectangle leftPanel = new QueueRectangle(Utils.scale(375), Utils.scale(1334),new Color(245, 132, 148));
-    private QueueRectangle rightPanel = new QueueRectangle(Utils.scale(375), Utils.scale(1334),new Color(125, 151,230));
+    private QueueRectangle leftPanel = new QueueRectangle(
+            0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
+            new Color(245, 132, 148));
+    private QueueRectangle rightPanel = new QueueRectangle(
+            Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
+            new Color(125, 151, 230));
 
     private Font vsFont = Utils.loadFont("resources/cloud.ttf", Utils.scale(80));
 
-    QueuePanel(Window window){
+    QueuePanel(Window window) {
         super(window);
-        clock = new Clock(Utils.scale(375), Utils.scale(500),80);
+        clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
 
         JButton backButton = new JButton("Back");
         backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
@@ -56,19 +61,17 @@ public class QueuePanel extends DropDownPanel {
 
     @Override
     void pullDown() {
-        ThreadPool.execute(() -> run());
+        ThreadPool.execute(this::load);
         super.pullDown();
     }
 
     @Override
     void retract() {
         super.retract();
-        clock.stop();
     }
 
-    void matchMade(){
-
-        ThreadPool.execute(() -> updateAnimation());
+    void matchMade() {
+        ThreadPool.execute(this::enterMatch);
     }
 
     /**
@@ -83,44 +86,63 @@ public class QueuePanel extends DropDownPanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.drawImage(settingDrape, 0, 0, null);
 
-        clock.draw(g2D);
+        if (loading) {
+            clock.draw(g2D);
+            g2D.setFont(Utils.loadFont("moon.otf", Utils.scale(50)));
+            FontMetrics fontMetrics = g2D.getFontMetrics();
+            g2D.drawString(message[messageState], Utils.scale(375) - fontMetrics.stringWidth("Finding Match") / 2, Utils.scale(690));
+        }
 
-        g2D.setFont(Utils.loadFont("moon.otf",Utils.scale(50)));
-        FontMetrics fontMetrics = g2D.getFontMetrics();
-        g2D.drawString(message[currState], Utils.scale(375)-fontMetrics.stringWidth("Finding Match")/2, Utils.scale(690));
+        if (animating) {
+            leftPanel.draw(g2D);
+            rightPanel.draw(g2D);
 
-        leftPanel.draw(g2D,0,-currY);
-        rightPanel.draw(g2D, Utils.scale(375),currY);
-
-        if (showVS){
-            g2D.setComposite(AlphaComposite.SrcOver.derive(opacity));
-            g2D.setFont(vsFont);
-            g2D.setColor(Pallette.OUTLINE_COLOR);
-            fontMetrics = g2D.getFontMetrics();
-            g2D.drawString("vs.", Utils.scale(375)-fontMetrics.stringWidth("vs.")/2, Utils.scale(690));
-            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+            if (opacity != 0f) {
+                g2D.setComposite(AlphaComposite.SrcOver.derive(opacity));
+                g2D.setFont(vsFont);
+                g2D.setColor(Pallette.OUTLINE_COLOR);
+                FontMetrics fontMetrics = g2D.getFontMetrics();
+                g2D.drawString("vs.", Utils.scale(375) - fontMetrics.stringWidth("vs.") / 2, Utils.scale(690));
+                g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+            }
         }
     }
 
-    private void run(){
+    private void load() {
+        clock.start();
+        loading = true;
+
         long startTime = System.currentTimeMillis();
-        while (running.get()){
-            currState = Utils.round((System.currentTimeMillis()-startTime)/(1000.0*secondsPerDot)%3);
+        while (loading) {
+            messageState = Utils.round((System.currentTimeMillis() - startTime) / (1000.0 * secondsPerDot)) % 3;
         }
+
+        clock.stop();
     }
 
-    private void updateAnimation(){
-        running.set(false);
+    private void enterMatch() {
+        animating = true;
+
         long startTime = System.currentTimeMillis();
-        while (currY > 0){
-            currY = Utils.scale(1335) - (int) Math.round((System.currentTimeMillis()-startTime)*speed);
+        double deltaTime = 0;
+        while (deltaTime < SLIDE_DURATION) {
+            double y = Settings.PANEL_SIZE.height * (deltaTime / SLIDE_DURATION);
+            leftPanel.setY(-Settings.PANEL_SIZE.height + y);
+            rightPanel.setY(Settings.PANEL_SIZE.height - y);
+            deltaTime = System.currentTimeMillis() - startTime;
         }
-        currY = 0;
-        showVS = true;
+        leftPanel.setY(0);
+        rightPanel.setY(0);
+
+        opacity = 0f;
         startTime = System.currentTimeMillis();
-        while (opacity < 1f){
-            opacity = (System.currentTimeMillis()-startTime)*0.003f;
+        deltaTime = 0;
+        while (deltaTime < VS_ANIMATION_DURATION) {
+            opacity = (float)(deltaTime / VS_ANIMATION_DURATION);
+            deltaTime = System.currentTimeMillis() - startTime;
         }
         opacity = 1f;
+
+        loading = false;
     }
 }
