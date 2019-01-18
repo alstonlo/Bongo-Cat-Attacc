@@ -17,7 +17,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class QueuePanel extends DropDownPanel {
-
+  
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
 
     private Clock clock;
