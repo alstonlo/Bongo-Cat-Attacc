@@ -1,6 +1,5 @@
 package client.menu;
 
-import client.Controllable;
 import client.Window;
 import client.components.Clock;
 import client.utilities.Pallette;
@@ -29,6 +28,7 @@ public class QueuePanel extends DropDownPanel {
     String[] message = {"Finding Match", "Finding Match.", "Finding Match..", "Finding Match..."};
 
     int currState = 0;
+    double secondsPerDot = 0.8;
 
     AtomicBoolean running = new AtomicBoolean(true);
 
@@ -69,7 +69,7 @@ public class QueuePanel extends DropDownPanel {
     void run(){
         long startTime = System.currentTimeMillis();
         while (running.get()){
-            currState = (int) Math.round((System.currentTimeMillis()-startTime)/(1000.0*2)%3);
+            currState = (int) Math.round((System.currentTimeMillis()-startTime)/(1000.0*secondsPerDot)%3);
         }
     }
 
