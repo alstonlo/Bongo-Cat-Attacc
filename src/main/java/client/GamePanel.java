@@ -24,6 +24,7 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
     public GamePanel(Window window) {
         this.window = window;
         this.animationTimer = new Timer(FPS / 30, (e) -> update());
+        this.setVisible(false);
     }
 
     /**

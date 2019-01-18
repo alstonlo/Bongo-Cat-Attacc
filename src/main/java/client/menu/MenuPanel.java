@@ -80,6 +80,8 @@ public class MenuPanel extends GamePanel {
         buttons[1] = playButton;
         buttons[2] = controlsButton;
         buttons[currSelected].select();
+
+        this.setVisible(true);
     }
 
     /**

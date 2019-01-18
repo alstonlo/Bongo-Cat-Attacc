@@ -8,7 +8,6 @@ import client.utilities.ThreadPool;
 import client.utilities.Utils;
 
 import javax.swing.JButton;
-import javax.swing.SwingUtilities;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -16,7 +15,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
@@ -55,7 +53,7 @@ public class QueuePanel extends DropDownPanel {
         backButton.setFocusPainted(false);
         add(backButton);
 
-        setVisible(false);
+        this.clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
     }
 
     @Override
@@ -82,9 +80,7 @@ public class QueuePanel extends DropDownPanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.drawImage(settingDrape, 0, 0, null);
 
-        if (clock != null) {
-            clock.draw(g2D);
-        }
+        clock.draw(g2D);
 
         g2D.setFont(Utils.loadFont("moon.otf", Utils.scale(50)));
         FontMetrics fontMetrics = g2D.getFontMetrics();
@@ -109,7 +105,7 @@ public class QueuePanel extends DropDownPanel {
 
     private void animate() {
 
-        clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
+        clock.configureSprites();
         clock.start();
 
         long startTime = System.currentTimeMillis();
@@ -139,7 +135,7 @@ public class QueuePanel extends DropDownPanel {
         startTime = System.currentTimeMillis();
         deltaTime = 0;
         while (deltaTime < VS_ANIMATION_DURATION) {
-            opacity = (float)(deltaTime / VS_ANIMATION_DURATION);
+            opacity = (float) (deltaTime / VS_ANIMATION_DURATION);
             deltaTime = System.currentTimeMillis() - startTime;
         }
         opacity = 1f;

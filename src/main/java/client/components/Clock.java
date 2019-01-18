@@ -8,6 +8,7 @@ import client.utilities.Utils;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Clock {
@@ -23,6 +24,8 @@ public class Clock {
     private int radius;
     private int armLength;
 
+    private BufferedImage sprite;
+
     private AtomicBoolean timeIsOn = new AtomicBoolean(true);
 
     public Clock(int x, int y, int radius) {
@@ -31,6 +34,10 @@ public class Clock {
         this.radius = radius;
         this.armLength = radius - Utils.scale(5);
         this.armY = y - radius;
+    }
+
+    public void configureSprites() {
+
     }
 
     public void start() {

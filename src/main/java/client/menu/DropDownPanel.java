@@ -42,7 +42,7 @@ abstract class DropDownPanel extends JPanel {
         this.y = -getHeight();
         relocate();
         this.setOpaque(false);
-        this.setVisible(true);
+        this.setVisible(false);
     }
 
     /**

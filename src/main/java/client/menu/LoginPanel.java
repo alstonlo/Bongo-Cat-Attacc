@@ -117,8 +117,6 @@ class LoginPanel extends DropDownPanel {
         add(submitButton);
         add(backButton);
         add(errorMessageArea);
-
-        setVisible(true);
     }
 
     @Override
