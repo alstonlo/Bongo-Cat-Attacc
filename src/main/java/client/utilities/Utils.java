@@ -103,17 +103,6 @@ public class Utils {
     }
 
     /**
-     * Returns a {@link BufferedImage} from the specified file path and scales it
-     * according to {@link Settings#SCALE}.
-     *
-     * @param filePath the file path of the image
-     * @return the image file at the filePath argument; or null if an IOException occurs
-     */
-    public static BufferedImage loadScaledImage(String filePath) {
-        return scale(loadImage(filePath));
-    }
-
-    /**
      * Returns a {@link BufferedImage} from the specified file path but does not scale it.
      *
      * @param filePath the file path of the image
@@ -126,6 +115,17 @@ public class Utils {
             System.out.println("Failed to load image at " + filePath);
             return null;
         }
+    }
+
+    /**
+     * Returns a {@link BufferedImage} from the specified file path and scales it
+     * according to {@link Settings#SCALE}.
+     *
+     * @param filePath the file path of the image
+     * @return the image file at the filePath argument; or null if an IOException occurs
+     */
+    public static BufferedImage loadScaledImage(String filePath) {
+        return scale(loadImage(filePath));
     }
 
     /**

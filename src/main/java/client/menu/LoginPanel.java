@@ -59,33 +59,21 @@ class LoginPanel extends DropDownPanel {
         //text field for username
         usernameField = new JTextField("Username");
         usernameField.setLocation(Utils.scale(175), Utils.scale(400));
-        stylizeTextField(usernameField);
+        stylize(usernameField);
 
         //text field for password
         passwordField = new JTextField("Password");
         passwordField.setLocation(Utils.scale(175), Utils.scale(520));
-        stylizeTextField(passwordField);
-
-        Font buttonFont = Utils.loadFont("moon.otf", Utils.scale(30));
+        stylize(passwordField);
 
         //radio buttons (to toggle between registering and logging in)
         loginButton = new JRadioButton("Login", true);
-        loginButton.setFont(buttonFont);
-        loginButton.setFocusPainted(false);
-        loginButton.setForeground(Pallette.OUTLINE_COLOR);
-        loginButton.setSize(Utils.scale(150), Utils.scale(90));
         loginButton.setLocation(Utils.scale(205), Utils.scale(615));
-        loginButton.setBackground(new Color(255, 255, 255));
-        loginButton.setHorizontalAlignment(JButton.CENTER);
+        stylize(loginButton);
 
         registerButton = new JRadioButton("Register");
-        registerButton.setFont(buttonFont);
-        registerButton.setFocusPainted(false);
-        registerButton.setForeground(Pallette.OUTLINE_COLOR);
-        registerButton.setSize(Utils.scale(150), Utils.scale(90));
         registerButton.setLocation(Utils.scale(360), Utils.scale(615));
-        registerButton.setBackground(new Color(255, 255, 255));
-        registerButton.setHorizontalAlignment(JButton.CENTER);
+        stylize(registerButton);
 
         ButtonGroup group = new ButtonGroup();
         group.add(loginButton);
@@ -93,7 +81,7 @@ class LoginPanel extends DropDownPanel {
 
         //buttons
         submitButton = new JButton("Submit");
-        submitButton.setFont(buttonFont);
+        submitButton.setFont(Utils.loadFont("moon.otf", Utils.scale(30)));
         submitButton.setSize(Utils.scale(250), Utils.scale(90));
         submitButton.setLocation(Utils.scale(250), Utils.scale(750));
         submitButton.addActionListener(e -> ThreadPool.execute(() -> submit()));
@@ -177,15 +165,15 @@ class LoginPanel extends DropDownPanel {
 
     //STYLIZATION METHODS (for readability)
 
-    private void stylizeTextField(JTextField field) {
+    private void stylize(JTextField field) {
         String defaultText = field.getText();
 
-        field.setSize(Utils.scale(400), Utils.scale(90));
+        field.setSize(Utils.scale(400), Utils.scale(60));
         field.setForeground(Pallette.OUTLINE_COLOR);
-        field.setBackground(new Color(247, 195, 210));
+        field.setBackground(new Color(255, 255, 255));
         field.setFont(Utils.loadFont("resources/mon.otf", Utils.scale(40)));
 
-        Border outline = BorderFactory.createLineBorder(Pallette.OUTLINE_COLOR, Utils.scale(3), true);
+        Border outline = BorderFactory.createMatteBorder(0, 0, Utils.scale(4), 0, Pallette.OUTLINE_COLOR);
         int padSize = Utils.scale(10);
         Border padding = BorderFactory.createEmptyBorder(0, padSize, 0, padSize);
         field.setBorder(BorderFactory.createCompoundBorder(outline, padding));
@@ -221,5 +209,14 @@ class LoginPanel extends DropDownPanel {
         });
 
         field.setText(defaultText);
+    }
+
+    private void stylize(JRadioButton button) {
+        button.setFont(Utils.loadFont("moon.otf", Utils.scale(30)));
+        button.setFocusPainted(false);
+        button.setForeground(Pallette.OUTLINE_COLOR);
+        button.setSize(Utils.scale(150), Utils.scale(90));
+        button.setBackground(new Color(255, 255, 255));
+        button.setHorizontalAlignment(JButton.CENTER);
     }
 }
