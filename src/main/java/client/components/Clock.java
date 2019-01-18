@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Clock {
 
-    private final long duration = 60000;
+    private final long CLOCK_DURATION = 60000;
 
     private final int x;
     private final int y;
@@ -35,7 +35,7 @@ public class Clock {
 
     public void start() {
         timeIsOn.set(true);
-        ThreadPool.execute(() -> update());
+        ThreadPool.execute(this::update);
     }
 
     public void stop() {
@@ -56,7 +56,7 @@ public class Clock {
     private void update() {
         long startTime = System.currentTimeMillis();
         while (timeIsOn.get()) {
-            double theta = 2.0 * Math.PI * (System.currentTimeMillis() - startTime) / duration;
+            double theta = 2.0 * Math.PI * (System.currentTimeMillis() - startTime) / CLOCK_DURATION;
             armX = x + Utils.round(armLength * Math.sin(theta));
             armY = y - Utils.round(armLength * Math.cos(theta));
         }

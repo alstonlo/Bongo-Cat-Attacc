@@ -42,7 +42,7 @@ public class SongSelectPanel extends GamePanel {
      */
     private final Deque<SongTile> viewFrame = new LinkedList<>();
 
-    private Clock clock = new Clock(Utils.scale(650), Utils.scale(250), Utils.scale(60));
+    private Clock clock;
 
 
     /**
@@ -76,6 +76,8 @@ public class SongSelectPanel extends GamePanel {
         synchronized (viewFrame) {
             viewFrame.addFirst(focus);
         }
+
+        this.clock = new Clock(Utils.scale(650), Utils.scale(250), Utils.scale(60));
     }
 
     @Override
