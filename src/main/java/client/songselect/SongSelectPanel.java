@@ -33,7 +33,6 @@ public class SongSelectPanel extends GamePanel {
 
     private int selected = 0; //the index of the focused song tile
     private SongTile[] songTiles;
-    private Clock clock;
 
     /*
      * Contains the tiles that are in the frame of viewing, and therefore,
@@ -42,6 +41,9 @@ public class SongSelectPanel extends GamePanel {
      * block.
      */
     private final Deque<SongTile> viewFrame = new LinkedList<>();
+
+    private Clock clock = new Clock(Utils.scale(650), Utils.scale(250), Utils.scale(60));
+
 
     /**
      * Constructs the SongSelectPanel by loading the songs stored
@@ -74,8 +76,6 @@ public class SongSelectPanel extends GamePanel {
         synchronized (viewFrame) {
             viewFrame.addFirst(focus);
         }
-
-        clock = new Clock(Utils.scale(650), Utils.scale(250), 60, Utils.scale(60));
     }
 
     @Override
@@ -137,6 +137,8 @@ public class SongSelectPanel extends GamePanel {
             tile.drawForeground(g2D);
         }
 
+        clock.draw(g2D);
+
         g2D.setColor(new Color(249, 255, 253));
         g2D.fillRect(0, 0, Utils.scale(750), Utils.scale(150));
         g2D.setColor(Pallette.OUTLINE_COLOR);
@@ -144,8 +146,6 @@ public class SongSelectPanel extends GamePanel {
         g2D.drawRect(0, 0, Utils.scale(750), Utils.scale(150));
         g2D.setFont(Utils.loadFont("resources/mon.otf", 20));
         g2D.drawString("Select Song", 40, 50);
-
-        clock.draw(g2D);
     }
 
     /**

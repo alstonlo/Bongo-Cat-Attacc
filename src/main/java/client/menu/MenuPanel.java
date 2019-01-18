@@ -3,6 +3,7 @@ package client.menu;
 import client.CircleButton;
 import client.GamePanel;
 import client.Window;
+import client.utilities.Settings;
 import client.utilities.Utils;
 import exceptions.GameException;
 import protocol.AuthenticateProtocol;
@@ -57,7 +58,7 @@ public class MenuPanel extends GamePanel {
         //create the drawer panels
         this.loginPanel = new LoginPanel(window, this);
         this.queuePanel = new QueuePanel(window);
-        this.settingPanel = new SettingPanel(window, this);
+        this.settingPanel = new SettingPanel(window);
         this.add(loginPanel);
         this.add(queuePanel);
         this.add(settingPanel);
@@ -193,6 +194,10 @@ public class MenuPanel extends GamePanel {
         for (CircleButton button : buttons) {
             button.draw(g2D);
         }
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+        g2D.setFont(Utils.loadFont("resources/cloud.ttf", Utils.scale(80)));
+        g2D.drawString("Bongo Cat", Utils.scale(50),Utils.scale(100));
+        g2D.drawString("Attacc!", Utils.scale(50), Utils.scale(200));
     }
 
     /**
