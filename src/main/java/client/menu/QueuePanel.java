@@ -7,7 +7,9 @@ import client.utilities.ThreadPool;
 import client.utilities.Utils;
 
 import javax.swing.JButton;
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -27,9 +29,12 @@ public class QueuePanel extends DropDownPanel {
 
     AtomicBoolean running = new AtomicBoolean(true);
     private boolean showVS = false;
+    private float opacity = 0f;
 
     private QueueRectangle leftPanel = new QueueRectangle(Utils.scale(375), Utils.scale(1334),new Color(245, 132, 148));
     private QueueRectangle rightPanel = new QueueRectangle(Utils.scale(375), Utils.scale(1334),new Color(125, 151,230));
+
+    private Font vsFont = Utils.loadFont("resources/cloud.ttf", Utils.scale(80));
 
     QueuePanel(Window window){
         super(window);
@@ -72,18 +77,25 @@ public class QueuePanel extends DropDownPanel {
     }
 
     void matchMade(){
-        ThreadPool.execute(() -> updatePosition());
-        showVS = true;
+        ThreadPool.execute(() -> updateAnimation());
     }
 
-    private void updatePosition(){
+    private void updateAnimation(){
         running.set(false);
         long startTime = System.currentTimeMillis();
         while (currY > 0){
             currY = Utils.scale(1335) - (int) Math.round((System.currentTimeMillis()-startTime)*speed);
         }
         currY = 0;
+        showVS = true;
+        startTime = System.currentTimeMillis();
+        while (opacity < 1f){
+            opacity = (System.currentTimeMillis()-startTime)*0.003f;
+        }
+        opacity = 1f;
     }
+
+
 
     /**
      * {@inheritDoc}
@@ -99,7 +111,7 @@ public class QueuePanel extends DropDownPanel {
 
         clock.draw(g2D);
 
-        g2D.setFont(Utils.loadFont("moon.otf",30));
+        g2D.setFont(Utils.loadFont("moon.otf",Utils.scale(50)));
         FontMetrics fontMetrics = g2D.getFontMetrics();
         g2D.drawString(message[currState], Utils.scale(375)-fontMetrics.stringWidth("Finding Match")/2, Utils.scale(690));
 
@@ -107,7 +119,12 @@ public class QueuePanel extends DropDownPanel {
         rightPanel.draw(g2D, Utils.scale(375),currY);
 
         if (showVS){
-            
+            g2D.setComposite(AlphaComposite.SrcOver.derive(opacity));
+            g2D.setFont(vsFont);
+            g2D.setColor(Pallette.OUTLINE_COLOR);
+            fontMetrics = g2D.getFontMetrics();
+            g2D.drawString("vs.", Utils.scale(375)-fontMetrics.stringWidth("vs.")/2, Utils.scale(690));
+            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
         }
     }
 }

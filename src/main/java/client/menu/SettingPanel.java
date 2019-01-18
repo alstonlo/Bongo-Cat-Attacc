@@ -1,6 +1,7 @@
 package client.menu;
 
 import client.Window;
+import client.utilities.Pallette;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
 
@@ -23,12 +24,13 @@ public class SettingPanel extends DropDownPanel{
         this.setLayout(null);
 
         backButton = new JButton("Back");
+        backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));
         backButton.addActionListener(e -> ThreadPool.execute(() -> retract()));
         backButton.setBorder(null);
         backButton.setBackground(new Color(190, 207, 255));
-        backButton.setForeground(new Color(60,51,28));
+        backButton.setForeground(Pallette.OUTLINE_COLOR);
         backButton.setFocusPainted(false);
 
         add(backButton);
