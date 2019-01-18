@@ -144,7 +144,9 @@ public class QueuePanel extends DropDownPanel {
         opacity = 1f;
 
 
+
         super.window.switchState(Window.SONG_SELECT_STATE);
+        super.window.requestFocus();
 
         loading = false;
     }

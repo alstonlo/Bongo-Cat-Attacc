@@ -123,7 +123,7 @@ public class Song {
      */
     public Clip getAudioExcerpt() {
         Clip excerpt = getAudio();
-        excerpt.setLoopPoints(start, end);
+        //excerpt.setLoopPoints(start, end);
         return excerpt;
     }
 }
