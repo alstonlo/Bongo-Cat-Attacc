@@ -128,6 +128,6 @@ public class QueuePanel extends DropDownPanel {
         while (System.currentTimeMillis()-startTime < 5000){
 
         }
-        window.switchState(Window.SONG_SELECT_STATE);
+        super.window.switchState(Window.SONG_SELECT_STATE);
     }
 }
