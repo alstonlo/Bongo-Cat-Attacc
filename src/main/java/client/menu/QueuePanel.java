@@ -19,22 +19,20 @@ public class QueuePanel extends DropDownPanel {
 
     private Clock clock;
 
-    private MenuPanel menuPanel;
-
-    int currY = 1334;
-
-    double speed = 8.0; //pixels per millisecond
-
-    String[] message = {"Finding Match", "Finding Match.", "Finding Match..", "Finding Match..."};
-
-    int currState = 0;
-    double secondsPerDot = 0.8;
+    private int currY = Utils.scale(1335);
+    private double speed = (double) Utils.scale(4.0); //pixels per millisecond
+    private String[] message = {"Finding Match", "Finding Match.", "Finding Match..", "Finding Match..."};
+    private int currState = 0;
+    private double secondsPerDot = (double) Utils.scale(0.8);
 
     AtomicBoolean running = new AtomicBoolean(true);
+    private boolean showVS = false;
 
-    QueuePanel(Window window, MenuPanel menuPanel){
+    private QueueRectangle leftPanel = new QueueRectangle(Utils.scale(375), Utils.scale(1334),new Color(245, 132, 148));
+    private QueueRectangle rightPanel = new QueueRectangle(Utils.scale(375), Utils.scale(1334),new Color(125, 151,230));
+
+    QueuePanel(Window window){
         super(window);
-        this.menuPanel = menuPanel;
         clock = new Clock(Utils.scale(375), Utils.scale(500),60,80);
 
         JButton backButton = new JButton("Back");
@@ -65,7 +63,7 @@ public class QueuePanel extends DropDownPanel {
         clock.stop();
     }
 
-    void run(){
+    private void run(){
         long startTime = System.currentTimeMillis();
         while (running.get()){
             currState = (int) Math.round((System.currentTimeMillis()-startTime)/(1000.0*secondsPerDot)%3);
@@ -74,13 +72,14 @@ public class QueuePanel extends DropDownPanel {
 
     void matchMade(){
         ThreadPool.execute(() -> updatePosition());
+        showVS = true;
     }
 
-    void updatePosition(){
+    private void updatePosition(){
         running.set(false);
         long startTime = System.currentTimeMillis();
         while (currY > 0){
-            currY = 1334 - (int) Math.round((System.currentTimeMillis()-startTime)*speed);
+            currY = Utils.scale(1335) - (int) Math.round((System.currentTimeMillis()-startTime)*speed);
         }
         currY = 0;
     }
@@ -103,10 +102,11 @@ public class QueuePanel extends DropDownPanel {
         FontMetrics fontMetrics = g2D.getFontMetrics();
         g2D.drawString(message[currState], Utils.scale(375)-fontMetrics.stringWidth("Finding Match")/2, Utils.scale(690));
 
-        g2D.setColor(new Color(245, 132, 148));
-        g2D.fillRect(0,Utils.scale(-currY),Utils.scale(375),Utils.scale(1334));
-        g2D.setColor(new Color(125, 151,230));
-        g2D.fillRect(Utils.scale(375),Utils.scale(currY),Utils.scale(375),Utils.scale(1334));
+        leftPanel.draw(g2D,0,-currY);
+        rightPanel.draw(g2D, Utils.scale(375),currY);
 
+        if (showVS){
+            
+        }
     }
 }

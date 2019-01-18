@@ -56,7 +56,7 @@ public class MenuPanel extends GamePanel {
 
         //create the drawer panels
         this.loginPanel = new LoginPanel(window, this);
-        this.queuePanel = new QueuePanel(window, this);
+        this.queuePanel = new QueuePanel(window);
         this.settingPanel = new SettingPanel(window, this);
         this.add(loginPanel);
         this.add(queuePanel);
