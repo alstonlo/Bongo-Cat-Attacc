@@ -81,12 +81,11 @@ class LoginPanel extends DropDownPanel {
 
         //buttons
         submitButton = new JButton("Submit");
-        submitButton.setFont(Utils.loadFont("moon.otf", Utils.scale(30)));
+        submitButton.setFont(Utils.loadFont("moon.otf", Utils.scale(33)));
         submitButton.setSize(Utils.scale(250), Utils.scale(90));
         submitButton.setLocation(Utils.scale(250), Utils.scale(750));
         submitButton.addActionListener(e -> ThreadPool.execute(() -> submit()));
-        Border outline = BorderFactory.createLineBorder(Pallette.OUTLINE_COLOR, Utils.scale(3), true);
-        submitButton.setBorder(outline);
+        submitButton.setBorder(BorderFactory.createLineBorder(Pallette.OUTLINE_COLOR, Utils.scale(3), true));
         submitButton.setBackground(new Color(255, 221, 216));
         submitButton.setForeground(Pallette.OUTLINE_COLOR);
         submitButton.setFocusPainted(false);

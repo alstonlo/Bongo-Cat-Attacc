@@ -52,14 +52,13 @@ public class QueuePanel extends DropDownPanel {
 
         add(backButton);
         setVisible(true);
-
-        ThreadPool.execute(() -> run());
-
     }
 
     @Override
     void pullDown() {
         clock.start();
+        ThreadPool.execute(() -> run());
+        
         super.pullDown();
     }
 
