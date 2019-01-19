@@ -74,7 +74,7 @@ public class Window extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.addKeyListener(bongoListener);
-        this.setIconImage(Utils.loadScaledImage("resources/icons/app icon.png"));
+        this.setIconImage(Utils.loadImage("resources/icons/app icon.png"));
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {

@@ -9,6 +9,7 @@ import client.utilities.Utils;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -57,17 +58,21 @@ public class Clock implements Drawable {
     }
 
     public void configureSprites() {
-
         int side = (int)Math.ceil((radius + clockOutline.getLineWidth()) * 2);
         sprite = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2D = (Graphics2D)sprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+        Ellipse2D shape = new Ellipse2D.Float( //the stroke thickness must be accounted for in the ellipse
+                clockOutline.getLineWidth(),
+                clockOutline.getLineWidth(),
+                side - 2 * clockOutline.getLineWidth(),
+                side - 2 * clockOutline.getLineWidth());
         g2D.setColor(new Color(255, 255, 255));
-        g2D.fillOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
+        g2D.fill(shape);
         g2D.setColor(Pallette.OUTLINE_COLOR);
-        g2D.setStroke(new BasicStroke(Utils.scale(4)));
-        g2D.drawOval(centerX - radius, centerY - radius, radius * 2, radius * 2);
+        g2D.setStroke(clockOutline);
+        g2D.draw(shape);
         g2D.dispose();
     }
 
@@ -76,7 +81,8 @@ public class Clock implements Drawable {
             return;
         }
 
-        g2D.drawImage(sprite, centerX - radius, centerY - radius, null);
+        g2D.drawImage(sprite, centerX - sprite.getWidth()/2, centerY - sprite.getHeight()/2, null);
+        g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setStroke(armOutline);
         g2D.drawLine(centerX, centerY, armX, armY);
     }

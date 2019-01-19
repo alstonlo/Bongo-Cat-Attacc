@@ -25,9 +25,6 @@ import java.util.Set;
  */
 public class Utils {
 
-    private static AffineTransformOp scale = new AffineTransformOp(
-            AffineTransform.getScaleInstance(Settings.SCALE, Settings.SCALE), AffineTransformOp.TYPE_BICUBIC);
-
     /**
      * Rounds a number n to the nearest integer.
      *
