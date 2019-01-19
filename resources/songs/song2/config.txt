@@ -1,1 +1,2 @@
 name: Kuusou Forest
+difficulty: 3

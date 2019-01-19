@@ -1,8 +1,10 @@
 package client.components;
 
+import client.utilities.Settings;
 import client.utilities.Utils;
 
 import javax.sound.sampled.Clip;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -71,6 +73,7 @@ public class Song {
             System.out.println(dirPath + "/config.txt cannot be found.");
         }
         this.name = configDetails.get("name");
+        this.difficulty = Integer.valueOf(configDetails.get("difficulty"));
     }
 
     /**
@@ -88,12 +91,12 @@ public class Song {
     }
 
     /**
-     * Loads the song's album image (unscaled) and returns it.
+     * Scales and re-sizes the album to be 300 x 300 pixels
      *
-     * @return the album art of the song
+     * @return the scaled image; or null if the image argument is null
      */
     public BufferedImage getAlbum() {
-        return Utils.loadImage(dirPath + "/album.png");
+        return Utils.loadSizedImage(dirPath + "/album.png", 300,300);
     }
 
     /**

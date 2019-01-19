@@ -87,7 +87,7 @@ public class SongSelectPanel extends GamePanel {
     public void run() {
         super.run();
         clock.start();
-        currSong = songTiles[selected].getAudio();
+        currSong = getTile(selected).getAudio();
         currSong.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
