@@ -30,6 +30,7 @@ public class SettingPanel extends DropDownPanel {
         backButton.setBackground(new Color(190, 207, 255));
         backButton.setForeground(Pallette.OUTLINE_COLOR);
         backButton.setFocusPainted(false);
+
         add(backButton);
     }
 

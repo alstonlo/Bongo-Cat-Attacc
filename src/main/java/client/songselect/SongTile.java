@@ -1,6 +1,6 @@
 package client.songselect;
 
-import client.Song;
+import client.components.Song;
 import client.utilities.Settings;
 import client.utilities.Utils;
 

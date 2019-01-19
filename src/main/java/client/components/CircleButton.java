@@ -1,4 +1,4 @@
-package client;
+package client.components;
 
 import client.utilities.Settings;
 import client.utilities.Utils;
