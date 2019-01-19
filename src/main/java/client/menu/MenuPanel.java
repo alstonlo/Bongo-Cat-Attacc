@@ -7,6 +7,7 @@ import client.utilities.Utils;
 import exceptions.GameException;
 import protocol.AuthenticateProtocol;
 import protocol.ExceptionProtocol;
+import protocol.MatchMadeProtocol;
 import protocol.Protocol;
 import protocol.RegisterProtocol;
 import protocol.ResponseProtocol;
@@ -57,7 +58,7 @@ public class MenuPanel extends GamePanel {
 
         //create the drawer panels
         this.loginPanel = new LoginPanel(window, this);
-        this.queuePanel = new QueuePanel(window);
+        this.queuePanel = new QueuePanel(window, this);
         this.settingPanel = new SettingPanel(window);
         this.add(loginPanel);
         this.add(queuePanel);
@@ -219,12 +220,12 @@ public class MenuPanel extends GamePanel {
         } else if (message instanceof ResponseProtocol) {
             processMessage((ResponseProtocol) message);
         } else if (message instanceof TimeOverProtocol) {
-            processMessage((TimeOverProtocol) message);
+            processMessage((MatchMadeProtocol) message);
         }
     }
 
-    private void processMessage(TimeOverProtocol message){
-        queuePanel.matchMade();
+    private void processMessage(MatchMadeProtocol message){
+        queuePanel.matchMade(message.username1, message.username2);
     }
 
     private void processMessage(ResponseProtocol message) {

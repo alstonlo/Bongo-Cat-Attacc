@@ -6,7 +6,7 @@ import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
-import javafx.scene.layout.Pane;
+import protocol.JoinQueueProtocol;
 
 import javax.swing.JButton;
 import java.awt.AlphaComposite;
@@ -19,8 +19,11 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
+    private MenuPanel menuPanel;
 
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
+    private BufferedImage leftBongoCat = Utils.loadScaledImage("resources/bongo cat/leftbongocat.png");
+    private BufferedImage rightBongoCat = Utils.loadScaledImage("resources/bongo cat/rightbongocat.png");
 
     private AtomicBoolean lock = new AtomicBoolean(false);
     private AtomicBoolean matchMade = new AtomicBoolean(false);
@@ -37,16 +40,21 @@ public class QueuePanel extends DropDownPanel {
     private QueueRectangle leftPanel;
     private QueueRectangle rightPanel;
 
-    private Font vsFont = Utils.loadFont("resources/cloud.ttf", Utils.scale(80));
+    private String user1;
+    private String user2;
 
-    QueuePanel(Window window) {
+    private Font vsFont = Utils.loadFont("resources/cloud.ttf", Utils.scale(80));
+    private Font userFont = Utils.loadFont("resources/cloud.ttf", Utils.scale(50));
+
+    QueuePanel(Window window, MenuPanel menuPanel) {
         super(window);
+        this.menuPanel = menuPanel;
 
         JButton backButton = new JButton("Back");
         backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));
-        backButton.addActionListener(e -> ThreadPool.execute(this::matchMade));
+        backButton.addActionListener(e -> matchMade("Username 1", "Username 2"));
         backButton.setBorder(null);
         backButton.setBackground(new Color(255, 221, 216));
         backButton.setForeground(Pallette.OUTLINE_COLOR);
@@ -69,11 +77,16 @@ public class QueuePanel extends DropDownPanel {
         if (lock.compareAndSet(false, true)) {
             ThreadPool.execute(this::animate);
             super.pullDown();
+            menuPanel.sendMessage(new JoinQueueProtocol());
         }
     }
 
-    void matchMade() {
-        matchMade.set(true);
+    void matchMade(String user1, String user2) {
+        this.user1 = user1;
+        this.user2 = user2;
+       // matchMade.set(true);
+        window.switchState(window.SONG_SELECT_STATE); //FOR DEVELOPMENT PURPOSES ONLY
+        window.requestFocus();
     }
 
     /**
@@ -97,12 +110,20 @@ public class QueuePanel extends DropDownPanel {
         rightPanel.draw(g2D);
 
         if (opacity != 0f) {
-            g2D.setComposite(AlphaComposite.SrcOver.derive(opacity));
+            g2D.setComposite(AlphaComposite.SrcOver.derive(opacity)); //drawing the "vs."
             g2D.setFont(vsFont);
             g2D.setColor(Pallette.OUTLINE_COLOR);
             fontMetrics = g2D.getFontMetrics();
             g2D.drawString("vs.", Utils.scale(375) - fontMetrics.stringWidth("vs.") / 2, Utils.scale(690));
-            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+
+            g2D.setFont(userFont); //drawing the two usernames and corresponding bongo cats
+            fontMetrics = g2D.getFontMetrics();
+            g2D.drawString(user1, Utils.scale(187) - fontMetrics.stringWidth(user1) / 2, Utils.scale(800));
+            g2D.drawString(user2, Utils.scale(563) - fontMetrics.stringWidth(user2) / 2, Utils.scale(800));
+            g2D.drawImage(leftBongoCat, Utils.scale(20),Utils.scale(480), null);
+            g2D.drawImage(rightBongoCat, Utils.scale(400),Utils.scale(480), null);
+
+            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER)); //resetting opacity
         }
     }
 
