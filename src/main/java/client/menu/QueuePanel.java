@@ -6,6 +6,7 @@ import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
+import javafx.scene.layout.Pane;
 
 import javax.swing.JButton;
 import java.awt.AlphaComposite;
@@ -53,6 +54,14 @@ public class QueuePanel extends DropDownPanel {
         add(backButton);
 
         this.clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
+        this.leftPanel = new QueueRectangle(
+                0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
+                new Color(245, 132, 148));
+        this.leftPanel.setY(-Settings.PANEL_SIZE.height);
+        this.rightPanel = new QueueRectangle(
+                Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
+                new Color(125, 151, 230));
+        this.rightPanel.setY(Settings.PANEL_SIZE.height);
     }
 
     @Override
@@ -84,13 +93,8 @@ public class QueuePanel extends DropDownPanel {
         g2D.setFont(Utils.loadFont("moon.otf", Utils.scale(50)));
         FontMetrics fontMetrics = g2D.getFontMetrics();
         g2D.drawString(message[messageState], Utils.scale(375) - fontMetrics.stringWidth("Finding Match") / 2, Utils.scale(690));
-
-        if (leftPanel != null) {
-            leftPanel.draw(g2D);
-        }
-        if (rightPanel != null) {
-            rightPanel.draw(g2D);
-        }
+        leftPanel.draw(g2D);
+        rightPanel.draw(g2D);
 
         if (opacity != 0f) {
             g2D.setComposite(AlphaComposite.SrcOver.derive(opacity));
@@ -103,21 +107,16 @@ public class QueuePanel extends DropDownPanel {
     }
 
     private void animate() {
-
         clock.configureSprites();
         clock.start();
 
         long startTime = System.currentTimeMillis();
         while (!matchMade.get()) {
-            messageState = Utils.round((System.currentTimeMillis() - startTime) / (1000.0 * secondsPerDot)) % 3;
+            messageState = Utils.round((System.currentTimeMillis() - startTime) / (1000.0 * secondsPerDot)) % 4;
         }
 
-        leftPanel = new QueueRectangle(
-                0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
-                new Color(245, 132, 148));
-        rightPanel = new QueueRectangle(
-                Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
-                new Color(125, 151, 230));
+        leftPanel.configureSprites();
+        rightPanel.configureSprites();
 
         startTime = System.currentTimeMillis();
         double deltaTime = 0;

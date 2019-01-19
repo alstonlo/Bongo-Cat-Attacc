@@ -37,7 +37,15 @@ public class Clock {
     }
 
     public void configureSprites() {
-
+        sprite = new BufferedImage(radius * 2, radius * 2, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2D = (Graphics2D)sprite.getGraphics();
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+        g2D.setColor(new Color(255, 255, 255));
+        g2D.fillOval(x - radius, y - radius, radius * 2, radius * 2);
+        g2D.setColor(Pallette.OUTLINE_COLOR);
+        g2D.setStroke(new BasicStroke(Utils.scale(4)));
+        g2D.drawOval(x - radius, y - radius, radius * 2, radius * 2);
+        g2D.dispose();
     }
 
     public void start() {
@@ -50,12 +58,11 @@ public class Clock {
     }
 
     public void draw(Graphics2D g2D) {
-        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
-        g2D.setColor(new Color(255, 255, 255));
-        g2D.fillOval(x - radius, y - radius, radius * 2, radius * 2);
-        g2D.setColor(Pallette.OUTLINE_COLOR);
-        g2D.setStroke(new BasicStroke(Utils.scale(4)));
-        g2D.drawOval(x - radius, y - radius, radius * 2, radius * 2);
+        if (sprite == null) {
+            return;
+        }
+
+        g2D.drawImage(sprite, x - radius, y - radius, null);
         g2D.setStroke(new BasicStroke(Utils.scale(3)));
         g2D.drawLine(x, y, armX, armY);
     }

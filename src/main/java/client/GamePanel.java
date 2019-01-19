@@ -22,9 +22,10 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
      * @param window the Window this panel belongs to
      */
     public GamePanel(Window window) {
+        this.setDoubleBuffered(true);
+
         this.window = window;
         this.animationTimer = new Timer(FPS / 30, (e) -> update());
-        this.setVisible(false);
     }
 
     /**

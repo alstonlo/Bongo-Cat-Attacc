@@ -6,7 +6,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
-class QueueRectangle extends Rectangle2D.Double {
+class QueueRectangle {
 
     private int x;
     private double y;
@@ -19,6 +19,10 @@ class QueueRectangle extends Rectangle2D.Double {
         this.width = width;
         this.height = height;
         this.bgColor = bgColor;
+    }
+
+    void configureSprites() {
+
     }
 
     void setY(double y) {
