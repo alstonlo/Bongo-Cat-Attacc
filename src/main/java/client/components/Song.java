@@ -1,10 +1,8 @@
 package client.components;
 
-import client.utilities.Settings;
 import client.utilities.Utils;
 
 import javax.sound.sampled.Clip;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -96,7 +94,7 @@ public class Song {
      * @return the scaled image; or null if the image argument is null
      */
     public BufferedImage getAlbum() {
-        return Utils.loadSizedImage(dirPath + "/album.png", 300,300);
+        return Utils.loadScaledImage(dirPath + "/album.png", 300,300);
     }
 
     /**

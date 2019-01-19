@@ -75,6 +75,10 @@ public class QueuePanel extends DropDownPanel {
     @Override
     void pullDown() {
         if (lock.compareAndSet(false, true)) {
+            clock.configureSprites();
+            leftPanel.configureSprites();
+            rightPanel.configureSprites();
+
             ThreadPool.execute(this::animate);
             super.pullDown();
             menuPanel.sendMessage(new JoinQueueProtocol());
@@ -128,16 +132,12 @@ public class QueuePanel extends DropDownPanel {
     }
 
     private void animate() {
-        clock.configureSprites();
         clock.start();
 
         long startTime = System.currentTimeMillis();
         while (!matchMade.get()) {
             messageState = Utils.round((System.currentTimeMillis() - startTime) / (1000.0 * secondsPerDot)) % 4;
         }
-
-        leftPanel.configureSprites();
-        rightPanel.configureSprites();
 
         startTime = System.currentTimeMillis();
         double deltaTime = 0;
@@ -160,6 +160,7 @@ public class QueuePanel extends DropDownPanel {
         opacity = 1f;
 
         clock.stop();
+        window.switchState(Window.SONG_SELECT_STATE);
     }
 
 }

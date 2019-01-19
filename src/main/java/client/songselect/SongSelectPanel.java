@@ -81,14 +81,15 @@ public class SongSelectPanel extends GamePanel {
         }
 
         this.clock = new Clock(Utils.scale(650), Utils.scale(250), Utils.scale(60));
+
+        window.requestFocus();
     }
 
     @Override
     public void run() {
         super.run();
         clock.start();
-        currSong = getTile(selected).getAudio();
-        currSong.loop(Clip.LOOP_CONTINUOUSLY);
+        switchSong(songTiles[selected].getAudio());
     }
 
     @Override
@@ -128,7 +129,9 @@ public class SongSelectPanel extends GamePanel {
             currSong.stop();
         }
         currSong = song;
-        currSong.loop(Clip.LOOP_CONTINUOUSLY);
+        if (currSong != null) {
+            currSong.loop(Clip.LOOP_CONTINUOUSLY);
+        }
     }
 
     @Override

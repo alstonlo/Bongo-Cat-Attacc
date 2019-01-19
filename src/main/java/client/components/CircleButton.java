@@ -1,5 +1,6 @@
 package client.components;
 
+import client.Drawable;
 import client.utilities.Settings;
 import client.utilities.Utils;
 
@@ -15,14 +16,14 @@ import java.awt.image.BufferedImage;
  * @author Katelyn and Alston
  * last updated 1/12/2019
  */
-public class CircleButton {
+public class CircleButton implements Drawable {
 
     /*
      * Preloaded sprites of the button.
      * sprites[0]: sprite of unselected button
      * sprites[1]: sprite of selected button
      */
-    private BufferedImage[] sprites = new BufferedImage[2];
+    private BufferedImage[] sprites;
 
     private int centerX;
     private int centerY;
@@ -52,7 +53,6 @@ public class CircleButton {
         this.centerX = centerX;
         this.centerY = centerY;
         this.radius = radius;
-        configureSprites();
     }
 
     /**
@@ -88,12 +88,9 @@ public class CircleButton {
         this.onSubmit = onSubmit;
     }
 
-    /**
-     * Pre-loads the sprites of this button based on its current state.
-     * Although it consumes more memory, loading the sprites makes rendering
-     * faster.
-     */
     public void configureSprites() {
+        sprites = new BufferedImage[2];
+
         int side = (int)Math.ceil((radius + outline.getLineWidth()) * 2);
         sprites[0] = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);
 
@@ -119,12 +116,11 @@ public class CircleButton {
         }
     }
 
-    /**
-     * Draws the button onto the g2D argument.
-     *
-     * @param g2D
-     */
     public void draw(Graphics2D g2D) {
+        if (sprites == null) {
+            return;
+        }
+
         BufferedImage sprite = sprites[(selected) ? 1 : 0];
         g2D.drawImage(sprite, centerX - sprite.getWidth() / 2, centerY - sprite.getWidth() / 2, null);
     }

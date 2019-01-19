@@ -42,7 +42,7 @@ abstract class DropDownPanel extends JPanel {
         this.y = -getHeight();
         relocate();
         this.setOpaque(false);
-        this.setVisible(false);
+        this.setVisible(true);
     }
 
     /**
@@ -62,13 +62,7 @@ abstract class DropDownPanel extends JPanel {
      */
     void pullDown() {
         if (state.compareAndSet(UP_STATE, ANIMATION_STATE)) {
-
-            SwingUtilities.invokeLater(() -> requestFocus()); //shift focus to the panel
-            try {
-                SwingUtilities.invokeAndWait(() -> setVisible(true));
-            } catch (InterruptedException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
+            SwingUtilities.invokeLater(() -> requestFocus());
 
             long startTime = System.currentTimeMillis();
             double deltaTime = System.currentTimeMillis() - startTime;
@@ -88,8 +82,6 @@ abstract class DropDownPanel extends JPanel {
      */
     void retract() {
         if (state.compareAndSet(DOWN_STATE, ANIMATION_STATE)) {
-            SwingUtilities.invokeLater(() -> window.requestFocus()); //return the focus to the window
-
             long startTime = System.currentTimeMillis();
             double deltaTime = System.currentTimeMillis() - startTime;
             while (deltaTime < SLIDE_DURATION) {
@@ -100,7 +92,7 @@ abstract class DropDownPanel extends JPanel {
 
             state.set(UP_STATE);
 
-            SwingUtilities.invokeLater(() -> setVisible(false));
+            SwingUtilities.invokeLater(() -> window.requestFocus());
         }
     }
 }

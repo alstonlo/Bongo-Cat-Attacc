@@ -30,12 +30,13 @@ public class MenuPanel extends GamePanel {
 
     private BongoCat cat;
     private BufferedImage background;
+    private BufferedImage title;
 
     private LoginPanel loginPanel;
     private QueuePanel queuePanel;
     private SettingPanel settingPanel;
 
-    private int currSelected = 0;
+    private int buttonIndex = 0;
     private CircleButton[] buttons = new CircleButton[3];
 
     private Clip bgMusic;
@@ -54,6 +55,8 @@ public class MenuPanel extends GamePanel {
 
         //load the image assets
         this.cat = new BongoCat();
+        this.cat.configureSprites();
+
         this.background = Utils.loadScaledImage("resources/menu/yellow.png");
 
         //create the drawer panels
@@ -80,7 +83,11 @@ public class MenuPanel extends GamePanel {
         buttons[0] = loginButton;
         buttons[1] = playButton;
         buttons[2] = controlsButton;
-        buttons[currSelected].select();
+
+        for (CircleButton button : buttons) {
+            button.configureSprites();
+        }
+        selectButton(buttonIndex);
 
         this.setVisible(true);
     }
@@ -104,13 +111,11 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void update() {
-        super.update();
-
-        //since update() is called as a part of the EDT thread,
-        //we relocate the panels inside update (for convenience instead of invoking later)
         loginPanel.relocate();
         queuePanel.relocate();
         settingPanel.relocate();
+
+        super.update();
     }
 
     /**
@@ -131,8 +136,8 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyLeftPress() {
-        currSelected = (currSelected + 2) % buttons.length;
-        selectButton(currSelected);
+        buttonIndex = (buttonIndex + 2) % buttons.length;
+        selectButton(buttonIndex);
 
         cat.leftPawDown();
     }
@@ -150,8 +155,8 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyRightPress() {
-        currSelected = (currSelected + 1) % buttons.length;
-        selectButton(currSelected);
+        buttonIndex = (buttonIndex + 1) % buttons.length;
+        selectButton(buttonIndex);
 
         cat.rightPawDown();
     }
@@ -169,7 +174,7 @@ public class MenuPanel extends GamePanel {
      */
     @Override
     public void notifyHold() {
-        buttons[currSelected].submit();
+        buttons[buttonIndex].submit();
     }
 
     /**
@@ -192,15 +197,14 @@ public class MenuPanel extends GamePanel {
         Graphics2D g2D = (Graphics2D) g;
 
         g2D.drawImage(background, 0, 0, this);
-        g2D.drawImage(cat.getImage(), 0, 0, this);
-
+        cat.draw(g2D);
         for (CircleButton button : buttons) {
             button.draw(g2D);
         }
-
-        g2D.setFont(Utils.loadFont("resources/cloud.ttf", Utils.scale(80)));
-        g2D.drawString("Bongo Cat", Utils.scale(50),Utils.scale(100));
-        g2D.drawString("Attacc!", Utils.scale(50), Utils.scale(200));
+//
+//        g2D.setFont(Utils.loadFont("resources/cloud.ttf", Utils.scale(80)));
+//        g2D.drawString("Bongo Cat", Utils.scale(50),Utils.scale(100));
+//        g2D.drawString("Attacc!", Utils.scale(50), Utils.scale(200));
     }
 
     /**
@@ -269,5 +273,9 @@ public class MenuPanel extends GamePanel {
                 buttons[i].deselect();
             }
         }
+    }
+
+    private void loadSprites() {
+
     }
 }
