@@ -36,6 +36,15 @@ public class Clock {
         this.armY = y - radius;
     }
 
+    public void start() {
+        timeIsOn.set(true);
+        ThreadPool.execute(this::animate);
+    }
+
+    public void stop() {
+        timeIsOn.set(false);
+    }
+
     public void configureSprites() {
         sprite = new BufferedImage(radius * 2, radius * 2, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2D = (Graphics2D)sprite.getGraphics();
@@ -48,15 +57,6 @@ public class Clock {
         g2D.dispose();
     }
 
-    public void start() {
-        timeIsOn.set(true);
-        ThreadPool.execute(this::update);
-    }
-
-    public void stop() {
-        timeIsOn.set(false);
-    }
-
     public void draw(Graphics2D g2D) {
         if (sprite == null) {
             return;
@@ -67,7 +67,7 @@ public class Clock {
         g2D.drawLine(x, y, armX, armY);
     }
 
-    private void update() {
+    private void animate() {
         long startTime = System.currentTimeMillis();
         while (timeIsOn.get()) {
             double theta = 2.0 * Math.PI * (System.currentTimeMillis() - startTime) / CLOCK_DURATION;

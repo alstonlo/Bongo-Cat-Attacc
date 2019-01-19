@@ -22,7 +22,7 @@ public class CircleButton {
      * sprites[0]: sprite of unselected button
      * sprites[1]: sprite of selected button
      */
-    private BufferedImage[] sprites = new BufferedImage[2];
+    private BufferedImage[] sprites;
 
     private int centerX;
     private int centerY;
@@ -52,7 +52,6 @@ public class CircleButton {
         this.centerX = centerX;
         this.centerY = centerY;
         this.radius = radius;
-        configureSprites();
     }
 
     /**
@@ -94,6 +93,8 @@ public class CircleButton {
      * faster.
      */
     public void configureSprites() {
+        sprites = new BufferedImage[2];
+
         int side = (int)Math.ceil((radius + outline.getLineWidth()) * 2);
         sprites[0] = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);
 
@@ -125,6 +126,10 @@ public class CircleButton {
      * @param g2D
      */
     public void draw(Graphics2D g2D) {
+        if (sprites == null) {
+            return;
+        }
+
         BufferedImage sprite = sprites[(selected) ? 1 : 0];
         g2D.drawImage(sprite, centerX - sprite.getWidth() / 2, centerY - sprite.getWidth() / 2, null);
     }

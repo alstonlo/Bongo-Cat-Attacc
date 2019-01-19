@@ -7,7 +7,9 @@ import javax.sound.sampled.Clip;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -58,6 +60,7 @@ public class Utils {
         }
 
         BufferedImage res = new BufferedImage(scale(img.getWidth()), scale(img.getHeight()), BufferedImage.TYPE_INT_ARGB);
+        res = createCompatibleImage(res);
         Graphics2D g2D = (Graphics2D) res.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.drawImage(img, scale, 0, 0);
@@ -110,7 +113,7 @@ public class Utils {
      */
     public static BufferedImage loadImage(String filePath) {
         try {
-            return ImageIO.read(new File(filePath));
+            return createCompatibleImage(ImageIO.read(new File(filePath)));
         } catch (IOException e) {
             System.out.println("Failed to load image at " + filePath);
             return null;
@@ -126,6 +129,19 @@ public class Utils {
      */
     public static BufferedImage loadScaledImage(String filePath) {
         return scale(loadImage(filePath));
+    }
+
+    public static BufferedImage createCompatibleImage(BufferedImage image) {
+        if (image == null) {
+            return null;
+        }
+
+        GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+        BufferedImage target = config.createCompatibleImage(image.getWidth(), image.getHeight(), Transparency.TRANSLUCENT);
+        Graphics2D g2d = target.createGraphics();
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+        return target;
     }
 
     /**

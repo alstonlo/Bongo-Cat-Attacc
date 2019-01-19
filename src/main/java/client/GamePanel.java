@@ -1,5 +1,7 @@
 package client;
 
+import client.utilities.Settings;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -11,7 +13,7 @@ import javax.swing.Timer;
  */
 public abstract class GamePanel extends JPanel implements Animatable, Controllable {
 
-    private final int FPS = 30; //the preferred FPS for the game
+    private final int FPS = 60; //the preferred FPS for the game
 
     private Timer animationTimer;
     protected final Window window;
@@ -23,9 +25,8 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
      */
     public GamePanel(Window window) {
         this.setDoubleBuffered(true);
-
         this.window = window;
-        this.animationTimer = new Timer(FPS / 30, (e) -> update());
+        this.animationTimer = new Timer(1000 / FPS, (e) -> update());
     }
 
     /**
