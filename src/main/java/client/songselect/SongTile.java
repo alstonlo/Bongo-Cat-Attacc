@@ -8,6 +8,7 @@ import sun.nio.ch.Util;
 import javax.sound.sampled.Clip;
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -32,6 +33,8 @@ class SongTile {
     private BufferedImage splash;
     private BufferedImage album;
     private BufferedImage star = Utils.loadSizedImage("resources/songs/star.png",45,45);
+
+    private BufferedImage foreground;
 
     private final int panelWidth = Settings.PANEL_SIZE.width; //for convenience
 
@@ -74,10 +77,30 @@ class SongTile {
         this.splash = song.getSplash();
         this.album = song.getAlbum();
         this.audio = song.getAudioExcerpt();
+        configureImage();
     }
 
     Clip getAudio(){
         return this.audio;
+    }
+
+    private void configureImage(){
+        foreground = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2D = (Graphics2D) foreground.getGraphics();
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+
+        g2D.setColor(new Color(44, 44, 44, 200));
+        g2D.fillRoundRect(0, 0, WIDTH, HEIGHT, 30, 30);
+        g2D.setColor(Color.WHITE);
+        g2D.drawString(song.getName(),Utils.scale(360), Utils.scale(40));
+        g2D.drawString("Difficulty: ", Utils.scale(360), Utils.scale(70));
+
+        for (int i = 0; i < song.getDifficulty(); i++){
+            g2D.drawImage(star,Utils.scale(360+(55*i)),Utils.scale(90), null);
+        }
+
+        g2D.drawImage(album, Utils.scale(30), Utils.scale(25), null);
+        g2D.dispose();
     }
 
     /**
@@ -105,16 +128,6 @@ class SongTile {
      * @param g2D the Graphics context in which to paint
      */
     void drawForeground(Graphics2D g2D) {
-        g2D.setColor(new Color(44, 44, 44, 200));
-        g2D.fillRoundRect(Utils.round(drawX) + (panelWidth - WIDTH) / 2, Y_POS,
-                WIDTH, HEIGHT, 30, 30);
-        g2D.setColor(Color.WHITE);
-        g2D.drawString(song.getName(),Utils.round(drawX)+ (panelWidth - WIDTH) / 2 + Utils.scale(360), Y_POS + Utils.scale(40));
-        g2D.drawString("Difficulty: ",
-                Utils.round(drawX)+ (panelWidth - WIDTH) / 2 + Utils.scale(360), Y_POS + Utils.scale(70));
-        for (int i = 0; i < song.getDifficulty(); i++){
-            g2D.drawImage(star,Utils.round(drawX)+ (panelWidth - WIDTH) / 2 + Utils.scale(360+(55*i)),Y_POS + Utils.scale(90), null);
-        }
-        g2D.drawImage(album, Utils.round(drawX)+ (panelWidth - WIDTH) / 2 + Utils.scale(30), Y_POS + Utils.scale(25), null);
+        g2D.drawImage(foreground,Utils.round(drawX) + (panelWidth - WIDTH) / 2, Y_POS,null);
     }
 }
