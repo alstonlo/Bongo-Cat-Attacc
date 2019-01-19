@@ -15,6 +15,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Convenience class containing methods for graphical scaling, rounding, loading resources, etc.
@@ -55,15 +56,18 @@ public class Utils {
      * @return the scaled image; or null if the image argument is null
      */
     public static BufferedImage scale(BufferedImage img) {
+        return scale(img, Settings.PANEL_SIZE.width, Settings.PANEL_SIZE.height);
+    }
+
+    public static BufferedImage scale(BufferedImage img, int width, int height){
         if (img == null) {
             return null;
         }
 
-        BufferedImage res = new BufferedImage(scale(img.getWidth()), scale(img.getHeight()), BufferedImage.TYPE_INT_ARGB);
-        res = createCompatibleImage(res);
+        BufferedImage res = createCompatibleImage(width, height);
         Graphics2D g2D = (Graphics2D) res.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
-        g2D.drawImage(img, scale, 0, 0);
+        g2D.drawImage(img, 0,0, width, height, null);
         g2D.dispose();
         return res;
     }
@@ -131,31 +135,25 @@ public class Utils {
         return scale(loadImage(filePath));
     }
 
+    public static BufferedImage loadScaledImage(String filePath, int width, int height) {
+        return scale(loadImage(filePath), width, height);
+    }
+
+    public static BufferedImage createCompatibleImage(int width, int height) {
+        GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+        return config.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+    }
+
     public static BufferedImage createCompatibleImage(BufferedImage image) {
         if (image == null) {
             return null;
         }
 
-        GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
-        BufferedImage target = config.createCompatibleImage(image.getWidth(), image.getHeight(), Transparency.TRANSLUCENT);
+        BufferedImage target = createCompatibleImage(image.getWidth(), image.getHeight());
         Graphics2D g2d = target.createGraphics();
         g2d.drawImage(image, 0, 0, null);
         g2d.dispose();
         return target;
-    }
-
-    public static BufferedImage loadSizedImage(String filePath, int width, int height){
-        BufferedImage img = loadImage(filePath);
-        if (img == null) {
-            return null;
-        }
-
-        BufferedImage res = new BufferedImage(Utils.scale(width),Utils.scale(height), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2D = (Graphics2D) res.getGraphics();
-        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
-        g2D.drawImage(img, 0,0, Utils.scale(width),Utils.scale(height), null);
-        g2D.dispose();
-        return res;
     }
 
     /**
@@ -176,7 +174,7 @@ public class Utils {
             height = Math.max(height, image.getHeight());
         }
 
-        BufferedImage merged = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage merged = createCompatibleImage(width, height);
         Graphics2D g2D = (Graphics2D) merged.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         for (BufferedImage image : images) {

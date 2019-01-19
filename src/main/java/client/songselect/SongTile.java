@@ -3,12 +3,10 @@ package client.songselect;
 import client.components.Song;
 import client.utilities.Settings;
 import client.utilities.Utils;
-import sun.nio.ch.Util;
 
 import javax.sound.sampled.Clip;
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -32,7 +30,7 @@ class SongTile {
     private Clip audio;
     private BufferedImage splash;
     private BufferedImage album;
-    private BufferedImage star = Utils.loadSizedImage("resources/songs/star.png",45,45);
+    private BufferedImage star = Utils.loadScaledImage("resources/songs/star.png",45,45);
 
     private BufferedImage foreground;
 
