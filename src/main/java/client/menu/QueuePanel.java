@@ -89,12 +89,8 @@ public class QueuePanel extends DropDownPanel {
         this.user1 = user1;
         this.user2 = user2;
        // matchMade.set(true);
-        if (window.getUsername().equals(user1)) {
-            window.switchState(window.SONG_SELECT_STATE); //FOR DEVELOPMENT PURPOSES ONLY
-            window.requestFocus();
-        } else {
-            window.switchState()
-        }
+        window.switchState(window.SONG_SELECT_STATE); //FOR DEVELOPMENT PURPOSES ONLY
+        window.requestFocus();
     }
 
     /**
