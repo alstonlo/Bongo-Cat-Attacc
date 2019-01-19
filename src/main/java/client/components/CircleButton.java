@@ -1,5 +1,6 @@
 package client.components;
 
+import client.Drawable;
 import client.utilities.Settings;
 import client.utilities.Utils;
 
@@ -15,7 +16,7 @@ import java.awt.image.BufferedImage;
  * @author Katelyn and Alston
  * last updated 1/12/2019
  */
-public class CircleButton {
+public class CircleButton implements Drawable {
 
     /*
      * Preloaded sprites of the button.
@@ -87,11 +88,6 @@ public class CircleButton {
         this.onSubmit = onSubmit;
     }
 
-    /**
-     * Pre-loads the sprites of this button based on its current state.
-     * Although it consumes more memory, loading the sprites makes rendering
-     * faster.
-     */
     public void configureSprites() {
         sprites = new BufferedImage[2];
 
@@ -120,11 +116,6 @@ public class CircleButton {
         }
     }
 
-    /**
-     * Draws the button onto the g2D argument.
-     *
-     * @param g2D
-     */
     public void draw(Graphics2D g2D) {
         if (sprites == null) {
             return;
