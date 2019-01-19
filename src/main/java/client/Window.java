@@ -156,4 +156,19 @@ public class Window extends JFrame {
 
         newPanel.run();               //run its animation
     }
+
+    /**
+     * Sets the username of the current player
+     * @param username their username
+     */
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+    /**
+     * @return the username of the current player
+     */
+    public String getUsername(){
+        return username;
+    }
 }

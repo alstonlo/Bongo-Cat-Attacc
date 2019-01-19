@@ -29,7 +29,8 @@ public class Network {
             Protocol.class, ExceptionProtocol.class, ResponseProtocol.class,
             AuthenticateProtocol.class, RegisterProtocol.class,
             JoinQueueProtocol.class, MatchMadeProtocol.class,
-            RequestSongProtocol.class, TimeOverProtocol.class
+            RequestSongProtocol.class, TimeOverProtocol.class,
+            NotePlayedByOpponentProtocol.class, PlayNoteProtocol.class
     };
 
     /**
