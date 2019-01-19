@@ -11,6 +11,7 @@ import protocol.ExceptionProtocol;
 import protocol.Protocol;
 import protocol.RegisterProtocol;
 import protocol.ResponseProtocol;
+import protocol.TimeOverProtocol;
 
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
@@ -218,16 +219,22 @@ public class MenuPanel extends GamePanel {
             processMessage((ExceptionProtocol) message);
         } else if (message instanceof ResponseProtocol) {
             processMessage((ResponseProtocol) message);
+        } else if (message instanceof TimeOverProtocol) {
+            processMessage((TimeOverProtocol) message);
         }
+    }
+
+    private void processMessage(TimeOverProtocol message){
+        queuePanel.matchMade();
     }
 
     private void processMessage(ResponseProtocol message) {
         Protocol response = requests.get(message.response);
 
         if (response instanceof AuthenticateProtocol) {
-
+            //successfully logged in
         } else if (response instanceof RegisterProtocol) {
-
+            //successfully registered
         }
     }
 

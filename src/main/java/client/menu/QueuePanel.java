@@ -21,7 +21,6 @@ public class QueuePanel extends DropDownPanel {
 
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
 
-
     private AtomicBoolean lock = new AtomicBoolean(false);
     private AtomicBoolean matchMade = new AtomicBoolean(false);
 
