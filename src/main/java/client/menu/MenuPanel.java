@@ -7,9 +7,11 @@ import client.utilities.Utils;
 import exceptions.GameException;
 import protocol.AuthenticateProtocol;
 import protocol.ExceptionProtocol;
+import protocol.MatchMadeProtocol;
 import protocol.Protocol;
 import protocol.RegisterProtocol;
 import protocol.ResponseProtocol;
+import protocol.TimeOverProtocol;
 
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
@@ -59,7 +61,7 @@ public class MenuPanel extends GamePanel {
 
         //create the drawer panels
         this.loginPanel = new LoginPanel(window, this);
-        this.queuePanel = new QueuePanel(window);
+        this.queuePanel = new QueuePanel(window, this);
         this.settingPanel = new SettingPanel(window);
         this.add(loginPanel);
         this.add(queuePanel);
@@ -221,16 +223,22 @@ public class MenuPanel extends GamePanel {
             processMessage((ExceptionProtocol) message);
         } else if (message instanceof ResponseProtocol) {
             processMessage((ResponseProtocol) message);
+        } else if (message instanceof TimeOverProtocol) {
+            processMessage((MatchMadeProtocol) message);
         }
+    }
+
+    private void processMessage(MatchMadeProtocol message){
+        queuePanel.matchMade(message.username1, message.username2);
     }
 
     private void processMessage(ResponseProtocol message) {
         Protocol response = requests.get(message.response);
 
         if (response instanceof AuthenticateProtocol) {
-
+            //successfully logged in
         } else if (response instanceof RegisterProtocol) {
-
+            //successfully registered
         }
     }
 
