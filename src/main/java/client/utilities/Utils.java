@@ -144,6 +144,20 @@ public class Utils {
         return target;
     }
 
+    public static BufferedImage loadSizedImage(String filePath, int width, int height){
+        BufferedImage img = loadImage(filePath);
+        if (img == null) {
+            return null;
+        }
+
+        BufferedImage res = new BufferedImage(Utils.scale(width),Utils.scale(height), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2D = (Graphics2D) res.getGraphics();
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+        g2D.drawImage(img, 0,0, Utils.scale(width),Utils.scale(height), null);
+        g2D.dispose();
+        return res;
+    }
+
     /**
      * Returns a {@link BufferedImage} that is the combination of the images arguments,
      * with the bottom-most image being the first element of the array and the top-most image being

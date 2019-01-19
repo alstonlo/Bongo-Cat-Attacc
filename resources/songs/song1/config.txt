@@ -1,1 +1,2 @@
-name:BongoCat Theme
+name: BongoCat Theme
+difficulty: 1
