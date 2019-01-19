@@ -30,7 +30,6 @@ class SongTile {
     private Clip audio;
     private BufferedImage splash;
     private BufferedImage album;
-    private BufferedImage star = Utils.loadScaledImage("resources/songs/star.png",45,45);
 
     private BufferedImage foreground;
 
@@ -93,8 +92,9 @@ class SongTile {
         g2D.drawString(song.getName(),Utils.scale(360), Utils.scale(40));
         g2D.drawString("Difficulty: ", Utils.scale(360), Utils.scale(70));
 
+        BufferedImage star = Utils.loadScaledImage("resources/songs/star.png",45,45);
         for (int i = 0; i < song.getDifficulty(); i++){
-            g2D.drawImage(star,Utils.scale(360+(55*i)),Utils.scale(90), null);
+            g2D.drawImage(star ,Utils.scale(360+(55*i)),Utils.scale(90), null);
         }
 
         g2D.drawImage(album, Utils.scale(30), Utils.scale(25), null);

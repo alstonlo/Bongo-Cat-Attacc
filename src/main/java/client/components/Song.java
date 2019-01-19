@@ -94,7 +94,7 @@ public class Song {
      * @return the scaled image; or null if the image argument is null
      */
     public BufferedImage getAlbum() {
-        return Utils.loadScaledImage(dirPath + "/album.png", 300,300);
+        return Utils.loadScaledImage(dirPath + "/album.png", Utils.scale(300),Utils.scale(300));
     }
 
     /**
