@@ -4,15 +4,19 @@ import client.Window;
 import client.utilities.Pallette;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
+import exceptions.GameException;
 import protocol.AuthenticateProtocol;
+import protocol.ExceptionProtocol;
 import protocol.Protocol;
 import protocol.RegisterProtocol;
+import protocol.ResponseProtocol;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -83,7 +87,10 @@ class LoginPanel extends DropDownPanel {
         submitButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 33));
         submitButton.setSize(Utils.scale(250), Utils.scale(90));
         submitButton.setLocation(Utils.scale(250), Utils.scale(750));
-        submitButton.addActionListener(e -> submit());
+        submitButton.addActionListener(e ->  {
+            submitButton.setEnabled(false);
+            ThreadPool.execute(this::submit);
+        });
         submitButton.setBorder(BorderFactory.createLineBorder(Pallette.OUTLINE_COLOR, Utils.scale(3), true));
         submitButton.setBackground(new Color(255, 221, 216));
         submitButton.setForeground(Pallette.OUTLINE_COLOR);
@@ -119,19 +126,41 @@ class LoginPanel extends DropDownPanel {
         add(errorMessageArea);
     }
 
-    /**
-     *
-     * @param message
-     */
-    void displayErrorMessage(String message) {
-        errorMessageArea.setText(message);
+
+
+    private void displayError(int errorState) {
+        String errorMessage;
+
+        switch (errorState) {
+            case GameException.DATABASE_ERROR_STATE:
+                errorMessage = "Our database ran into an issue. Please try again.";
+                break;
+
+            case GameException.INVALID_REGISTER_STATE:
+                errorMessage = "Username taken. Please try again.";
+                break;
+
+            case GameException.DOUBLE_LOGIN_STATE:
+                errorMessage = "You are already logged in.";
+                break;
+
+            case GameException.INVALID_LOGIN_STATE:
+                errorMessage = "Incorrect username or password.";
+                break;
+
+            default:
+                errorMessage = "";
+                System.out.println("Received error with state " + errorState);
+        }
+
+        SwingUtilities.invokeLater(() -> errorMessageArea.setText(errorMessage));
     }
 
     /**
      * Submits the form and sends the appropriate message to the server
      * based on what is inputted in the fields and buttons.
      */
-    private synchronized void submit() {
+    private void submit() {
         String username = usernameField.getText().trim().toLowerCase();
         String password = passwordField.getText().trim().toLowerCase();
 
@@ -146,7 +175,6 @@ class LoginPanel extends DropDownPanel {
 
         toSend.id = UUID.randomUUID().toString();
         lastSent = toSend;
-        submitButton.setEnabled(false);
         window.sendMessage(toSend);
     }
 
@@ -167,14 +195,36 @@ class LoginPanel extends DropDownPanel {
         super.retract();
 
         //reset all text fields to their default values
-        usernameField.setText("Username");
-        passwordField.setText("Password");
-        errorMessageArea.setText("");
+        SwingUtilities.invokeLater(() -> {
+            usernameField.setText("Username");
+            passwordField.setText("Password");
+            errorMessageArea.setText("");
+        });
     }
 
     @Override
     public void notifyReceived(Protocol protocol) {
+        if (protocol instanceof ExceptionProtocol) {
+            ExceptionProtocol error = (ExceptionProtocol) protocol;
+            if (lastSent.id.equals(error.response)) {
+                displayError(error.errorState);
+                SwingUtilities.invokeLater(() -> submitButton.setEnabled(true));
+            }
 
+        } else if (protocol instanceof ResponseProtocol) {
+            ResponseProtocol response = (ResponseProtocol) protocol;
+            if (lastSent.id.equals(response.response)) {
+                if (lastSent instanceof RegisterProtocol) {
+                    SwingUtilities.invokeLater(() -> errorMessageArea.setText("Account registered!"));
+
+                } else if (lastSent instanceof AuthenticateProtocol) {
+                    window.setUsername(((AuthenticateProtocol)lastSent).username);
+                    ThreadPool.execute(this::retract);
+                }
+
+                SwingUtilities.invokeLater(() -> submitButton.setEnabled(true));
+            }
+        }
     }
 
 
