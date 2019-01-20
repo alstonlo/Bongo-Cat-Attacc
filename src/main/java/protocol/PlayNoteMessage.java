@@ -3,22 +3,22 @@ package protocol;
 /**
  *
  */
-public class PlayNoteProtocol extends Protocol {
+public class PlayNoteMessage extends Message {
     public final int side; // 0 is left, 1 is right
 
     /**
-     * Constructs a PlayNoteProtocol
+     * Constructs a PlayNoteMessage
      *
      * @param side indicates which bongo was played - 0 = left, 1 = right
      */
-    public PlayNoteProtocol(int side){
+    public PlayNoteMessage(int side){
         this.side = side;
     }
 
     /**
      * Empty constructor necessary for Kyro serialization
      */
-    private PlayNoteProtocol(){
+    private PlayNoteMessage(){
         this.side = -1;
     }
 }

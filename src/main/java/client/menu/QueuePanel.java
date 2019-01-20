@@ -6,7 +6,7 @@ import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
-import protocol.Protocol;
+import protocol.Message;
 
 import javax.swing.JButton;
 import java.awt.AlphaComposite;
@@ -76,7 +76,7 @@ public class QueuePanel extends DropDownPanel {
     }
 
     @Override
-    public void notifyReceived(Protocol protocol) {
+    public void notifyReceived(Message message) {
 
     }
 

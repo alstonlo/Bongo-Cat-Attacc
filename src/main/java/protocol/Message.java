@@ -4,12 +4,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Abstract representation of a protocol message between the client and server.
+ * Abstract representation of a message between the client and server.
  *
  * @author Alston
  * last updated 12/19/2018
  */
-public abstract class Protocol {
+public abstract class Message {
 
     /**
      * True, if the protocol is meant to be sent over TCP (default); false,
@@ -18,7 +18,7 @@ public abstract class Protocol {
     public boolean isTCP = true;
 
     /**
-     * The time this Protocol is constructed.
+     * The time this Message is constructed.
      */
     public final Date timeCreated;
 
@@ -28,10 +28,10 @@ public abstract class Protocol {
     public String id = null;
 
     /**
-     * Constructs a Protocol. Sets {@link Protocol#timeCreated} to the time
+     * Constructs a Message. Sets {@link Message#timeCreated} to the time
      * that this constructor is called.
      */
-    public Protocol() {
+    public Message() {
         this.timeCreated = Calendar.getInstance().getTime();
     }
 }

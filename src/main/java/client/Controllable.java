@@ -1,7 +1,5 @@
 package client;
 
-import protocol.Protocol;
-
 /**
  * Abstract representation of an object that is controlled by
  * the game's inputs

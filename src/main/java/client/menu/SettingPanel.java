@@ -4,7 +4,7 @@ import client.Window;
 import client.utilities.Pallette;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
-import protocol.Protocol;
+import protocol.Message;
 
 import javax.swing.JButton;
 import java.awt.Color;
@@ -36,7 +36,7 @@ public class SettingPanel extends DropDownPanel {
     }
 
     @Override
-    public void notifyReceived(Protocol protocol) {
+    public void notifyReceived(Message message) {
 
     }
 

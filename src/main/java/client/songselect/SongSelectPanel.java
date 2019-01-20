@@ -7,8 +7,8 @@ import client.components.Clock;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
-import protocol.Protocol;
-import protocol.TimeOverProtocol;
+import protocol.Message;
+import protocol.TimeOverMessage;
 
 import javax.sound.sampled.Clip;
 import java.awt.BasicStroke;
@@ -125,8 +125,8 @@ public class SongSelectPanel extends GamePanel {
 
 
     @Override
-    public void notifyReceived(Protocol protocol) {
-        if (protocol instanceof TimeOverProtocol) {
+    public void notifyReceived(Message message) {
+        if (message instanceof TimeOverMessage) {
 
         }
     }

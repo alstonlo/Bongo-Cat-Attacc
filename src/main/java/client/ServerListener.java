@@ -3,7 +3,7 @@ package client;
 import client.utilities.ThreadPool;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import protocol.Protocol;
+import protocol.Message;
 
 /**
  * An implementation of {@link Listener} from the KyroNet library.
@@ -30,8 +30,8 @@ public class ServerListener extends Listener {
 
     @Override
     public void received(Connection connection, Object o) {
-        if (obj != null && o instanceof Protocol) { //only notify if the Object is actually a Protocol
-            ThreadPool.execute(() -> obj.notifyReceived((Protocol) o));
+        if (obj != null && o instanceof Message) { //only notify if the Object is actually a Message
+            ThreadPool.execute(() -> obj.notifyReceived((Message) o));
         }
     }
 }

@@ -2,7 +2,7 @@ package client.menu;
 
 import client.GamePanel;
 import client.Window;
-import protocol.Protocol;
+import protocol.Message;
 
 public class GamePlayPanel extends GamePanel {
 
@@ -35,7 +35,7 @@ public class GamePlayPanel extends GamePanel {
     }
 
     @Override
-    public void notifyReceived(Protocol protocol) {
+    public void notifyReceived(Message message) {
 
     }
 }

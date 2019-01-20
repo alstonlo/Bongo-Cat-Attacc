@@ -1,6 +1,6 @@
 package client;
 
-import protocol.Protocol;
+import protocol.Message;
 
 /**
  * Abstract representation of an object that is controlled by
@@ -14,8 +14,8 @@ public interface Messagable {
     /**
      * Notify to this object that a message was received from the server.
      *
-     * @param protocol the protocol that was received
+     * @param message the message that was received
      */
-    void notifyReceived(Protocol protocol);
+    void notifyReceived(Message message);
 
 }

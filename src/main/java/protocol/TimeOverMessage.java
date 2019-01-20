@@ -1,13 +1,13 @@
 package protocol;
 
-public class TimeOverProtocol extends Protocol {
+public class TimeOverMessage extends Message {
     public String songSelected;
 
-    public TimeOverProtocol(String songSelected){
+    public TimeOverMessage(String songSelected){
         this.songSelected = songSelected;
     }
 
-    private TimeOverProtocol(){
+    private TimeOverMessage(){
         songSelected = null;
     }
 }

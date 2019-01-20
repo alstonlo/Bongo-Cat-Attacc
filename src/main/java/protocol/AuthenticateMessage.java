@@ -1,24 +1,24 @@
 package protocol;
 
 /**
- * Protocol for registering a new player or account. The player
- * attempts to register a new account under a specified username and password.
+ * Message for authenticating a player. The player attempts to log in
+ * with a specified username and password.
  *
  * @author Alston
  * last updated 12/25/2018
  */
-public class RegisterProtocol extends Protocol {
+public class AuthenticateMessage extends Message {
 
     public final String username;
     public final String password;
 
     /**
-     * Constructs an RegisterProtocol.
+     * Constructs an AuthenticateMessage.
      *
      * @param username the username that the player is attempting to log in with
      * @param password the password that the player is attempting to log in with
      */
-    public RegisterProtocol(String username, String password) {
+    public AuthenticateMessage(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -26,8 +26,8 @@ public class RegisterProtocol extends Protocol {
     /**
      * Empty constructor necessary for Kyro serialization
      */
-    private RegisterProtocol() {
-        this.username = null;
-        this.password = null;
+    private AuthenticateMessage() {
+        username = null;
+        password = null;
     }
 }

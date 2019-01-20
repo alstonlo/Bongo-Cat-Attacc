@@ -8,7 +8,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import protocol.Network;
-import protocol.Protocol;
+import protocol.Message;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -119,10 +119,10 @@ public class Window extends JFrame {
      * Sends a message to the server. Currently, the message defaults to being
      * sent over TCP.
      *
-     * @param protocol the message to be sent
+     * @param message the message to be sent
      */
-    public void sendMessage(Protocol protocol) {
-        client.sendTCP(protocol);
+    public void sendMessage(Message message) {
+        client.sendTCP(message);
     }
 
     /**
