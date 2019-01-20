@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
 
-    private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
+    private BufferedImage drape = Utils.loadScaledImage("resources/menu/queue drape.png");
 
     private AtomicBoolean lock = new AtomicBoolean(false);
     private AtomicBoolean matchMade = new AtomicBoolean(false);
@@ -37,8 +37,8 @@ public class QueuePanel extends DropDownPanel {
     private QueueRectangle leftPanel;
     private QueueRectangle rightPanel;
 
-    private Font vsFont = Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(80));
-    private Font messageFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 50);
+    private Font vsFont = Pallette.getScaledFont(Pallette.TITLE_FONT, 80);
+    private Font messageFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 40);
 
     QueuePanel(Window window) {
         super(window);
@@ -98,7 +98,7 @@ public class QueuePanel extends DropDownPanel {
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-        g2D.drawImage(settingDrape, 0, 0, null);
+        g2D.drawImage(drape, 0, 0, null);
 
         clock.draw(g2D);
 
@@ -149,7 +149,14 @@ public class QueuePanel extends DropDownPanel {
         opacity = 1f;
 
         clock.stop();
-        window.switchState(Window.GAME_STATE);
+
+        try {
+          Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        window.switchState(Window.SONG_SELECT_STATE);
     }
 
 }

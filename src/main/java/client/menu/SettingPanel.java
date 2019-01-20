@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 
 public class SettingPanel extends DropDownPanel {
 
-    private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
+    private BufferedImage drape = Utils.loadScaledImage("resources/menu/controls drape.png");
 
     private JButton backButton;
 
@@ -45,6 +45,6 @@ public class SettingPanel extends DropDownPanel {
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-        g2D.drawImage(settingDrape, 0, 0, null);
+        g2D.drawImage(drape, 0, 0, null);
     }
 }
