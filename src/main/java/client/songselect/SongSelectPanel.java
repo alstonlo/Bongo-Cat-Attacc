@@ -216,8 +216,8 @@ public class SongSelectPanel extends GamePanel {
                 viewFrame.pollFirst();
             }
 
-            //decrement index
-            selected--;
+            //increment index
+            selected++;
             switchSong(getTile(selected).getAudio());
             isAnimating.set(false);
         }
@@ -257,8 +257,8 @@ public class SongSelectPanel extends GamePanel {
                 viewFrame.pollLast();
             }
 
-            //increment index
-            selected++;
+            //decrement index
+            selected--;
             switchSong(getTile(selected).getAudio());
             isAnimating.set(false);
         }

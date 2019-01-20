@@ -1,0 +1,2 @@
+name: Kiseki
+difficulty: 2
