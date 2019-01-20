@@ -178,6 +178,7 @@ class LoginPanel extends DropDownPanel {
 
         field.setSize(Utils.scale(400), Utils.scale(60));
         field.setForeground(Pallette.OUTLINE_COLOR);
+
         field.setBackground(Color.WHITE);
         field.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 40));
 

@@ -38,10 +38,7 @@ public class QueuePanel extends DropDownPanel {
     private QueueRectangle leftPanel;
     private QueueRectangle rightPanel;
 
-    private String user1;
-    private String user2;
-
-    private Font vsFont = Utils.loadFont("resources/cloud.ttf", Utils.scale(80));
+    private Font vsFont = Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(80));
 
     QueuePanel(Window window, MenuPanel menuPanel) {
         super(window);
@@ -79,8 +76,6 @@ public class QueuePanel extends DropDownPanel {
     }
 
     void matchMade(String user1, String user2) {
-        this.user1 = user1;
-        this.user2 = user2;
         leftPanel.setUsername(user1);
         rightPanel.setUsername(user2);
         leftPanel.configureSprites();
