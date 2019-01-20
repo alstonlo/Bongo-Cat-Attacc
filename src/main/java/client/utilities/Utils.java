@@ -51,7 +51,7 @@ public class Utils {
      * @return the compatible scaled image, or null if the image argument is null
      */
     public static BufferedImage scale(BufferedImage img) {
-        return scale(img, 750, 1334);
+        return scale(img, img.getWidth(), img.getHeight());
     }
 
     /**
