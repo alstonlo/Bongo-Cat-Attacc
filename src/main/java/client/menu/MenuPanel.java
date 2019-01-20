@@ -61,7 +61,7 @@ public class MenuPanel extends GamePanel {
         this.cat.configureSprites();
         this.background = Utils.loadScaledImage("resources/menu/yellow.png");
         this.title = getTitleSprite();
-        this.catIcon = Utils.loadScaledImage("resources/menu/cathead.png", Utils.scale(100),Utils.scale(100));
+        this.catIcon = Utils.loadScaledImage("resources/menu/cathead.png", 100,100);
 
         //create the drawer panels
         this.loginPanel = new LoginPanel(window, this);

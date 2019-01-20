@@ -72,7 +72,7 @@ class SongTile {
      */
     void loadTile() {
         this.splash = song.getSplash();
-        this.album = Utils.scale(song.getAlbum(), Utils.scale(300),Utils.scale(300));
+        this.album = Utils.scale(song.getAlbum(), 300,300);
         this.audio = song.getAudioExcerpt();
         configureImage();
     }
