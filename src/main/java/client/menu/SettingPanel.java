@@ -35,6 +35,11 @@ public class SettingPanel extends DropDownPanel {
     }
 
     @Override
+    void pullDown() {
+        super.pullDown();
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
