@@ -1,5 +1,6 @@
-package client.menu;
+package client.components;
 
+import client.Drawable;
 import client.utilities.Utils;
 
 import java.awt.Graphics2D;
@@ -13,7 +14,7 @@ import java.awt.image.BufferedImage;
  * @author Alston
  * last updated 1/12/2019
  */
-class BongoCat {
+public class BongoCat implements Drawable {
 
     /*
      * A 4 x 4 matrix of the sprites representing all the possible sprites
@@ -39,7 +40,7 @@ class BongoCat {
     /**
      * Constructs a BongoCat. The sprites are loaded and made.
      */
-    BongoCat() {
+    public BongoCat() {
         leftPawUp();
         rightPawUp();
     }
@@ -47,7 +48,7 @@ class BongoCat {
     /**
      * Moves the left paw of the bongo cat down.
      */
-    void leftPawDown() {
+    public void leftPawDown() {
         if (state[0] == -1) {
             state[0] = System.currentTimeMillis();
         }
@@ -56,7 +57,7 @@ class BongoCat {
     /**
      * Moves the right paw of the bongo cat down.
      */
-    void rightPawDown() {
+    public void rightPawDown() {
         if (state[1] == -1) {
             state[1] = System.currentTimeMillis();
         }
@@ -65,18 +66,18 @@ class BongoCat {
     /**
      * Moves the left paw of the bongo cat up.
      */
-    void leftPawUp() {
+    public void leftPawUp() {
         state[0] = -1;
     }
 
     /**
      * Moves the right paw of the bongo cat up.
      */
-    void rightPawUp() {
+    public void rightPawUp() {
         state[1] = -1;
     }
 
-    void configureSprites() {
+    public void configureSprites() {
         BufferedImage body = Utils.loadScaledImage("resources/bongo cat/body.png");
         BufferedImage leftPawDown = Utils.loadScaledImage("resources/bongo cat/left paw down.png");
         BufferedImage leftPawHit = Utils.loadScaledImage("resources/bongo cat/left paw hit.png");
@@ -102,7 +103,7 @@ class BongoCat {
         sprites[3][3] = Utils.mergeImages(new BufferedImage[]{body, leftPawDown, leftPawHit, rightPawDown, rightPawHit});
     }
 
-    void draw(Graphics2D g2D) {
+    public void draw(Graphics2D g2D) {
         if (sprites == null) {
             return;
         }

@@ -1,12 +1,13 @@
 package client.menu;
 
+import client.Drawable;
 import client.utilities.Utils;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
-class QueueRectangle {
+class QueueRectangle implements Drawable {
 
     private int x;
     private double y;
@@ -21,7 +22,7 @@ class QueueRectangle {
         this.bgColor = bgColor;
     }
 
-    void configureSprites() {
+    public void configureSprites() {
 
     }
 
@@ -29,7 +30,7 @@ class QueueRectangle {
         this.y = y;
     }
 
-    void draw(Graphics2D g2D){
+    public void draw(Graphics2D g2D){
         int drawY = Utils.round(y);
 
         g2D.setColor(bgColor);

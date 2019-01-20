@@ -1,8 +1,11 @@
 package client.menu;
 
+import client.components.BongoCat;
 import client.components.CircleButton;
 import client.GamePanel;
 import client.Window;
+import client.utilities.Pallette;
+import client.utilities.Settings;
 import client.utilities.Utils;
 import exceptions.GameException;
 import protocol.AuthenticateProtocol;
@@ -14,6 +17,7 @@ import protocol.ResponseProtocol;
 import protocol.TimeOverProtocol;
 
 import javax.sound.sampled.Clip;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -29,8 +33,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MenuPanel extends GamePanel {
 
     private BongoCat cat;
-    private BufferedImage background;
     private BufferedImage title;
+    private BufferedImage background;
 
     private LoginPanel loginPanel;
     private QueuePanel queuePanel;
@@ -56,8 +60,8 @@ public class MenuPanel extends GamePanel {
         //load the image assets
         this.cat = new BongoCat();
         this.cat.configureSprites();
-
         this.background = Utils.loadScaledImage("resources/menu/yellow.png");
+        this.title = getTitleSprite();
 
         //create the drawer panels
         this.loginPanel = new LoginPanel(window, this);
@@ -197,14 +201,12 @@ public class MenuPanel extends GamePanel {
         Graphics2D g2D = (Graphics2D) g;
 
         g2D.drawImage(background, 0, 0, this);
+        g2D.drawImage(title, 0, 0, null);
+
         cat.draw(g2D);
         for (CircleButton button : buttons) {
             button.draw(g2D);
         }
-//
-//        g2D.setFont(Utils.loadFont("resources/cloud.ttf", Utils.scale(80)));
-//        g2D.drawString("Bongo Cat", Utils.scale(50),Utils.scale(100));
-//        g2D.drawString("Attacc!", Utils.scale(50), Utils.scale(200));
     }
 
     /**
@@ -233,13 +235,7 @@ public class MenuPanel extends GamePanel {
     }
 
     private void processMessage(ResponseProtocol message) {
-        Protocol response = requests.get(message.response);
 
-        if (response instanceof AuthenticateProtocol) {
-            //successfully logged in
-        } else if (response instanceof RegisterProtocol) {
-            //successfully registered
-        }
     }
 
     private void processMessage(ExceptionProtocol message) {
@@ -275,7 +271,15 @@ public class MenuPanel extends GamePanel {
         }
     }
 
-    private void loadSprites() {
-
+    private BufferedImage getTitleSprite() {
+        BufferedImage titleSprite = Utils.createCompatibleImage(Utils.scale(750), Utils.scale(300));
+        Graphics2D g2D = (Graphics2D)titleSprite.getGraphics();
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+        g2D.setColor(Pallette.OUTLINE_COLOR);
+        g2D.setFont(Pallette.TITLE_FONT.deriveFont(Font.PLAIN, Utils.scale(80)));
+        g2D.drawString("Bongo Cat", Utils.scale(50),Utils.scale(100));
+        g2D.drawString("Attacc!", Utils.scale(50), Utils.scale(200));
+        g2D.dispose();
+        return titleSprite;
     }
 }

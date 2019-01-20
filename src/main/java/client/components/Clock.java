@@ -58,10 +58,10 @@ public class Clock implements Drawable {
     }
 
     public void configureSprites() {
-        int side = (int)Math.ceil((radius + clockOutline.getLineWidth()) * 2);
+        int side = (int) Math.ceil((radius + clockOutline.getLineWidth()) * 2);
         sprite = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D g2D = (Graphics2D)sprite.getGraphics();
+        Graphics2D g2D = (Graphics2D) sprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         Ellipse2D shape = new Ellipse2D.Float( //the stroke thickness must be accounted for in the ellipse
                 clockOutline.getLineWidth(),
@@ -81,9 +81,12 @@ public class Clock implements Drawable {
             return;
         }
 
-        g2D.drawImage(sprite, centerX - sprite.getWidth()/2, centerY - sprite.getHeight()/2, null);
+        g2D.drawImage(sprite, centerX - sprite.getWidth() / 2, centerY - sprite.getHeight() / 2, null);
+
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setStroke(armOutline);
         g2D.drawLine(centerX, centerY, armX, armY);
+        g2D.setRenderingHints(Settings.DEFAULT_RENDER_SETTINGS);
     }
 }

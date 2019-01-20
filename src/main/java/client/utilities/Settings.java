@@ -29,18 +29,32 @@ public class Settings {
 
     //rendering hints that prioritize quality
     public static final Map<RenderingHints.Key, Object> QUALITY_RENDER_SETTINGS = getQualityRenderSettings();
+    public static final Map<RenderingHints.Key, Object> DEFAULT_RENDER_SETTINGS = getDefaultRenderSettings();
 
     /**
      * @return the configured settings for {@link Settings#QUALITY_RENDER_SETTINGS}
      */
     private static Map<RenderingHints.Key, Object> getQualityRenderSettings() {
-        Map<RenderingHints.Key, Object> qualitySettings = new HashMap<>();
-        qualitySettings.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        qualitySettings.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        qualitySettings.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-        qualitySettings.put(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-        qualitySettings.put(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-        return qualitySettings;
+        Map<RenderingHints.Key, Object> settings     = new HashMap<>();
+        settings.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        settings.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        settings.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        settings.put(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        settings.put(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        return settings;
+    }
+
+    /**
+     * @return the configured settings for {@link Settings#QUALITY_RENDER_SETTINGS}
+     */
+    private static Map<RenderingHints.Key, Object> getDefaultRenderSettings() {
+        Map<RenderingHints.Key, Object> settings = new HashMap<>();
+        settings.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
+        settings.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_DEFAULT);
+        settings.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        settings.put(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_DEFAULT);
+        settings.put(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_DEFAULT);
+        return settings;
     }
 }
 
