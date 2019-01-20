@@ -70,6 +70,7 @@ public class Song {
         } catch (IOException e) {
             System.out.println(dirPath + "/config.txt cannot be found.");
         }
+
         this.name = configDetails.get("name");
         this.difficulty = Integer.valueOf(configDetails.get("difficulty"));
     }
@@ -89,12 +90,12 @@ public class Song {
     }
 
     /**
-     * Scales and re-sizes the album to be 300 x 300 pixels
+     * Loads the song's album art and returns it.
      *
      * @return the scaled image; or null if the image argument is null
      */
     public BufferedImage getAlbum() {
-        return Utils.loadScaledImage(dirPath + "/album.png", Utils.scale(300),Utils.scale(300));
+        return Utils.loadImage(dirPath + "/album.png");
     }
 
     /**

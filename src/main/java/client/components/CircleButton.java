@@ -79,7 +79,7 @@ public class CircleButton implements Drawable {
     }
 
     /**
-     * Sets the Runnable action the button will perform on being clicked
+     * Sets the Runnable action the button will run on being clicked
      * or submitted by {@link CircleButton#submit()}.
      *
      * @param onSubmit the action the button will perform on being clicked
@@ -87,7 +87,6 @@ public class CircleButton implements Drawable {
     public void setOnSubmit(Runnable onSubmit) {
         this.onSubmit = onSubmit;
     }
-
 
 
     //DRAWABLE METHODS ------------------------------------------------------------------------------------

@@ -13,6 +13,12 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Circular 60 second clock with only the seconds hand.
+ *
+ * @author Alston
+ * last updated 1/19/2018
+ */
 public class Clock implements Drawable {
 
     private final long CLOCK_DURATION = 60000;
@@ -25,29 +31,45 @@ public class Clock implements Drawable {
     private int armY;
     private int armLength;
 
-    private BufferedImage sprite;
+    private BufferedImage clockSprite;
     private BasicStroke armOutline = new BasicStroke(Utils.scale(3));
     private BasicStroke clockOutline = new BasicStroke(Utils.scale(4));
 
     private AtomicBoolean timeIsOn = new AtomicBoolean(true);
 
+    /**
+     * Constructs a Clock.
+     *
+     * @param centerX the x-coordinate of the clock's center
+     * @param centerY the y-coordinate of the clock's center
+     * @param radius  the radius of the clock
+     */
     public Clock(int centerX, int centerY, int radius) {
         this.centerX = centerX;
         this.centerY = centerY;
         this.radius = radius;
         this.armLength = radius - Utils.scale(5);
-        this.armY = centerY - radius;
+        this.armY = centerY - armLength;
     }
 
+    /**
+     * Starts the clock on a new thread.
+     */
     public void start() {
         timeIsOn.set(true);
         ThreadPool.execute(this::animate);
     }
 
+    /**
+     * Stops the clock.
+     */
     public void stop() {
         timeIsOn.set(false);
     }
 
+    /**
+     * Continuously updates the seconds hand of this clock.
+     */
     private void animate() {
         long startTime = System.currentTimeMillis();
         while (timeIsOn.get()) {
@@ -57,11 +79,16 @@ public class Clock implements Drawable {
         }
     }
 
-    public void configureSprites() {
-        int side = (int) Math.ceil((radius + clockOutline.getLineWidth()) * 2);
-        sprite = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D g2D = (Graphics2D) sprite.getGraphics();
+    //DRAWABLE METHODS ------------------------------------------------------------------------------------
+
+    public void configureSprites() {
+
+        //pre-load the backing of this clock
+        int side = (int) Math.ceil((radius + clockOutline.getLineWidth()) * 2);
+        clockSprite = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2D = (Graphics2D) clockSprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         Ellipse2D shape = new Ellipse2D.Float( //the stroke thickness must be accounted for in the ellipse
                 clockOutline.getLineWidth(),
@@ -77,8 +104,10 @@ public class Clock implements Drawable {
     }
 
     public void draw(Graphics2D g2D) {
-        g2D.drawImage(sprite, centerX - sprite.getWidth() / 2, centerY - sprite.getHeight() / 2, null);
+        g2D.drawImage(clockSprite, centerX - clockSprite.getWidth() / 2,
+                centerY - clockSprite.getHeight() / 2, null);
 
+        //draw the arm
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setStroke(armOutline);

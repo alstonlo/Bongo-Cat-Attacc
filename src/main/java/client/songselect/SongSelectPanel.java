@@ -81,6 +81,7 @@ public class SongSelectPanel extends GamePanel {
         }
 
         this.clock = new Clock(Utils.scale(650), Utils.scale(250), Utils.scale(60));
+        clock.configureSprites();
 
         window.requestFocus();
     }
