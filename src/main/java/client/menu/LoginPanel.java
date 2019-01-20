@@ -5,6 +5,7 @@ import client.utilities.Pallette;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
 import protocol.AuthenticateProtocol;
+import protocol.Protocol;
 import protocol.RegisterProtocol;
 
 import javax.swing.BorderFactory;
@@ -43,6 +44,8 @@ class LoginPanel extends DropDownPanel {
     private JButton submitButton;
     private JButton backButton;
     private JTextField errorMessageArea;
+
+    private Protocol lastSent;
 
     /**
      * Constructs a LoginPanel.
@@ -119,22 +122,10 @@ class LoginPanel extends DropDownPanel {
         add(errorMessageArea);
     }
 
-    @Override
-    void retract() {
-        super.retract();
-        usernameField.setText("Username");
-        passwordField.setText("Password");
-        errorMessageArea.setText("");
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D g2D = (Graphics2D) g;
-        g2D.drawImage(loginDrape, 0, 0, null);
-    }
-
+    /**
+     *
+     * @param message
+     */
     void displayErrorMessage(String message) {
         errorMessageArea.setText(message);
     }
@@ -155,7 +146,27 @@ class LoginPanel extends DropDownPanel {
         }
     }
 
-    //Stylization methods (for readability) -----------------------------------------------------------
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.drawImage(loginDrape, 0, 0, null);
+    }
+
+    // DropDownPanel methods -------------------------------------------------------------------------
+
+    @Override
+    void retract() {
+        super.retract();
+
+        //reset all text fields to their default values
+        usernameField.setText("Username");
+        passwordField.setText("Password");
+        errorMessageArea.setText("");
+    }
+
+    // Stylization methods (for readability) -----------------------------------------------------------
 
     /**
      * Convenience method that stylizes the text fields used in this panel
