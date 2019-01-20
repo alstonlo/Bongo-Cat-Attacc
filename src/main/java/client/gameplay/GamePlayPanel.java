@@ -2,6 +2,7 @@ package client.gameplay;
 
 import client.GamePanel;
 import client.Window;
+import client.components.Clock;
 import client.utilities.Pallette;
 import client.utilities.Utils;
 import protocol.Message;
@@ -18,6 +19,8 @@ public class GamePlayPanel extends GamePanel {
     private BufferedImage background;
     private Conductor conductor;
 
+    private Clock clock;
+
     public GamePlayPanel(Window window){
         super(window);
     }
@@ -26,6 +29,9 @@ public class GamePlayPanel extends GamePanel {
     public void run() {
         super.run();
         configureSprites();
+        clock = new Clock(Utils.scale(100), Utils.scale(100), window.getSong().getDuration()*1000,Utils.scale(60));
+        clock.configureSprites();
+        clock.start();
         conductor = new Conductor(window.getSong());
         conductor.run();
         window.getSong().getAudio().loop(Clip.LOOP_CONTINUOUSLY);
@@ -39,6 +45,7 @@ public class GamePlayPanel extends GamePanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.drawImage(background,0,0,null);
         conductor.draw(g2D);
+        clock.draw(g2D);
     }
 
     @Override

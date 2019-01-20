@@ -60,7 +60,7 @@ public class Conductor implements Drawable {
         long noteCreationPrevTime = System.currentTimeMillis();
         long animationPrevTime = System.currentTimeMillis();
         long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis()-startTime/1000.0 < duration) {
+        while (gameInPlay.get()) {
             long noteCreationElapsedTime = System.currentTimeMillis() - noteCreationPrevTime;
             if (noteCreationElapsedTime > 1000.0/bps) {
                 noteCreationPrevTime = System.currentTimeMillis();

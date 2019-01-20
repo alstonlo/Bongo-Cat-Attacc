@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class Clock implements Drawable {
 
-    private final long CLOCK_DURATION = 60000;
+    private long clockDuration = 60000;
 
     private final int centerX;
     private final int centerY;
@@ -53,6 +53,22 @@ public class Clock implements Drawable {
     }
 
     /**
+     * Constructs a Clock.
+     *
+     * @param centerX the x-coordinate of the clock's center
+     * @param centerY the y-coordinate of the clock's center
+     * @param radius  the radius of the clock
+     */
+    public Clock(int centerX, int centerY, int duration, int radius) {
+        this.centerX = centerX;
+        this.centerY = centerY;
+        this.radius = radius;
+        this.clockDuration = duration;
+        this.armLength = radius - Utils.scale(5);
+        this.armY = centerY - armLength;
+    }
+
+    /**
      * Starts the clock on a new thread.
      */
     public void start() {
@@ -73,7 +89,7 @@ public class Clock implements Drawable {
     private void animate() {
         long startTime = System.currentTimeMillis();
         while (timeIsOn.get()) {
-            double theta = 2.0 * Math.PI * (System.currentTimeMillis() - startTime) / CLOCK_DURATION;
+            double theta = 2.0 * Math.PI * (System.currentTimeMillis() - startTime) / clockDuration;
             armX = centerX + Utils.round(armLength * Math.sin(theta));
             armY = centerY - Utils.round(armLength * Math.cos(theta));
         }
