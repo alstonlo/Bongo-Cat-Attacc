@@ -80,7 +80,7 @@ class LoginPanel extends DropDownPanel {
 
         //buttons
         submitButton = new JButton("Submit");
-        submitButton.setFont(Utils.loadFont("moon.otf", Utils.scale(33)));
+        submitButton.setFont(Pallette.DEFAULT_FONT.deriveFont((float) Utils.scale(33)));
         submitButton.setSize(Utils.scale(250), Utils.scale(90));
         submitButton.setLocation(Utils.scale(250), Utils.scale(750));
         submitButton.addActionListener(e -> ThreadPool.execute(() -> submit()));
@@ -90,7 +90,7 @@ class LoginPanel extends DropDownPanel {
         submitButton.setFocusPainted(false);
 
         backButton = new JButton("Back");
-        backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
+        backButton.setFont(Pallette.DEFAULT_FONT.deriveFont((float) Utils.scale(25)));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));
         backButton.addActionListener(e -> ThreadPool.execute(() -> retract()));
@@ -101,7 +101,7 @@ class LoginPanel extends DropDownPanel {
 
         errorMessageArea = new JTextField();
         errorMessageArea.setEditable(false);
-        errorMessageArea.setFont(Utils.loadFont("moon.otf", Utils.scale(15)));
+        errorMessageArea.setFont(Pallette.DEFAULT_FONT.deriveFont((float) Utils.scale(15)));
         errorMessageArea.setHorizontalAlignment(JTextField.CENTER);
         errorMessageArea.setBorder(null);
         errorMessageArea.setBackground(new Color(255, 255, 255));
@@ -167,7 +167,7 @@ class LoginPanel extends DropDownPanel {
         field.setSize(Utils.scale(400), Utils.scale(60));
         field.setForeground(Pallette.OUTLINE_COLOR);
         field.setBackground(new Color(255, 255, 255));
-        field.setFont(Utils.loadFont("resources/mon.otf", Utils.scale(40)));
+        field.setFont(Pallette.DEFAULT_FONT.deriveFont((float) Utils.scale(40)));
 
         Border outline = BorderFactory.createMatteBorder(0, 0, Utils.scale(4), 0, Pallette.OUTLINE_COLOR);
         int padSize = Utils.scale(10);
@@ -208,7 +208,7 @@ class LoginPanel extends DropDownPanel {
     }
 
     private void stylize(JRadioButton button) {
-        button.setFont(Utils.loadFont("moon.otf", Utils.scale(30)));
+        button.setFont(Pallette.DEFAULT_FONT.deriveFont((float) Utils.scale(30)));
         button.setFocusPainted(false);
         button.setForeground(Pallette.OUTLINE_COLOR);
         button.setSize(Utils.scale(150), Utils.scale(90));

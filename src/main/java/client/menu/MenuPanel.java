@@ -35,6 +35,7 @@ public class MenuPanel extends GamePanel {
     private BongoCat cat;
     private BufferedImage title;
     private BufferedImage background;
+    private BufferedImage catIcon;
 
     private LoginPanel loginPanel;
     private QueuePanel queuePanel;
@@ -61,6 +62,7 @@ public class MenuPanel extends GamePanel {
         this.cat = new BongoCat();
         this.cat.configureSprites();
         this.background = Utils.loadScaledImage("resources/menu/yellow.png");
+        this.catIcon = Utils.loadScaledImage("resources/menu/cathead.png",Utils.scale(80),Utils.scale(80));
         this.title = getTitleSprite();
 
         //create the drawer panels
@@ -207,6 +209,11 @@ public class MenuPanel extends GamePanel {
         for (CircleButton button : buttons) {
             button.draw(g2D);
         }
+
+        if (window.getUsername() != "") {
+            g2D.drawString(window.getUsername(), Utils.scale(100), Utils.scale(1200));
+        }
+        g2D.drawImage(catIcon, Utils.scale(50), Utils.scale(1200), null);
     }
 
     /**
@@ -235,7 +242,9 @@ public class MenuPanel extends GamePanel {
     }
 
     private void processMessage(ResponseProtocol message) {
-
+        if ((requests.get(message.id) instanceof AuthenticateProtocol) || (requests.get(message.id) instanceof AuthenticateProtocol)){
+            window.setUsername(((AuthenticateProtocol) requests.get(message.id)).username);
+        }
     }
 
     private void processMessage(ExceptionProtocol message) {

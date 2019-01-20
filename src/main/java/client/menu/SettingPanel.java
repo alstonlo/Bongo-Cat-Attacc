@@ -22,7 +22,7 @@ public class SettingPanel extends DropDownPanel {
         this.setLayout(null);
 
         backButton = new JButton("Back");
-        backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
+        backButton.setFont(Pallette.DEFAULT_FONT.deriveFont((float) Utils.scale(25)));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));
         backButton.addActionListener(e -> ThreadPool.execute(() -> retract()));
