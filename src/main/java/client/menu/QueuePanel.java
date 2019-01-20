@@ -31,7 +31,7 @@ public class QueuePanel extends DropDownPanel {
     private Clock clock;
     private int messageState = 0;
     private double secondsPerDot = 0.8;
-    private String[] message = {"Finding Match", "Finding Match.", "Finding Match..", "Finding Match..."};
+    private String[] message = {"Finding Matches", "Finding Matches.", "Finding Matches..", "Finding Matches..."};
 
     private final long SLIDE_DURATION = 500;
     private final long VS_ANIMATION_DURATION = 500;
@@ -80,17 +80,18 @@ public class QueuePanel extends DropDownPanel {
             rightPanel.configureSprites();
 
             ThreadPool.execute(this::animate);
+
             super.pullDown();
-            menuPanel.sendMessage(new JoinQueueProtocol());
         }
     }
 
     void matchMade(String user1, String user2) {
         this.user1 = user1;
         this.user2 = user2;
-       // matchMade.set(true);
-        window.switchState(window.SONG_SELECT_STATE); //FOR DEVELOPMENT PURPOSES ONLY
-        window.requestFocus();
+        matchMade.set(true);
+
+//        window.switchState(window.SONG_SELECT_STATE); //FOR DEVELOPMENT PURPOSES ONLY
+//        window.requestFocus();
     }
 
     /**
@@ -106,10 +107,10 @@ public class QueuePanel extends DropDownPanel {
         g2D.drawImage(settingDrape, 0, 0, null);
 
         clock.draw(g2D);
-
         g2D.setFont(Utils.loadFont("moon.otf", Utils.scale(50)));
         FontMetrics fontMetrics = g2D.getFontMetrics();
         g2D.drawString(message[messageState], Utils.scale(375) - fontMetrics.stringWidth("Finding Match") / 2, Utils.scale(690));
+
         leftPanel.draw(g2D);
         rightPanel.draw(g2D);
 

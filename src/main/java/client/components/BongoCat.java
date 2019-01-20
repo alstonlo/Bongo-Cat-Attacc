@@ -104,10 +104,6 @@ public class BongoCat implements Drawable {
     }
 
     public void draw(Graphics2D g2D) {
-        if (sprites == null) {
-            return;
-        }
-
         long[] drawState = {state[0], state[1]};
 
         //retrieve the row index of the sprite table

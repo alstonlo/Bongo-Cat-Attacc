@@ -77,10 +77,6 @@ public class Clock implements Drawable {
     }
 
     public void draw(Graphics2D g2D) {
-        if (sprite == null) {
-            return;
-        }
-
         g2D.drawImage(sprite, centerX - sprite.getWidth() / 2, centerY - sprite.getHeight() / 2, null);
 
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
