@@ -35,6 +35,7 @@ public class Window extends JFrame {
     public static final int SONG_SELECT_STATE = 1;
     
     private String username = "";
+
     private Client client;
     private BongoListener bongoListener = new BongoListener();
     private ServerListener serverListener = new ServerListener();

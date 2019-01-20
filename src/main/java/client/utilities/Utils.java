@@ -55,11 +55,13 @@ public class Utils {
     }
 
     /**
-     * Re-sizes a image according to the specified width and height.
+     * Re-sizes a image according to the specified width and height. The
+     * resulting image is then scaled according to {@link Settings#SCALE}; that is,
+     * the {@link Utils#scale(double)} are called on the width and height arguments.
      *
      * @param img    the image to be scaled
-     * @param width  the width of the resultant image
-     * @param height the height of the resultant image
+     * @param width  the unscaled width of the resultant image
+     * @param height the unscaled height of the resultant image
      * @return the compatible scaled image, or null if the image argument is null
      */
     public static BufferedImage scale(BufferedImage img, int width, int height) {
@@ -67,10 +69,10 @@ public class Utils {
             return null;
         }
 
-        BufferedImage res = createCompatibleImage(width, height);
+        BufferedImage res = createCompatibleImage(Utils.scale(width), Utils.scale(height));
         Graphics2D g2D = (Graphics2D) res.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
-        g2D.drawImage(img, 0, 0, width, height, null);
+        g2D.drawImage(img, 0, 0, Utils.scale(width), Utils.scale(height), null);
         g2D.dispose();
         return res;
     }
@@ -131,7 +133,7 @@ public class Utils {
 
     /**
      * Returns a compatible {@link BufferedImage} from the specified file path and scales it
-     * according to {@link Settings#SCALE}.
+     * according to {@link Utils#scale(BufferedImage)}.
      *
      * @param filePath the file path of the image
      * @return the scaled image file at the filePath argument, or null if an IOException occurs
@@ -142,11 +144,11 @@ public class Utils {
 
     /**
      * Returns a compatible {@link BufferedImage} from the specified file path and scales it
-     * according to the specified width and height.
+     * according {@link Utils#scale(BufferedImage, int, int)}.
      *
      * @param filePath the file path of the image
-     * @param width    the width of the resulting scaled image
-     * @param height   the height of the resulting scaled image
+     * @param width    the unscaled width of the resulting scaled image
+     * @param height   the unscaled height of the resulting scaled image
      * @return the scaled image file at the filePath argument, or null if an IOException occurs
      */
     public static BufferedImage loadScaledImage(String filePath, int width, int height) {
