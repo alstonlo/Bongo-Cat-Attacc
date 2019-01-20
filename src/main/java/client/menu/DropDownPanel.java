@@ -1,5 +1,6 @@
 package client.menu;
 
+import client.Messagable;
 import client.Window;
 import client.utilities.Settings;
 import client.utilities.Utils;
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Alston
  * last updated 1/19/2018
  */
-abstract class DropDownPanel extends JPanel {
+abstract class DropDownPanel extends JPanel implements Messagable {
 
     //the states the panel can be in
     static int ANIMATION_STATE = -1; //is currently in a drop down animation
