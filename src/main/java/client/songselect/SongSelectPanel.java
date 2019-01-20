@@ -13,6 +13,7 @@ import protocol.TimeOverProtocol;
 import javax.sound.sampled.Clip;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -83,7 +84,7 @@ public class SongSelectPanel extends GamePanel {
             viewFrame.addFirst(focus);
         }
 
-        this.clock = new Clock(Utils.scale(650), Utils.scale(100), Utils.scale(60));
+        this.clock = new Clock(Utils.scale(375), Utils.scale(170), Utils.scale(60));
         clock.configureSprites();
 
         window.requestFocus();
@@ -160,10 +161,11 @@ public class SongSelectPanel extends GamePanel {
         for (SongTile tile : toRender) { //draw all the tiles' foregrounds
             tile.drawForeground(g2D);
         }
+        g2D.drawImage(title, 0,0, null);
 
         clock.draw(g2D);
 
-        g2D.drawImage(title, 0,0, null);
+
     }
 
     /**
@@ -265,11 +267,15 @@ public class SongSelectPanel extends GamePanel {
     void configureTitle(){
         title = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(150));
         Graphics2D g2D = (Graphics2D)title.getGraphics();
+        g2D.setColor(new Color(255,255,255,240));
+        g2D.fillRect(0,0,Utils.scale(750),Utils.scale(150));
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
-        g2D.drawImage(Utils.loadScaledImage("resources/songs/border.png"),0,0, null);
         g2D.setColor(Pallette.OUTLINE_COLOR);
+        g2D.setStroke(new BasicStroke(4));
+        g2D.drawRect(0,0,Utils.scale(750),Utils.scale(150));
         g2D.setFont(Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(50)));
-        g2D.drawString("Select Song", 30, 70);
+        FontMetrics fontMetrics = g2D.getFontMetrics();
+        g2D.drawString("Select Song", Utils.scale(375)-fontMetrics.stringWidth("Select Song")/2, Utils.scale(80));
     }
 
 }

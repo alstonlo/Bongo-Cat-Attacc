@@ -108,6 +108,7 @@ public class QueuePanel extends DropDownPanel {
 
         if (opacity != 0f) {
             g2D.setComposite(AlphaComposite.SrcOver.derive(opacity)); //drawing the "vs."
+            g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
             g2D.setFont(vsFont);
             g2D.setColor(Pallette.OUTLINE_COLOR);
             fontMetrics = g2D.getFontMetrics();
