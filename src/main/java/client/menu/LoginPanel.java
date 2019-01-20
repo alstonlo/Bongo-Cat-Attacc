@@ -23,6 +23,7 @@ import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
+import java.util.UUID;
 
 /**
  * Login panel where players can log into their accounts or
@@ -34,8 +35,6 @@ import java.awt.image.BufferedImage;
 class LoginPanel extends DropDownPanel {
 
     private BufferedImage loginDrape = Utils.loadScaledImage("resources/menu/login drape.png");
-
-    private MenuPanel menuPanel;
 
     private JTextField usernameField;
     private JTextField passwordField;
@@ -51,11 +50,9 @@ class LoginPanel extends DropDownPanel {
      * Constructs a LoginPanel.
      *
      * @param window    the Window this panel belongs to
-     * @param menuPanel the menu panel that this panel belongs to
      */
-    LoginPanel(Window window, MenuPanel menuPanel) {
+    LoginPanel(Window window) {
         super(window);
-        this.menuPanel = menuPanel;
         this.setLayout(null);
 
         //text field for username
@@ -86,7 +83,7 @@ class LoginPanel extends DropDownPanel {
         submitButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 33));
         submitButton.setSize(Utils.scale(250), Utils.scale(90));
         submitButton.setLocation(Utils.scale(250), Utils.scale(750));
-        submitButton.addActionListener(e -> ThreadPool.execute(() -> submit()));
+        submitButton.addActionListener(e -> submit());
         submitButton.setBorder(BorderFactory.createLineBorder(Pallette.OUTLINE_COLOR, Utils.scale(3), true));
         submitButton.setBackground(new Color(255, 221, 216));
         submitButton.setForeground(Pallette.OUTLINE_COLOR);
@@ -134,16 +131,23 @@ class LoginPanel extends DropDownPanel {
      * Submits the form and sends the appropriate message to the server
      * based on what is inputted in the fields and buttons.
      */
-    private void submit() {
+    private synchronized void submit() {
         String username = usernameField.getText().trim().toLowerCase();
         String password = passwordField.getText().trim().toLowerCase();
 
-        if (registerButton.isSelected()) {      //if user is registering a new account
-            menuPanel.sendMessage(new RegisterProtocol(username, password));
+        Protocol toSend;
 
-        } else if (loginButton.isSelected()) {   //if user is logging into an account
-            menuPanel.sendMessage(new AuthenticateProtocol(username, password));
+        if (registerButton.isSelected()) {      //if user is registering a new account
+           toSend = new RegisterProtocol(username, password);
+
+        } else {   //if user is logging into an account
+            toSend = new AuthenticateProtocol(username, password);
         }
+
+        toSend.id = UUID.randomUUID().toString();
+        lastSent = toSend;
+        submitButton.setEnabled(false);
+        window.sendMessage(toSend);
     }
 
     @Override
@@ -153,6 +157,8 @@ class LoginPanel extends DropDownPanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.drawImage(loginDrape, 0, 0, null);
     }
+
+
 
     // DropDownPanel methods -------------------------------------------------------------------------
 
@@ -165,6 +171,13 @@ class LoginPanel extends DropDownPanel {
         passwordField.setText("Password");
         errorMessageArea.setText("");
     }
+
+    @Override
+    public void notifyReceived(Protocol protocol) {
+
+    }
+
+
 
     // Stylization methods (for readability) -----------------------------------------------------------
 

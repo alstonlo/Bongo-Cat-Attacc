@@ -4,15 +4,12 @@ import protocol.Protocol;
 
 /**
  * Abstract representation of an object that is controlled by
- * the game's inputs and the server's messages.
+ * the game's inputs
  *
  * @author Alston
- * last updated 1/9/2019
+ * last updated 1/19/2019
  */
 public interface Controllable {
-
-    //KEYLISTENER NOTIFY METHODS -------------------------------------------------
-    //notifies this object of inputs from the key listener
 
     /**
      * Notify to this object that the left bongo key has been pressed.
@@ -38,14 +35,4 @@ public interface Controllable {
      * Notify to this object that both the hold bongo key has been triggered.
      */
     void notifyHold();
-
-    //SERVERLISTENER NOTIFY METHOD ---------------------------------------------------
-    //notifies this object of connections and messages from the server
-
-    /**
-     * Notify to this object that a message was received from the server.
-     *
-     * @param protocol the protocol that was received
-     */
-    void notifyReceived(Protocol protocol);
 }

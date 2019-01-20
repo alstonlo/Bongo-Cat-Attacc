@@ -14,16 +14,16 @@ import protocol.Protocol;
  */
 public class ServerListener extends Listener {
 
-    private Controllable obj;
+    private Messagable obj;
 
     /**
-     * Sets the object that is controlled by this listener.
+     * Sets the object that is messaged by this listener.
      * Initially, this object is set to null and only one object
-     * can be controlled at a time.
+     * can be messaged at a time.
      *
-     * @param obj the object to be controlled by this listener
+     * @param obj the object to be messaged by this listener
      */
-    void setControllableObj(Controllable obj) {
+    void setControllableObj(Messagable obj) {
         this.obj = obj;
     }
 

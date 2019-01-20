@@ -30,7 +30,7 @@ class QueueRectangle implements Drawable {
         this.catFileName = fileName;
     }
 
-    public void setUsername(String username){
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -38,13 +38,17 @@ class QueueRectangle implements Drawable {
         this.sprite = Utils.createCompatibleImage(width, height);
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+
         g2D.setColor(bgColor);
         g2D.fillRect(0, 0, sprite.getWidth(), sprite.getHeight());
-        g2D.drawImage(Utils.loadScaledImage(catFileName,Utils.scale(325),Utils.scale(200)), Utils.scale(20),Utils.scale(480), null);
-        g2D.setFont(Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(50))); //drawing the two usernames and corresponding bongo cats
+
+        g2D.drawImage(Utils.loadScaledImage(catFileName, 325, 200), Utils.scale(20), Utils.scale(480), null);
+
+        g2D.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT, 50)); //drawing the two usernames and corresponding bongo cats
         FontMetrics fontMetrics = g2D.getFontMetrics();
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.drawString(username, Utils.scale(187) - fontMetrics.stringWidth(username) / 2, Utils.scale(800));
+
         g2D.dispose();
     }
 

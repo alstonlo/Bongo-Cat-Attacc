@@ -6,7 +6,7 @@ import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
-import protocol.JoinQueueProtocol;
+import protocol.Protocol;
 
 import javax.swing.JButton;
 import java.awt.AlphaComposite;
@@ -63,7 +63,7 @@ public class QueuePanel extends DropDownPanel {
         this.leftPanel.setY(-Settings.PANEL_SIZE.height);
         this.rightPanel = new QueueRectangle(
                 Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
-                new Color(125, 151, 230),"resources/menu/right bongo cat.png");
+                new Color(125, 151, 230), "resources/menu/right bongo cat.png");
         this.rightPanel.setY(Settings.PANEL_SIZE.height);
     }
 
@@ -75,6 +75,11 @@ public class QueuePanel extends DropDownPanel {
             ThreadPool.execute(this::animate);
             super.pullDown();
         }
+    }
+
+    @Override
+    public void notifyReceived(Protocol protocol) {
+
     }
 
     void matchMade(String user1, String user2) {
