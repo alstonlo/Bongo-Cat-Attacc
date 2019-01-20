@@ -80,7 +80,7 @@ public class Clock implements Drawable {
     }
 
 
-    //DRAWABLE METHODS ------------------------------------------------------------------------------------
+    //Drawable methods ------------------------------------------------------------------------------------
 
     public void configureSprites() {
 
@@ -95,7 +95,7 @@ public class Clock implements Drawable {
                 clockOutline.getLineWidth(),
                 side - 2 * clockOutline.getLineWidth(),
                 side - 2 * clockOutline.getLineWidth());
-        g2D.setColor(new Color(255, 255, 255));
+        g2D.setColor(Color.WHITE);
         g2D.fill(shape);
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setStroke(clockOutline);

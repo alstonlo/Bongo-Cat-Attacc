@@ -46,12 +46,14 @@ public class Song {
     /**
      * Constructs a song that is represented by a specific folder. For a folder
      * to properly represent a song, it must have the following files in the following format.
-     * </br>
      * <p>
-     * config.txt - a .txt file holding information about the song
-     * music.wav - a file holding the audio of the song
-     * album.png - a png depicting the song's album with a square aspect ratio
-     * background.png - a png depicting splash art associated with the song (750px x 1334px)
+     * <ul>
+     * <li>config.txt - a .txt file holding information about the song</li>
+     * <li>music.wav - a file holding the audio of the song</li>
+     * <li>album.png - a png depicting the song's album with a square aspect ratio</li>
+     * <li>background.png - a png depicting splash art associated with the song (750px x 1334px)</li>
+     * </ul>
+     * <p>
      *
      * @param dirPath the file path of the folder representing the song
      */
@@ -60,7 +62,7 @@ public class Song {
 
         //read the config file and configure properties
         Map<String, String> configDetails = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(dirPath + "/config.txt")))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(dirPath + "/config.txt")))) {
             String line = reader.readLine();
             while (line != null) {
                 String[] property = line.split(":");

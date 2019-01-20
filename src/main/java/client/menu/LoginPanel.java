@@ -80,7 +80,7 @@ class LoginPanel extends DropDownPanel {
 
         //buttons
         submitButton = new JButton("Submit");
-        submitButton.setFont(Utils.loadFont("moon.otf", Utils.scale(33)));
+        submitButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 33));
         submitButton.setSize(Utils.scale(250), Utils.scale(90));
         submitButton.setLocation(Utils.scale(250), Utils.scale(750));
         submitButton.addActionListener(e -> ThreadPool.execute(() -> submit()));
@@ -90,7 +90,7 @@ class LoginPanel extends DropDownPanel {
         submitButton.setFocusPainted(false);
 
         backButton = new JButton("Back");
-        backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
+        backButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 25));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));
         backButton.addActionListener(e -> ThreadPool.execute(() -> retract()));
@@ -99,12 +99,13 @@ class LoginPanel extends DropDownPanel {
         backButton.setForeground(Pallette.OUTLINE_COLOR);
         backButton.setFocusPainted(false);
 
+        //text area for error messaging
         errorMessageArea = new JTextField();
         errorMessageArea.setEditable(false);
-        errorMessageArea.setFont(Utils.loadFont("moon.otf", Utils.scale(15)));
+        errorMessageArea.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 15));
         errorMessageArea.setHorizontalAlignment(JTextField.CENTER);
         errorMessageArea.setBorder(null);
-        errorMessageArea.setBackground(new Color(255, 255, 255));
+        errorMessageArea.setBackground(Color.WHITE);
         errorMessageArea.setForeground(Pallette.OUTLINE_COLOR);
         errorMessageArea.setSize(Utils.scale(600), Utils.scale(80));
         errorMessageArea.setLocation(Utils.scale(75), Utils.scale(330));
@@ -126,11 +127,6 @@ class LoginPanel extends DropDownPanel {
         errorMessageArea.setText("");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param g
-     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -159,15 +155,20 @@ class LoginPanel extends DropDownPanel {
         }
     }
 
-    //STYLIZATION METHODS (for readability)
+    //Stylization methods (for readability) -----------------------------------------------------------
 
+    /**
+     * Convenience method that stylizes the text fields used in this panel
+     *
+     * @param field the field to be stylized
+     */
     private void stylize(JTextField field) {
         String defaultText = field.getText();
 
         field.setSize(Utils.scale(400), Utils.scale(60));
         field.setForeground(Pallette.OUTLINE_COLOR);
-        field.setBackground(new Color(255, 255, 255));
-        field.setFont(Utils.loadFont("resources/mon.otf", Utils.scale(40)));
+        field.setBackground(Color.WHITE);
+        field.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 40));
 
         Border outline = BorderFactory.createMatteBorder(0, 0, Utils.scale(4), 0, Pallette.OUTLINE_COLOR);
         int padSize = Utils.scale(10);
@@ -207,12 +208,17 @@ class LoginPanel extends DropDownPanel {
         field.setText(defaultText);
     }
 
+    /**
+     * Convenience method to stylize the radio buttons used in this panel
+     *
+     * @param button the button to be stylized
+     */
     private void stylize(JRadioButton button) {
-        button.setFont(Utils.loadFont("moon.otf", Utils.scale(30)));
+        button.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 30));
         button.setFocusPainted(false);
         button.setForeground(Pallette.OUTLINE_COLOR);
         button.setSize(Utils.scale(150), Utils.scale(90));
-        button.setBackground(new Color(255, 255, 255));
+        button.setBackground(Color.WHITE);
         button.setHorizontalAlignment(JButton.CENTER);
     }
 }

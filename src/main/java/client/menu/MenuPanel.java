@@ -1,23 +1,20 @@
 package client.menu;
 
-import client.components.BongoCat;
-import client.components.CircleButton;
 import client.GamePanel;
 import client.Window;
+import client.components.BongoCat;
+import client.components.CircleButton;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
 import exceptions.GameException;
-import protocol.AuthenticateProtocol;
 import protocol.ExceptionProtocol;
 import protocol.MatchMadeProtocol;
 import protocol.Protocol;
-import protocol.RegisterProtocol;
 import protocol.ResponseProtocol;
 import protocol.TimeOverProtocol;
 
 import javax.sound.sampled.Clip;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -97,119 +94,6 @@ public class MenuPanel extends GamePanel {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void run() {
-        super.run();
-
-        //playing background music
-//        bgMusic = Utils.loadAudio("resources/menu/music.wav");
-        if (bgMusic != null) {
-            bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update() {
-        loginPanel.relocate();
-        queuePanel.relocate();
-        settingPanel.relocate();
-
-        super.update();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void stop() {
-        super.stop();
-
-        //stop the background music
-        if (bgMusic != null) {
-            bgMusic.close();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyLeftPress() {
-        buttonIndex = (buttonIndex + 2) % buttons.length;
-        selectButton(buttonIndex);
-
-        cat.leftPawDown();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyLeftRelease() {
-        cat.leftPawUp();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyRightPress() {
-        buttonIndex = (buttonIndex + 1) % buttons.length;
-        selectButton(buttonIndex);
-
-        cat.rightPawDown();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyRightRelease() {
-        cat.rightPawUp();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyHold() {
-        buttons[buttonIndex].submit();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void notifyReceived(Protocol protocol) {
-        processMessage(protocol);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param g
-     */
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D g2D = (Graphics2D) g;
-
-        g2D.drawImage(background, 0, 0, this);
-        g2D.drawImage(title, 0, 0, null);
-
-        cat.draw(g2D);
-        for (CircleButton button : buttons) {
-            button.draw(g2D);
-        }
-    }
-
-    /**
      * Sends a message to the server
      *
      * @param message the message to be sent
@@ -230,7 +114,7 @@ public class MenuPanel extends GamePanel {
         }
     }
 
-    private void processMessage(MatchMadeProtocol message){
+    private void processMessage(MatchMadeProtocol message) {
         queuePanel.matchMade(message.username1, message.username2);
     }
 
@@ -271,15 +155,105 @@ public class MenuPanel extends GamePanel {
         }
     }
 
+
+    // GamePanel methods -----------------------------------------------------------------------------------
+
+    @Override
+    public void run() {
+        super.run();
+
+        //playing background music
+//        bgMusic = Utils.loadAudio("resources/menu/music.wav");
+        if (bgMusic != null) {
+            bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+    }
+
+    @Override
+    public void update() {
+        loginPanel.relocate();
+        queuePanel.relocate();
+        settingPanel.relocate();
+
+        super.update();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+
+        //stop the background music
+        if (bgMusic != null) {
+            bgMusic.close();
+        }
+    }
+
+    @Override
+    public void notifyLeftPress() {
+        buttonIndex = (buttonIndex + 2) % buttons.length;
+        selectButton(buttonIndex);
+
+        cat.leftPawDown();
+    }
+
+    @Override
+    public void notifyLeftRelease() {
+        cat.leftPawUp();
+    }
+
+    @Override
+    public void notifyRightPress() {
+        buttonIndex = (buttonIndex + 1) % buttons.length;
+        selectButton(buttonIndex);
+
+        cat.rightPawDown();
+    }
+
+    @Override
+    public void notifyRightRelease() {
+        cat.rightPawUp();
+    }
+
+    @Override
+    public void notifyHold() {
+        buttons[buttonIndex].submit();
+    }
+
+    @Override
+    public void notifyReceived(Protocol protocol) {
+        processMessage(protocol);
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2D = (Graphics2D) g;
+
+        g2D.drawImage(background, 0, 0, this);
+        g2D.drawImage(title, 0, 0, null);
+
+        cat.draw(g2D);
+        for (CircleButton button : buttons) {
+            button.draw(g2D);
+        }
+    }
+
+    // Loading sprites methods -----------------------------------------------------------------------
+
+    /**
+     * @return a scaled 500px x 200px sprite of the title
+     */
     private BufferedImage getTitleSprite() {
-        BufferedImage titleSprite = Utils.createCompatibleImage(Utils.scale(750), Utils.scale(300));
-        Graphics2D g2D = (Graphics2D)titleSprite.getGraphics();
+        BufferedImage titleSprite = Utils.createCompatibleImage(Utils.scale(500), Utils.scale(250));
+        Graphics2D g2D = (Graphics2D) titleSprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.setColor(Pallette.OUTLINE_COLOR);
-        g2D.setFont(Pallette.TITLE_FONT.deriveFont(Font.PLAIN, Utils.scale(80)));
-        g2D.drawString("Bongo Cat", Utils.scale(50),Utils.scale(100));
+        g2D.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT, 80));
+        g2D.drawString("Bongo Cat", Utils.scale(50), Utils.scale(100));
         g2D.drawString("Attacc!", Utils.scale(50), Utils.scale(200));
         g2D.dispose();
         return titleSprite;
     }
+
 }
