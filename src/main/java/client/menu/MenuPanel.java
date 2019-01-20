@@ -10,12 +10,9 @@ import client.utilities.Utils;
 import protocol.Protocol;
 
 import javax.sound.sampled.Clip;
-import java.awt.Button;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Panel for the main menu.

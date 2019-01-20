@@ -109,7 +109,7 @@ class LoginPanel extends DropDownPanel {
         //text area for error messaging
         errorMessageArea = new JTextField();
         errorMessageArea.setEditable(false);
-        errorMessageArea.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 15));
+        errorMessageArea.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 20));
         errorMessageArea.setHorizontalAlignment(JTextField.CENTER);
         errorMessageArea.setBorder(null);
         errorMessageArea.setBackground(Color.WHITE);
