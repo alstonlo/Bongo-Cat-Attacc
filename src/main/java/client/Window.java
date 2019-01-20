@@ -35,6 +35,7 @@ public class Window extends JFrame {
     public static final int SONG_SELECT_STATE = 1;
 
     private String username;
+
     private Client client;
     private BongoListener bongoListener = new BongoListener();
     private ServerListener serverListener = new ServerListener();
@@ -93,6 +94,25 @@ public class Window extends JFrame {
      */
     public void close() {
         client.close();
+    }
+
+    /**
+     * @return the username of the player, or null if the player hasn't logged in
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Sets the username of the player, if they have not logged in.
+     * If they are already logged in, does nothing.
+     *
+     * @param username the player's username
+     */
+    public void setUsername(String username) {
+        if (this.username == null) {
+            this.username = username;
+        }
     }
 
     /**
@@ -157,18 +177,4 @@ public class Window extends JFrame {
         newPanel.run();               //run its animation
     }
 
-    /**
-     * Sets the username of the current player
-     * @param username their username
-     */
-    public void setUsername(String username){
-        this.username = username;
-    }
-
-    /**
-     * @return the username of the current player
-     */
-    public String getUsername(){
-        return username;
-    }
 }

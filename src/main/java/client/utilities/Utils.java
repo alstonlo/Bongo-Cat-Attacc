@@ -155,7 +155,7 @@ public class Utils {
     /**
      * Creates an {@link BufferedImage} that is compatible with the local
      * graphics environment from an existing image. The existing image is drawn
-     * onto a new, empty compatible image. 
+     * onto a new, empty compatible image.
      *
      * @param image the original image
      * @return the compatible image, or null if the image argument is null
