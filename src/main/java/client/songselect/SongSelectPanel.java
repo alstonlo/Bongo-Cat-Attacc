@@ -88,6 +88,7 @@ public class SongSelectPanel extends GamePanel {
     @Override
     public void run() {
         super.run();
+        clock.configureSprites();
         clock.start();
         switchSong(songTiles[selected].getAudio());
     }
