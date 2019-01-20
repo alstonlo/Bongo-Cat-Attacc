@@ -5,12 +5,12 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Listener.ThreadedListener;
 import com.esotericsoftware.kryonet.Server;
 import exceptions.GameException;
-import protocol.AuthenticateProtocol;
-import protocol.ExceptionProtocol;
-import protocol.JoinQueueProtocol;
+import protocol.AuthenticateMessage;
+import protocol.ExceptionMessage;
+import protocol.JoinQueueMessage;
 import protocol.Network;
-import protocol.RegisterProtocol;
-import protocol.ResponseProtocol;
+import protocol.RegisterMessage;
+import protocol.ResponseMessage;
 
 import java.io.IOException;
 
@@ -107,14 +107,14 @@ class GameServer {
 
         //the class of the protocol argument is inspected,
         //casted accordingly and then directed to some method
-        if (protocol instanceof JoinQueueProtocol) {
-            process(player, (JoinQueueProtocol) protocol);
+        if (protocol instanceof JoinQueueMessage) {
+            process(player, (JoinQueueMessage) protocol);
 
-        } else if (protocol instanceof RegisterProtocol) {
-            process(player, (RegisterProtocol) protocol);
+        } else if (protocol instanceof RegisterMessage) {
+            process(player, (RegisterMessage) protocol);
 
-        } else if (protocol instanceof AuthenticateProtocol) {
-            process(player, (AuthenticateProtocol) protocol);
+        } else if (protocol instanceof AuthenticateMessage) {
+            process(player, (AuthenticateMessage) protocol);
 
         }
     }
@@ -125,39 +125,39 @@ class GameServer {
      * makes it cleaner.
      */
 
-    private void process(Player player, JoinQueueProtocol protocol) {
+    private void process(Player player, JoinQueueMessage protocol) {
         if (!player.loggedIn()) { //ensure player is logged in in order to join queue room
-            player.sendTCP(new ExceptionProtocol(protocol, GameException.NOT_LOGGED_IN_STATE));
+            player.sendTCP(new ExceptionMessage(protocol, GameException.NOT_LOGGED_IN_STATE));
         }
 
         matchMakingRoom.queue(player);
-        player.sendTCP(new ResponseProtocol(protocol));
+        player.sendTCP(new ResponseMessage(protocol));
     }
 
-    private void process(Player player, RegisterProtocol protocol) {
+    private void process(Player player, RegisterMessage protocol) {
         try {
             database.register(protocol.username, protocol.password); //attempt to register account
         } catch (GameException e) {
-            player.sendTCP(new ExceptionProtocol(protocol, e.getState()));
+            player.sendTCP(new ExceptionMessage(protocol, e.getState()));
             return;
         }
 
-        player.sendTCP(new ResponseProtocol(protocol)); //no error was thrown, so send ResponseProtocol
+        player.sendTCP(new ResponseMessage(protocol)); //no error was thrown, so send ResponseMessage
     }
 
-    private void process(Player player, AuthenticateProtocol protocol) {
+    private void process(Player player, AuthenticateMessage protocol) {
         if (player.loggedIn()) {
-            player.sendTCP(new ExceptionProtocol(protocol, GameException.DOUBLE_LOGIN_STATE));
+            player.sendTCP(new ExceptionMessage(protocol, GameException.DOUBLE_LOGIN_STATE));
             return;
         }
 
         boolean authenticated = database.authenticate(protocol.username, protocol.password);
 
-        if (authenticated) { //authentication successful, so send ResponseProtocol
+        if (authenticated) { //authentication successful, so send ResponseMessage
             player.registerUsername(protocol.username);
-            player.sendTCP(new ResponseProtocol(protocol));
+            player.sendTCP(new ResponseMessage(protocol));
         } else {
-            player.sendTCP(new ExceptionProtocol(protocol, GameException.INVALID_LOGIN_STATE));
+            player.sendTCP(new ExceptionMessage(protocol, GameException.INVALID_LOGIN_STATE));
         }
     }
 }

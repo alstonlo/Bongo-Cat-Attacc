@@ -26,11 +26,11 @@ public class Network {
      */
     private static Class[] protocolClasses = {
             Date.class,
-            Protocol.class, ExceptionProtocol.class, ResponseProtocol.class,
-            AuthenticateProtocol.class, RegisterProtocol.class,
-            JoinQueueProtocol.class, MatchMadeProtocol.class,
-            RequestSongProtocol.class, TimeOverProtocol.class,
-            NotePlayedByOpponentProtocol.class, PlayNoteProtocol.class
+            Message.class, ExceptionMessage.class, ResponseMessage.class,
+            AuthenticateMessage.class, RegisterMessage.class,
+            JoinQueueMessage.class, MatchMadeMessage.class,
+            RequestSongMessage.class, TimeOverMessage.class,
+            NotePlayedByOpponentMessage.class, PlayNoteMessage.class
     };
 
     /**

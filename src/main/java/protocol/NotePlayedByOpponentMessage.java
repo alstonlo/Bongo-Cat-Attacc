@@ -1,21 +1,21 @@
 package protocol;
 
-public class NotePlayedByOpponentProtocol extends Protocol {
+public class NotePlayedByOpponentMessage extends Message {
     public final int side;
 
     /**
-     * Constructs a NotePlayedByOpponentProtocol
+     * Constructs a NotePlayedByOpponentMessage
      *
      * @param side indicate which bongo was played (0 = left, 1 = right)
      */
-    NotePlayedByOpponentProtocol(int side){
+    NotePlayedByOpponentMessage(int side){
         this.side = side;
     }
 
     /**
      * Empty constructor necessary for Kyro serialization
      */
-    private NotePlayedByOpponentProtocol(){
+    private NotePlayedByOpponentMessage(){
         side = -1;
     }
 }

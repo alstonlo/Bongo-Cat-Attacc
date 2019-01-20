@@ -5,11 +5,11 @@ import client.utilities.Pallette;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
 import exceptions.GameException;
-import protocol.AuthenticateProtocol;
-import protocol.ExceptionProtocol;
-import protocol.Protocol;
-import protocol.RegisterProtocol;
-import protocol.ResponseProtocol;
+import protocol.AuthenticateMessage;
+import protocol.ExceptionMessage;
+import protocol.Message;
+import protocol.RegisterMessage;
+import protocol.ResponseMessage;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -48,7 +48,7 @@ class LoginPanel extends DropDownPanel {
     private JButton backButton;
     private JTextField errorMessageArea;
 
-    private Protocol lastSent;
+    private Message lastSent;
 
     /**
      * Constructs a LoginPanel.
@@ -168,12 +168,12 @@ class LoginPanel extends DropDownPanel {
         String username = usernameField.getText().trim().toLowerCase();
         String password = passwordField.getText().trim().toLowerCase();
 
-        Protocol toSend;
+        Message toSend;
         if (registerButton.isSelected()) {      //if user is registering a new account
-            toSend = new RegisterProtocol(username, password);
+            toSend = new RegisterMessage(username, password);
 
         } else {                                //if user is logging into an account
-            toSend = new AuthenticateProtocol(username, password);
+            toSend = new AuthenticateMessage(username, password);
         }
 
         toSend.id = UUID.randomUUID().toString();
@@ -205,26 +205,26 @@ class LoginPanel extends DropDownPanel {
     }
 
     @Override
-    public void notifyReceived(Protocol protocol) {
+    public void notifyReceived(Message message) {
 
         //use if statements to filter out the type of message
-        if (protocol instanceof ExceptionProtocol) {
-            ExceptionProtocol error = (ExceptionProtocol) protocol;
+        if (message instanceof ExceptionMessage) {
+            ExceptionMessage error = (ExceptionMessage) message;
             if (lastSent.id.equals(error.response)) {
                 displayError(error.errorState); //display the error
                 SwingUtilities.invokeLater(() -> submitButton.setEnabled(true)); //unlock the submit button
             }
 
-        } else if (protocol instanceof ResponseProtocol) {
-            ResponseProtocol response = (ResponseProtocol) protocol;
+        } else if (message instanceof ResponseMessage) {
+            ResponseMessage response = (ResponseMessage) message;
             if (lastSent.id.equals(response.response)) {
 
                 //retrieve what type of message the server responded to
-                if (lastSent instanceof RegisterProtocol) { //account was successfully registered
+                if (lastSent instanceof RegisterMessage) { //account was successfully registered
                     SwingUtilities.invokeLater(() -> errorMessageArea.setText("Account registered!"));
 
-                } else if (lastSent instanceof AuthenticateProtocol) { //user successfully logged in
-                    window.setUsername(((AuthenticateProtocol) lastSent).username);
+                } else if (lastSent instanceof AuthenticateMessage) { //user successfully logged in
+                    window.setUsername(((AuthenticateMessage) lastSent).username);
                     ThreadPool.execute(this::retract);
                 }
 
@@ -255,14 +255,14 @@ class LoginPanel extends DropDownPanel {
         Border padding = BorderFactory.createEmptyBorder(0, padSize, 0, padSize);
         field.setBorder(BorderFactory.createCompoundBorder(outline, padding));
 
-        //bound field to 15 characters
+        //bound field to 10 characters
         field.setDocument(new PlainDocument() {
             @Override
             public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
                 if (str == null) {
                     return;
                 }
-                if ((getLength() + str.length()) <= 15) {
+                if ((getLength() + str.length()) <= 10) {
                     super.insertString(offs, str, a);
                 }
             }

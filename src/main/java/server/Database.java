@@ -29,7 +29,7 @@ class Database {
     }
 
     private ConnectionPool pool = new ConnectionPool();
-    private String tableSQL = "create table users(username varchar(15) not null unique, password varchar(15) not null)";
+    private String tableSQL = "create table users(username varchar(10) not null unique, password varchar(10) not null)";
     private String insertSQL = "insert into users (username, password) values (?,?)";
     private String authenticateSQL = "select * from users where username=? and password=?";
 

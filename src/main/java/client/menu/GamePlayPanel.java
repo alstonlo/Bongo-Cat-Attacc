@@ -4,7 +4,7 @@ import client.GamePanel;
 import client.Window;
 import client.utilities.Pallette;
 import client.utilities.Utils;
-import protocol.Protocol;
+import protocol.Message;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -63,7 +63,7 @@ public class GamePlayPanel extends GamePanel {
     }
 
     @Override
-    public void notifyReceived(Protocol protocol) {
+    public void notifyReceived(Message message) {
 
     }
 

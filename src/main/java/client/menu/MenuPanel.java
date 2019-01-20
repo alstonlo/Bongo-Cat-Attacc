@@ -7,7 +7,7 @@ import client.components.CircleButton;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
-import protocol.Protocol;
+import protocol.Message;
 
 import javax.sound.sampled.Clip;
 import java.awt.Graphics;
@@ -171,9 +171,9 @@ public class MenuPanel extends GamePanel {
     }
 
     @Override
-    public void notifyReceived(Protocol protocol) {
+    public void notifyReceived(Message message) {
         for (DropDownPanel panel : panels) {
-            panel.notifyReceived(protocol);
+            panel.notifyReceived(message);
         }
     }
 

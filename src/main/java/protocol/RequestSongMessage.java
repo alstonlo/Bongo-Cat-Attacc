@@ -1,24 +1,24 @@
 package protocol;
 
 /**
- * Protocol for the client to request a song if they are the one choosing
+ * Message for the client to request a song if they are the one choosing
  */
-public class RequestSongProtocol extends Protocol{
+public class RequestSongMessage extends Message {
     public final String songRequest;
 
     /**
-     * Constructs a RequestSongProtocol message
+     * Constructs a RequestSongMessage message
      *
      * @param songRequest the name of the song requested
      */
-    public RequestSongProtocol(String songRequest){
+    public RequestSongMessage(String songRequest){
         this.songRequest = songRequest;
     }
 
     /**
      * Empty constructor necessary for Kyro serialization
      */
-    private RequestSongProtocol(){
+    private RequestSongMessage(){
         this.songRequest = null;
     }
 }
