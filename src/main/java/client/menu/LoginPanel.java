@@ -38,7 +38,7 @@ import java.util.UUID;
  */
 class LoginPanel extends DropDownPanel {
 
-    private BufferedImage loginDrape = Utils.loadScaledImage("resources/menu/login drape.png");
+    private BufferedImage drape = Utils.loadScaledImage("resources/menu/login drape.png");
 
     private JTextField usernameField;
     private JTextField passwordField;
@@ -53,7 +53,7 @@ class LoginPanel extends DropDownPanel {
     /**
      * Constructs a LoginPanel.
      *
-     * @param window    the Window this panel belongs to
+     * @param window the Window this panel belongs to
      */
     LoginPanel(Window window) {
         super(window);
@@ -87,8 +87,8 @@ class LoginPanel extends DropDownPanel {
         submitButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 33));
         submitButton.setSize(Utils.scale(250), Utils.scale(90));
         submitButton.setLocation(Utils.scale(250), Utils.scale(750));
-        submitButton.addActionListener(e ->  {
-            submitButton.setEnabled(false);
+        submitButton.addActionListener(e -> {
+            submitButton.setEnabled(false); //lock the submit button
             ThreadPool.execute(this::submit);
         });
         submitButton.setBorder(BorderFactory.createLineBorder(Pallette.OUTLINE_COLOR, Utils.scale(3), true));
@@ -126,8 +126,11 @@ class LoginPanel extends DropDownPanel {
         add(errorMessageArea);
     }
 
-
-
+    /**
+     * Displays an error onto the panel.
+     *
+     * @param errorState the state denoting the type of error, as specified by {@link GameException}
+     */
     private void displayError(int errorState) {
         String errorMessage;
 
@@ -153,6 +156,7 @@ class LoginPanel extends DropDownPanel {
                 System.out.println("Received error with state " + errorState);
         }
 
+        //display the message into the appropriate area
         SwingUtilities.invokeLater(() -> errorMessageArea.setText(errorMessage));
     }
 
@@ -165,11 +169,10 @@ class LoginPanel extends DropDownPanel {
         String password = passwordField.getText().trim().toLowerCase();
 
         Protocol toSend;
-
         if (registerButton.isSelected()) {      //if user is registering a new account
-           toSend = new RegisterProtocol(username, password);
+            toSend = new RegisterProtocol(username, password);
 
-        } else {   //if user is logging into an account
+        } else {                                //if user is logging into an account
             toSend = new AuthenticateProtocol(username, password);
         }
 
@@ -183,9 +186,8 @@ class LoginPanel extends DropDownPanel {
         super.paintComponent(g);
 
         Graphics2D g2D = (Graphics2D) g;
-        g2D.drawImage(loginDrape, 0, 0, null);
+        g2D.drawImage(drape, 0, 0, null);
     }
-
 
 
     // DropDownPanel methods -------------------------------------------------------------------------
@@ -204,29 +206,32 @@ class LoginPanel extends DropDownPanel {
 
     @Override
     public void notifyReceived(Protocol protocol) {
+
+        //use if statements to filter out the type of message
         if (protocol instanceof ExceptionProtocol) {
             ExceptionProtocol error = (ExceptionProtocol) protocol;
             if (lastSent.id.equals(error.response)) {
-                displayError(error.errorState);
-                SwingUtilities.invokeLater(() -> submitButton.setEnabled(true));
+                displayError(error.errorState); //display the error
+                SwingUtilities.invokeLater(() -> submitButton.setEnabled(true)); //unlock the submit button
             }
 
         } else if (protocol instanceof ResponseProtocol) {
             ResponseProtocol response = (ResponseProtocol) protocol;
             if (lastSent.id.equals(response.response)) {
-                if (lastSent instanceof RegisterProtocol) {
+
+                //retrieve what type of message the server responded to
+                if (lastSent instanceof RegisterProtocol) { //account was successfully registered
                     SwingUtilities.invokeLater(() -> errorMessageArea.setText("Account registered!"));
 
-                } else if (lastSent instanceof AuthenticateProtocol) {
-                    window.setUsername(((AuthenticateProtocol)lastSent).username);
+                } else if (lastSent instanceof AuthenticateProtocol) { //user successfully logged in
+                    window.setUsername(((AuthenticateProtocol) lastSent).username);
                     ThreadPool.execute(this::retract);
                 }
 
-                SwingUtilities.invokeLater(() -> submitButton.setEnabled(true));
+                SwingUtilities.invokeLater(() -> submitButton.setEnabled(true)); //unlock the submit button
             }
         }
     }
-
 
 
     // Stylization methods (for readability) -----------------------------------------------------------

@@ -47,7 +47,7 @@ public class MenuPanel extends GamePanel {
         this.cat.configureSprites();
         this.background = Utils.loadScaledImage("resources/menu/yellow.png");
         this.title = loadTitleSprite();
-        this.catIcon = Utils.loadScaledImage("resources/menu/cathead.png", 100, 100);
+        this.catIcon = Utils.loadScaledImage("resources/menu/cat icon.png", 100, 100);
 
         //create the buttons and the panels they trigger
         BufferedImage loginIcon = Utils.loadImage("resources/icons/login.png");
