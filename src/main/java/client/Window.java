@@ -1,5 +1,6 @@
 package client;
 
+import client.menu.GamePlayPanel;
 import client.menu.MenuPanel;
 import client.songselect.SongSelectPanel;
 import client.utilities.Settings;
@@ -33,6 +34,7 @@ public class Window extends JFrame {
 
     public static final int MENU_STATE = 0;
     public static final int SONG_SELECT_STATE = 1;
+    public static final int GAME_STATE = 2;
 
     private String username = "";
 
@@ -110,7 +112,7 @@ public class Window extends JFrame {
      * @param username the player's username
      */
     public void setUsername(String username) {
-        if (this.username == null) {
+        if (username.equals("")) {
             this.username = username;
         }
     }
@@ -145,6 +147,10 @@ public class Window extends JFrame {
 
             case SONG_SELECT_STATE:
                 switchPanel(new SongSelectPanel(this));
+                break;
+
+            case GAME_STATE:
+                switchPanel(new GamePlayPanel(this));
                 break;
 
             default:
