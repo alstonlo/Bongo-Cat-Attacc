@@ -40,7 +40,7 @@ public class Window extends JFrame {
     private BongoListener bongoListener = new BongoListener();
     private ServerListener serverListener = new ServerListener();
 
-    private GamePanel currPanel;
+    private Messagable currPanel;
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
@@ -158,7 +158,7 @@ public class Window extends JFrame {
      *
      * @param newPanel the new JPanel to be displayed
      */
-    private void switchPanel(GamePanel newPanel) {
+    private void switchPanel(Messagable newPanel) {
         if (currPanel != null) { //stop the animation running on the currently displayed panel
             currPanel.stop();
         }

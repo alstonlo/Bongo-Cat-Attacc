@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class BongoListener implements KeyListener {
 
-    private Controllable obj = null;
+    private Messagable obj = null;
     private final AtomicBoolean leftPress = new AtomicBoolean(false);
     private final AtomicBoolean rightPress = new AtomicBoolean(false);
 
@@ -32,7 +32,7 @@ public class BongoListener implements KeyListener {
      *
      * @param obj the object to be controlled by this listener
      */
-    void setControlledObj(Controllable obj) {
+    void setControlledObj(Messagable obj) {
         this.obj = obj;
     }
 
