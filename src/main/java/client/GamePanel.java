@@ -9,7 +9,7 @@ import javax.swing.Timer;
  * @author Alston
  * last updated 1/9/2019
  */
-public abstract class GamePanel extends JPanel implements Animatable, Controllable {
+public abstract class GamePanel extends JPanel implements Animatable, Controllable, Messagable {
 
     private final int FPS = 60; //the preferred FPS for the game
 

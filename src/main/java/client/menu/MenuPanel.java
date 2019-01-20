@@ -60,7 +60,7 @@ public class MenuPanel extends GamePanel {
         this.cat = new BongoCat();
         this.cat.configureSprites();
         this.background = Utils.loadScaledImage("resources/menu/yellow.png");
-        this.title = getTitleSprite();
+        this.title = loadTitleSprite();
         this.catIcon = Utils.loadScaledImage("resources/menu/cathead.png", 100,100);
 
         //create the drawer panels
@@ -248,7 +248,7 @@ public class MenuPanel extends GamePanel {
             }
         }
     }
-    private BufferedImage getTitleSprite() {
+    private BufferedImage loadTitleSprite() {
         BufferedImage titleSprite = Utils.createCompatibleImage(Utils.scale(500), Utils.scale(250));
         Graphics2D g2D = (Graphics2D) titleSprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
