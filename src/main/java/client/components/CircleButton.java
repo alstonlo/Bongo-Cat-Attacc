@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 /**
  * Custom circular game button object. Instead of text, the button has an icon.
  *
- * @author Katelyn and Alston
+ * @author Alston
  * last updated 1/12/2019
  */
 public class CircleButton implements Drawable {
@@ -79,7 +79,7 @@ public class CircleButton implements Drawable {
     }
 
     /**
-     * Sets the Runnable action the button will perform on being clicked
+     * Sets the Runnable action the button will run on being clicked
      * or submitted by {@link CircleButton#submit()}.
      *
      * @param onSubmit the action the button will perform on being clicked
@@ -89,8 +89,7 @@ public class CircleButton implements Drawable {
     }
 
 
-
-    //DRAWABLE METHODS ------------------------------------------------------------------------------------
+    //Drawable methods ------------------------------------------------------------------------------------
 
     public void configureSprites() {
         sprites = new BufferedImage[2];

@@ -81,6 +81,7 @@ public class SongSelectPanel extends GamePanel {
         }
 
         this.clock = new Clock(Utils.scale(650), Utils.scale(250), Utils.scale(60));
+        clock.configureSprites();
 
         window.requestFocus();
     }
@@ -163,7 +164,7 @@ public class SongSelectPanel extends GamePanel {
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setStroke(new BasicStroke(2));
         g2D.drawRect(0, 0, Utils.scale(750), Utils.scale(150));
-        g2D.setFont(Utils.loadFont("resources/mon.otf", 20));
+        g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 20));
         g2D.drawString("Select Song", 40, 50);
     }
 

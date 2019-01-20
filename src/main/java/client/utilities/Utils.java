@@ -10,12 +10,9 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 /**
  * Convenience class containing methods for graphical scaling, rounding, loading resources, etc.
@@ -47,16 +44,24 @@ public class Utils {
     }
 
     /**
-     * Scales and re-sizes a image according to {@link Settings#SCALE}.
+     * Scales an image according to {@link Settings#SCALE}.
      *
-     * @param img an image
-     * @return the scaled image; or null if the image argument is null
+     * @param img the image to be scaled
+     * @return the compatible scaled image, or null if the image argument is null
      */
     public static BufferedImage scale(BufferedImage img) {
         return scale(img, Settings.PANEL_SIZE.width, Settings.PANEL_SIZE.height);
     }
 
-    public static BufferedImage scale(BufferedImage img, int width, int height){
+    /**
+     * Re-sizes a image according to the specified width and height.
+     *
+     * @param img    the image to be scaled
+     * @param width  the width of the resultant image
+     * @param height the height of the resultant image
+     * @return the compatible scaled image, or null if the image argument is null
+     */
+    public static BufferedImage scale(BufferedImage img, int width, int height) {
         if (img == null) {
             return null;
         }
@@ -64,17 +69,17 @@ public class Utils {
         BufferedImage res = createCompatibleImage(width, height);
         Graphics2D g2D = (Graphics2D) res.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
-        g2D.drawImage(img, 0,0, width, height, null);
+        g2D.drawImage(img, 0, 0, width, height, null);
         g2D.dispose();
         return res;
     }
 
     /**
-     * Returns a {@link Clip} (.wav file) from the specified file path but does
+     * Returns a {@link Clip} from the specified file path but does
      * not play it.
      *
      * @param filePath the file path of the audio
-     * @return the clip at the filePath argument; or null if an Exception occurs
+     * @return the clip at the filePath argument, or null if an Exception occurs
      */
     public static Clip loadAudio(String filePath) {
         try (AudioInputStream stream = AudioSystem.getAudioInputStream(new File(filePath))) {
@@ -88,11 +93,11 @@ public class Utils {
     }
 
     /**
-     * Retrieves a font and creates it.
+     * Loads a font, creates it, and then returns it.
      *
-     * @param filePath the name of the font file
+     * @param filePath the file path of the font file
      * @param size     the desired size of the font to be made
-     * @return the created Font
+     * @return the loaded Font, or the default sans-serif font if the font file cannot be loaded
      */
     public static Font loadFont(String filePath, float size) {
         Font font;
@@ -100,17 +105,19 @@ public class Utils {
             font = Font.createFont(Font.TRUETYPE_FONT, new File(filePath)).deriveFont(size);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(Font.createFont(Font.PLAIN, new File(filePath)));
+
         } catch (IOException | FontFormatException e) {
-            font = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(size)); //if it cannot find the font, defaults to sans-serif of the same size
+            System.out.println("Failed to load font at " + filePath);
+            font = new Font(Font.SANS_SERIF, Font.PLAIN, Math.round(size));
         }
         return font;
     }
 
     /**
-     * Returns a {@link BufferedImage} from the specified file path but does not scale it.
+     * Returns a compatible {@link BufferedImage} from the specified file path but does not scale it.
      *
      * @param filePath the file path of the image
-     * @return the image file at the filePath argument; or null if an IOException occurs
+     * @return the image file at the filePath argument, or null if an IOException occurs
      */
     public static BufferedImage loadImage(String filePath) {
         try {
@@ -122,25 +129,37 @@ public class Utils {
     }
 
     /**
-     * Returns a {@link BufferedImage} from the specified file path and scales it
+     * Returns a compatible {@link BufferedImage} from the specified file path and scales it
      * according to {@link Settings#SCALE}.
      *
      * @param filePath the file path of the image
-     * @return the image file at the filePath argument; or null if an IOException occurs
+     * @return the scaled image file at the filePath argument, or null if an IOException occurs
      */
     public static BufferedImage loadScaledImage(String filePath) {
         return scale(loadImage(filePath));
     }
 
+    /**
+     * Returns a compatible {@link BufferedImage} from the specified file path and scales it
+     * according to the specified width and height.
+     *
+     * @param filePath the file path of the image
+     * @param width    the width of the resulting scaled image
+     * @param height   the height of the resulting scaled image
+     * @return the scaled image file at the filePath argument, or null if an IOException occurs
+     */
     public static BufferedImage loadScaledImage(String filePath, int width, int height) {
         return scale(loadImage(filePath), width, height);
     }
 
-    public static BufferedImage createCompatibleImage(int width, int height) {
-        GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
-        return config.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
-    }
-
+    /**
+     * Creates an {@link BufferedImage} that is compatible with the local
+     * graphics environment from an existing image. The existing image is drawn
+     * onto a new, empty compatible image. 
+     *
+     * @param image the original image
+     * @return the compatible image, or null if the image argument is null
+     */
     public static BufferedImage createCompatibleImage(BufferedImage image) {
         if (image == null) {
             return null;
@@ -151,6 +170,19 @@ public class Utils {
         g2d.drawImage(image, 0, 0, null);
         g2d.dispose();
         return target;
+    }
+
+    /**
+     * Creates an empty {@link BufferedImage} that is compatible with the local
+     * graphics environment.
+     *
+     * @param width  the width of the image
+     * @param height the height of the image
+     * @return the compatible image
+     */
+    public static BufferedImage createCompatibleImage(int width, int height) {
+        GraphicsConfiguration config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+        return config.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
     }
 
     /**

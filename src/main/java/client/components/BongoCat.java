@@ -78,7 +78,7 @@ public class BongoCat implements Drawable {
     }
 
 
-    //DRAWABLE METHODS --------------------------------------------------------------------------------------
+    //Drawable methods --------------------------------------------------------------------------------------
 
     public void configureSprites() {
         BufferedImage body = Utils.loadScaledImage("resources/bongo cat/body.png");

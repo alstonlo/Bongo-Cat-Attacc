@@ -1,6 +1,5 @@
 package client.utilities;
 
-import javax.rmi.CORBA.Util;
 import java.awt.Dimension;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
@@ -16,26 +15,63 @@ import java.util.Map;
  */
 public class Settings {
 
-    //the scale factor of the game - the game frame should be ~80% the height of the computer screen
+    // Scaling fields ------------------------------------------------------------------------------
+
+    /**
+     * The scale factor of the game display; the game frame is 80% the height of the computer screen.
+     */
     public static final double SCALE = (Toolkit.getDefaultToolkit().getScreenSize().height * 0.8) / 1334;
 
-    //the dimensions of a full panel in the game
+    /**
+     * The dimensions the game display is.
+     */
     public static final Dimension PANEL_SIZE = new Dimension(Utils.scale(750), Utils.scale(1334));
 
-    //key mappings for controls
+
+    // Key mapping fields -----------------------------------------------------------------------
+
+    /**
+     * The key code that is mapped to the left bongo.
+     *
+     * @see KeyEvent
+     * @see client.BongoListener
+     */
     public static final int LEFT_BONGO_KEY = KeyEvent.VK_A;
+
+    /**
+     * The key code that is mapped to the right bongo.
+     *
+     * @see KeyEvent
+     * @see client.BongoListener
+     */
     public static final int RIGHT_BONGO_KEY = KeyEvent.VK_L;
+
+    /**
+     * The key code that is mapped to the hold bongo.
+     *
+     * @see KeyEvent
+     * @see client.BongoListener
+     */
     public static final int HOLD_BONGO_KEY = KeyEvent.VK_ENTER;
 
-    //rendering hints that prioritize quality
+
+    // Rendering settings fields -------------------------------------------------------------------------------
+
+    /**
+     * Rendering hints that prioritize quality.
+     */
     public static final Map<RenderingHints.Key, Object> QUALITY_RENDER_SETTINGS = getQualityRenderSettings();
+
+    /**
+     * The default rendering hints.
+     */
     public static final Map<RenderingHints.Key, Object> DEFAULT_RENDER_SETTINGS = getDefaultRenderSettings();
 
     /**
      * @return the configured settings for {@link Settings#QUALITY_RENDER_SETTINGS}
      */
     private static Map<RenderingHints.Key, Object> getQualityRenderSettings() {
-        Map<RenderingHints.Key, Object> settings     = new HashMap<>();
+        Map<RenderingHints.Key, Object> settings = new HashMap<>();
         settings.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         settings.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         settings.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);

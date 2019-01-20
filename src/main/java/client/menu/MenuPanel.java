@@ -1,9 +1,9 @@
 package client.menu;
 
-import client.components.BongoCat;
-import client.components.CircleButton;
 import client.GamePanel;
 import client.Window;
+import client.components.BongoCat;
+import client.components.CircleButton;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
@@ -12,12 +12,10 @@ import protocol.AuthenticateProtocol;
 import protocol.ExceptionProtocol;
 import protocol.MatchMadeProtocol;
 import protocol.Protocol;
-import protocol.RegisterProtocol;
 import protocol.ResponseProtocol;
 import protocol.TimeOverProtocol;
 
 import javax.sound.sampled.Clip;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -98,9 +96,9 @@ public class MenuPanel extends GamePanel {
         this.setVisible(true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
+    // GamePanel methods -----------------------------------------------------------------------------------
+
     @Override
     public void run() {
         super.run();
@@ -112,9 +110,6 @@ public class MenuPanel extends GamePanel {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void update() {
         loginPanel.relocate();
@@ -124,9 +119,6 @@ public class MenuPanel extends GamePanel {
         super.update();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void stop() {
         super.stop();
@@ -137,9 +129,6 @@ public class MenuPanel extends GamePanel {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void notifyLeftPress() {
         buttonIndex = (buttonIndex + 2) % buttons.length;
@@ -148,17 +137,11 @@ public class MenuPanel extends GamePanel {
         cat.leftPawDown();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void notifyLeftRelease() {
         cat.leftPawUp();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void notifyRightPress() {
         buttonIndex = (buttonIndex + 1) % buttons.length;
@@ -167,35 +150,21 @@ public class MenuPanel extends GamePanel {
         cat.rightPawDown();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void notifyRightRelease() {
         cat.rightPawUp();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void notifyHold() {
         buttons[buttonIndex].submit();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void notifyReceived(Protocol protocol) {
         processMessage(protocol);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param g
-     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -216,10 +185,10 @@ public class MenuPanel extends GamePanel {
         g2D.drawImage(catIcon, Utils.scale(50), Utils.scale(1200), null);
     }
 
+    // Loading sprites methods -----------------------------------------------------------------------
+
     /**
-     * Sends a message to the server
-     *
-     * @param message the message to be sent
+     * @return a scaled 500px x 200px sprite of the title
      */
     void sendMessage(Protocol message) {
         message.id = String.valueOf(idCounter.incrementAndGet());
@@ -279,16 +248,16 @@ public class MenuPanel extends GamePanel {
             }
         }
     }
-
     private BufferedImage getTitleSprite() {
-        BufferedImage titleSprite = Utils.createCompatibleImage(Utils.scale(750), Utils.scale(300));
-        Graphics2D g2D = (Graphics2D)titleSprite.getGraphics();
+        BufferedImage titleSprite = Utils.createCompatibleImage(Utils.scale(500), Utils.scale(250));
+        Graphics2D g2D = (Graphics2D) titleSprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.setColor(Pallette.OUTLINE_COLOR);
-        g2D.setFont(Pallette.TITLE_FONT.deriveFont(Font.PLAIN, Utils.scale(80)));
-        g2D.drawString("Bongo Cat", Utils.scale(50),Utils.scale(100));
+        g2D.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT, 80));
+        g2D.drawString("Bongo Cat", Utils.scale(50), Utils.scale(100));
         g2D.drawString("Attacc!", Utils.scale(50), Utils.scale(200));
         g2D.dispose();
         return titleSprite;
     }
+
 }

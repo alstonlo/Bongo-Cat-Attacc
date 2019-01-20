@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * through a drop down animation.
  *
  * @author Alston
- * last updated 1/10/2018
+ * last updated 1/19/2018
  */
 abstract class DropDownPanel extends JPanel {
 
