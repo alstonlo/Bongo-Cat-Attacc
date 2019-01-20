@@ -3,6 +3,7 @@ package client;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 
+import javax.naming.ldap.Control;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.concurrent.ExecutorService;
@@ -18,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class BongoListener implements KeyListener {
 
-    private Messagable obj = null;
+    private Controllable obj = null;
     private final AtomicBoolean leftPress = new AtomicBoolean(false);
     private final AtomicBoolean rightPress = new AtomicBoolean(false);
 
@@ -32,7 +33,7 @@ public class BongoListener implements KeyListener {
      *
      * @param obj the object to be controlled by this listener
      */
-    void setControlledObj(Messagable obj) {
+    void setControlledObj(Controllable obj) {
         this.obj = obj;
     }
 
