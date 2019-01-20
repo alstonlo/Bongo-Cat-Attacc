@@ -88,10 +88,13 @@ public class CircleButton implements Drawable {
         this.onSubmit = onSubmit;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void configureSprites() {
         sprites = new BufferedImage[2];
 
-        int side = (int)Math.ceil((radius + outline.getLineWidth()) * 2);
+        int side = (int) Math.ceil((radius + outline.getLineWidth()) * 2);
         sprites[0] = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);
 
         side += (2 * deltaRadius); //the selected sprite is slightly larger than the unselected one
@@ -116,6 +119,11 @@ public class CircleButton implements Drawable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param g2D the graphics context in which this object is drawn
+     */
     public void draw(Graphics2D g2D) {
         if (sprites == null) {
             return;

@@ -24,8 +24,12 @@ hs_err_pid*
 
 # IntelliJ .idea
 .idea/
+*.iml
 
 # Database folder
 UserDatabase/
+
+#Misc
 *.wav
-*.iml
+javadocs/
+

@@ -8,11 +8,11 @@ import java.awt.image.BufferedImage;
 
 /**
  * Graphically represents the standard BongoCat. This class is used to store
- * the state of the bongo cat and then return the appropriate images based
+ * the state of the bongo cat and then draw the appropriate images based
  * on that state.
  *
  * @author Alston
- * last updated 1/12/2019
+ * last updated 1/19/2019
  */
 public class BongoCat implements Drawable {
 
@@ -77,6 +77,9 @@ public class BongoCat implements Drawable {
         state[1] = -1;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void configureSprites() {
         BufferedImage body = Utils.loadScaledImage("resources/bongo cat/body.png");
         BufferedImage leftPawDown = Utils.loadScaledImage("resources/bongo cat/left paw down.png");
@@ -103,8 +106,14 @@ public class BongoCat implements Drawable {
         sprites[3][3] = Utils.mergeImages(new BufferedImage[]{body, leftPawDown, leftPawHit, rightPawDown, rightPawHit});
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @param g2D the graphics context in which this object is drawn
+     */
     public void draw(Graphics2D g2D) {
-        long[] drawState = {state[0], state[1]};
+
+        long[] drawState = {state[0], state[1]}; //save the current state
 
         //retrieve the row index of the sprite table
         int row;
