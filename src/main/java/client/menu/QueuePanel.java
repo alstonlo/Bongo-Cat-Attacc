@@ -149,7 +149,7 @@ public class QueuePanel extends DropDownPanel {
         opacity = 1f;
 
         clock.stop();
-        window.switchState(Window.SONG_SELECT_STATE);
+        window.switchState(Window.GAME_STATE);
     }
 
 }

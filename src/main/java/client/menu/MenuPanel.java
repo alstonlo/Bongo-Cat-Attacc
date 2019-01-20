@@ -86,11 +86,11 @@ public class MenuPanel extends GamePanel {
         g2D.drawImage(background, 0, 0, this);
         g2D.drawImage(title, 0, 0, null);
 
-        if (window.getUsername() != "") {
-            g2D.drawString(window.getUsername(), Utils.scale(100), Utils.scale(1200));
-        }
-        g2D.drawImage(catIcon, Utils.scale(30), Utils.scale(1200), null);
 
+        g2D.drawImage(catIcon, Utils.scale(30), Utils.scale(1200), null);
+        g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT,30));
+        g2D.setColor(Pallette.OUTLINE_COLOR);
+        g2D.drawString(window.getUsername(), Utils.scale(100), Utils.scale(1200));
         cat.draw(g2D);
         for (CircleButton button : buttons) {
             button.draw(g2D);

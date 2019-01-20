@@ -97,7 +97,7 @@ class SongTile {
 
         BufferedImage star = Utils.loadScaledImage("resources/songs/bongo.png",40,40);
         for (int i = 0; i < song.getDifficulty(); i++){
-            g2D.drawImage(star ,Utils.scale(360+(60*i)),Utils.scale(90), null);
+            g2D.drawImage(star ,Utils.scale(360+(45*i)),Utils.scale(90), null);
         }
 
         g2D.drawImage(album, Utils.scale(30), Utils.scale(25), null);
