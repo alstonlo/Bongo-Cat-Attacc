@@ -13,8 +13,10 @@ import protocol.TimeOverProtocol;
 import javax.sound.sampled.Clip;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -29,6 +31,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SongSelectPanel extends GamePanel {
 
     private static final long SLIDE_DURATION = 500;
+
+    private BufferedImage title;
 
     private AtomicBoolean isAnimating = new AtomicBoolean(false);
 
@@ -80,7 +84,7 @@ public class SongSelectPanel extends GamePanel {
             viewFrame.addFirst(focus);
         }
 
-        this.clock = new Clock(Utils.scale(650), Utils.scale(250), Utils.scale(60));
+        this.clock = new Clock(Utils.scale(375), Utils.scale(170), Utils.scale(60));
         clock.configureSprites();
 
         window.requestFocus();
@@ -89,6 +93,7 @@ public class SongSelectPanel extends GamePanel {
     @Override
     public void run() {
         super.run();
+        configureTitle();
         clock.configureSprites();
         clock.start();
         switchSong(songTiles[selected].getAudio());
@@ -156,16 +161,11 @@ public class SongSelectPanel extends GamePanel {
         for (SongTile tile : toRender) { //draw all the tiles' foregrounds
             tile.drawForeground(g2D);
         }
+        g2D.drawImage(title, 0,0, null);
 
         clock.draw(g2D);
 
-        g2D.setColor(new Color(249, 255, 253));
-        g2D.fillRect(0, 0, Utils.scale(750), Utils.scale(150));
-        g2D.setColor(Pallette.OUTLINE_COLOR);
-        g2D.setStroke(new BasicStroke(2));
-        g2D.drawRect(0, 0, Utils.scale(750), Utils.scale(150));
-        g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 20));
-        g2D.drawString("Select Song", 40, 50);
+
     }
 
     /**
@@ -262,6 +262,20 @@ public class SongSelectPanel extends GamePanel {
             switchSong(getTile(selected).getAudio());
             isAnimating.set(false);
         }
+    }
+
+    void configureTitle(){
+        title = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(150));
+        Graphics2D g2D = (Graphics2D)title.getGraphics();
+        g2D.setColor(new Color(255,255,255,240));
+        g2D.fillRect(0,0,Utils.scale(750),Utils.scale(150));
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+        g2D.setColor(Pallette.OUTLINE_COLOR);
+        g2D.setStroke(new BasicStroke(4));
+        g2D.drawRect(0,0,Utils.scale(750),Utils.scale(150));
+        g2D.setFont(Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(50)));
+        FontMetrics fontMetrics = g2D.getFontMetrics();
+        g2D.drawString("Select Song", Utils.scale(375)-fontMetrics.stringWidth("Select Song")/2, Utils.scale(80));
     }
 
 }

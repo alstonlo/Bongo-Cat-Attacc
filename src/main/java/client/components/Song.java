@@ -97,7 +97,7 @@ public class Song {
      * @return the scaled image; or null if the image argument is null
      */
     public BufferedImage getAlbum() {
-        return Utils.loadImage(dirPath + "/album.png");
+        return Utils.loadScaledImage(dirPath + "/album.png", Utils.scale(300),Utils.scale(300));
     }
 
     /**
@@ -106,7 +106,7 @@ public class Song {
      * @return the splash art of the song
      */
     public BufferedImage getSplash() {
-        return Utils.loadScaledImage(dirPath + "/background.png");
+        return Utils.loadScaledImage(dirPath + "/background.png",Utils.scale(750), Utils.scale(1334));
     }
 
     /**

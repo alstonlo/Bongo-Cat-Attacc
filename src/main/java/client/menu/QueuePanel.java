@@ -39,6 +39,7 @@ public class QueuePanel extends DropDownPanel {
     private QueueRectangle rightPanel;
 
     private Font vsFont = Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(80));
+    private Font messageFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 50);
 
     QueuePanel(Window window, MenuPanel menuPanel) {
         super(window);
@@ -70,8 +71,6 @@ public class QueuePanel extends DropDownPanel {
     void pullDown() {
         if (lock.compareAndSet(false, true)) {
             clock.configureSprites();
-            leftPanel.configureSprites();
-            rightPanel.configureSprites();
 
             ThreadPool.execute(this::animate);
             super.pullDown();
@@ -81,6 +80,8 @@ public class QueuePanel extends DropDownPanel {
     void matchMade(String user1, String user2) {
         leftPanel.setUsername(user1);
         rightPanel.setUsername(user2);
+        leftPanel.configureSprites();
+        rightPanel.configureSprites();
         matchMade.set(true);
     }
 
@@ -97,7 +98,8 @@ public class QueuePanel extends DropDownPanel {
         g2D.drawImage(settingDrape, 0, 0, null);
 
         clock.draw(g2D);
-        g2D.setFont(Utils.loadFont("moon.otf", Utils.scale(50)));
+
+        g2D.setFont(messageFont);
         FontMetrics fontMetrics = g2D.getFontMetrics();
         g2D.drawString(message[messageState], Utils.scale(375) - fontMetrics.stringWidth("Finding Match") / 2, Utils.scale(690));
 
@@ -106,6 +108,7 @@ public class QueuePanel extends DropDownPanel {
 
         if (opacity != 0f) {
             g2D.setComposite(AlphaComposite.SrcOver.derive(opacity)); //drawing the "vs."
+            g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
             g2D.setFont(vsFont);
             g2D.setColor(Pallette.OUTLINE_COLOR);
             fontMetrics = g2D.getFontMetrics();
