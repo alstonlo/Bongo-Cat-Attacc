@@ -1,4 +1,4 @@
 name: BongoCat Theme
 difficulty: 1
 bpm: 240
-duration: 138
+duration: 118

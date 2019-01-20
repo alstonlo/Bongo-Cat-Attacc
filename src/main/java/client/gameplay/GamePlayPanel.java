@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 
 public class GamePlayPanel extends GamePanel {
     private BufferedImage background;
-    private Conductor conductor;
+    private NoteManager noteManager;
 
     private Clock clock;
 
@@ -32,8 +32,8 @@ public class GamePlayPanel extends GamePanel {
         clock = new Clock(Utils.scale(100), Utils.scale(100), window.getSong().getDuration()*1000,Utils.scale(60));
         clock.configureSprites();
         clock.start();
-        conductor = new Conductor(window.getSong());
-        conductor.run();
+        noteManager = new NoteManager(window.getSong());
+        noteManager.run();
         window.getSong().getAudio().loop(Clip.LOOP_CONTINUOUSLY);
     }
 
@@ -44,7 +44,7 @@ public class GamePlayPanel extends GamePanel {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         g2D.drawImage(background,0,0,null);
-        conductor.draw(g2D);
+        noteManager.draw(g2D);
         clock.draw(g2D);
     }
 

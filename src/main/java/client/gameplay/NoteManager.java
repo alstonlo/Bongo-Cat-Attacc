@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Conductor implements Drawable {
+public class NoteManager implements Drawable {
     private ArrayList<int[]> notes;
     private List<int[]> leftNoteCoords = Collections.synchronizedList(new ArrayList<>());
     private List<int[]> rightNoteCoords = Collections.synchronizedList(new ArrayList<>());
@@ -38,7 +38,7 @@ public class Conductor implements Drawable {
 
     private int duration; //in seconds
 
-    Conductor(Song song) {
+    NoteManager(Song song) {
         notes = song.getNotes();
         bps = song.getBps();
         duration = song.getDuration();
