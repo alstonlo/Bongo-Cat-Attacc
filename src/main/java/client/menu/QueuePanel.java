@@ -22,8 +22,6 @@ public class QueuePanel extends DropDownPanel {
     private MenuPanel menuPanel;
 
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
-    private BufferedImage leftBongoCat = Utils.loadScaledImage("resources/menu/left bongo cat.png");
-    private BufferedImage rightBongoCat = Utils.loadScaledImage("resources/menu/right bongo cat.png");
 
     private AtomicBoolean lock = new AtomicBoolean(false);
     private AtomicBoolean matchMade = new AtomicBoolean(false);
@@ -44,7 +42,6 @@ public class QueuePanel extends DropDownPanel {
     private String user2;
 
     private Font vsFont = Utils.loadFont("resources/cloud.ttf", Utils.scale(80));
-    private Font userFont = Utils.loadFont("resources/cloud.ttf", Utils.scale(50));
 
     QueuePanel(Window window, MenuPanel menuPanel) {
         super(window);
@@ -64,11 +61,11 @@ public class QueuePanel extends DropDownPanel {
         this.clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
         this.leftPanel = new QueueRectangle(
                 0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
-                new Color(245, 132, 148));
+                new Color(245, 132, 148), "resources/menu/left bongo cat.png");
         this.leftPanel.setY(-Settings.PANEL_SIZE.height);
         this.rightPanel = new QueueRectangle(
                 Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
-                new Color(125, 151, 230));
+                new Color(125, 151, 230),"resources/menu/right bongo cat.png");
         this.rightPanel.setY(Settings.PANEL_SIZE.height);
     }
 
@@ -76,11 +73,7 @@ public class QueuePanel extends DropDownPanel {
     void pullDown() {
         if (lock.compareAndSet(false, true)) {
             clock.configureSprites();
-            leftPanel.configureSprites();
-            rightPanel.configureSprites();
-
             ThreadPool.execute(this::animate);
-
             super.pullDown();
         }
     }
@@ -88,10 +81,11 @@ public class QueuePanel extends DropDownPanel {
     void matchMade(String user1, String user2) {
         this.user1 = user1;
         this.user2 = user2;
+        leftPanel.setUsername(user1);
+        rightPanel.setUsername(user2);
+        leftPanel.configureSprites();
+        rightPanel.configureSprites();
         matchMade.set(true);
-
-//        window.switchState(window.SONG_SELECT_STATE); //FOR DEVELOPMENT PURPOSES ONLY
-//        window.requestFocus();
     }
 
     /**
@@ -120,14 +114,6 @@ public class QueuePanel extends DropDownPanel {
             g2D.setColor(Pallette.OUTLINE_COLOR);
             fontMetrics = g2D.getFontMetrics();
             g2D.drawString("vs.", Utils.scale(375) - fontMetrics.stringWidth("vs.") / 2, Utils.scale(690));
-
-            g2D.setFont(userFont); //drawing the two usernames and corresponding bongo cats
-            fontMetrics = g2D.getFontMetrics();
-            g2D.drawString(user1, Utils.scale(187) - fontMetrics.stringWidth(user1) / 2, Utils.scale(800));
-            g2D.drawString(user2, Utils.scale(563) - fontMetrics.stringWidth(user2) / 2, Utils.scale(800));
-            g2D.drawImage(leftBongoCat, Utils.scale(20),Utils.scale(480), null);
-            g2D.drawImage(rightBongoCat, Utils.scale(400),Utils.scale(480), null);
-
             g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER)); //resetting opacity
         }
     }
