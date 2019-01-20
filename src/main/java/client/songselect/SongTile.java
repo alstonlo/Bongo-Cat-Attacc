@@ -82,6 +82,10 @@ class SongTile {
         return this.audio;
     }
 
+    Song getSong(){
+        return this.song;
+    }
+
     private void configureImage(){
         foreground = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2D = (Graphics2D) foreground.getGraphics();

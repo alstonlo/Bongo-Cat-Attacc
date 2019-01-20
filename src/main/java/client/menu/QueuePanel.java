@@ -43,7 +43,7 @@ public class QueuePanel extends DropDownPanel {
     QueuePanel(Window window) {
         super(window);
 
-        JButton backButton = new JButton("Back");
+        JButton backButton = new JButton("SongSelect");
         backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));

@@ -1,6 +1,7 @@
 package client;
 
-import client.menu.GamePlayPanel;
+import client.components.Song;
+import client.gameplay.GamePlayPanel;
 import client.menu.MenuPanel;
 import client.songselect.SongSelectPanel;
 import client.utilities.Settings;
@@ -43,6 +44,7 @@ public class Window extends JFrame {
     private ServerListener serverListener = new ServerListener();
 
     private GamePanel currPanel;
+    private Song currGameSong;
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
@@ -115,6 +117,21 @@ public class Window extends JFrame {
         if (username.equals("")) {
             this.username = username;
         }
+    }
+
+    /**
+     * @return the song for the game currently in play
+     */
+    public Song getSong(){
+        return this.currGameSong;
+    }
+
+    /**
+     * updates the song of the current game
+     * @param song the new song
+     */
+    public void setSong(Song song){
+        this.currGameSong = song;
     }
 
     /**

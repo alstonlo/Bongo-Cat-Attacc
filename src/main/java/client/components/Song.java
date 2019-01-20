@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,9 @@ public class Song {
     private String dirPath;
     private String name;
     private int difficulty;
+    private int bpm;
+    private int duration;
+    private ArrayList<int[]> notes = new ArrayList<>();
     private int start, end;
 
     /**
@@ -75,6 +79,18 @@ public class Song {
 
         this.name = configDetails.get("name");
         this.difficulty = Integer.valueOf(configDetails.get("difficulty"));
+        this.bpm = Integer.valueOf(configDetails.get("bpm"));
+        this.duration = Integer.valueOf(configDetails.get("duration"));
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(dirPath + "/beats.txt")))) {
+            String line = reader.readLine();
+            while (line != null) {
+                notes.add(new int[] {Integer.valueOf(line.substring(0,1)), Integer.valueOf(line.substring(1))});
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            System.out.println(dirPath + "/beats.txt cannot be found.");
+        }
     }
 
     /**
@@ -128,5 +144,26 @@ public class Song {
         Clip excerpt = getAudio();
         //excerpt.setLoopPoints(start, end);
         return excerpt;
+    }
+
+    /**
+     * @return the songs array of beats (1 = a note, 0 = a space)
+     */
+    public ArrayList<int[]> getNotes(){
+        return this.notes;
+    }
+
+    /**
+     * @return the beats per second of the song
+     */
+    public int getBps(){
+        return this.bpm/60;
+    }
+
+    /**
+     * @return the length of the song, in seconds
+     */
+    public int getDuration(){
+        return this.duration;
     }
 }

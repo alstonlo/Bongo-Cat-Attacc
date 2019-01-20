@@ -6,11 +6,13 @@ import client.Window;
 import client.components.Clock;
 import client.utilities.Pallette;
 import client.utilities.Settings;
+import client.utilities.ThreadPool;
 import client.utilities.Utils;
 import protocol.Message;
 import protocol.TimeOverMessage;
 
 import javax.sound.sampled.Clip;
+import javax.swing.JButton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -87,6 +89,20 @@ public class SongSelectPanel extends GamePanel {
         this.clock = new Clock(Utils.scale(375), Utils.scale(170), Utils.scale(60));
         clock.configureSprites();
 
+        this.setLayout(null);
+
+        JButton backButton = new JButton("GamePlay");
+        backButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 25));
+        backButton.setSize(Utils.scale(100), Utils.scale(70));
+        backButton.setLocation(Utils.scale(90), Utils.scale(260));
+        backButton.addActionListener(e -> ThreadPool.execute(() -> startGame()));
+        backButton.setBorder(null);
+        backButton.setBackground(new Color(190, 207, 255));
+        backButton.setForeground(Pallette.OUTLINE_COLOR);
+        backButton.setFocusPainted(false);
+
+        add(backButton);
+
         window.requestFocus();
     }
 
@@ -127,8 +143,16 @@ public class SongSelectPanel extends GamePanel {
     @Override
     public void notifyReceived(Message message) {
         if (message instanceof TimeOverMessage) {
-
+            startGame();
         }
+    }
+
+    private void startGame(){
+        if (currSong != null){
+            currSong.stop();
+        }
+        window.setSong(getTile(selected).getSong());
+        window.switchState(Window.GAME_STATE);
     }
 
     private void switchSong(Clip song){
