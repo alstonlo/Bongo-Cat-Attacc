@@ -60,7 +60,7 @@ public class MenuPanel extends GamePanel {
         buttons[0] = new CircleButton(loginIcon, Utils.scale(670), Utils.scale(990), Utils.scale(50));
         panels[0] = new LoginPanel(window);
         buttons[1] = new CircleButton(playIcon, Utils.scale(670), Utils.scale(1120), Utils.scale(50));
-        panels[1] = new QueuePanel(window, this);
+        panels[1] = new QueuePanel(window);
         buttons[2] = new CircleButton(controlsIcon, Utils.scale(670), Utils.scale(1250), Utils.scale(50));
         panels[2] = new SettingPanel(window);
 

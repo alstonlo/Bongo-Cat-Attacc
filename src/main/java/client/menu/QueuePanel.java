@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
-    private MenuPanel menuPanel;
 
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
 
@@ -41,9 +40,8 @@ public class QueuePanel extends DropDownPanel {
     private Font vsFont = Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(80));
     private Font messageFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 50);
 
-    QueuePanel(Window window, MenuPanel menuPanel) {
+    QueuePanel(Window window) {
         super(window);
-        this.menuPanel = menuPanel;
 
         JButton backButton = new JButton("Back");
         backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
