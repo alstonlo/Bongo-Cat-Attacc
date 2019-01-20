@@ -35,10 +35,10 @@ public class BongoCat implements Drawable {
     private long[] state = new long[2];
 
     //duration that the hit lines will stay (in ms)
-    private long hitMarkDuration = 150;
+    private final long hitMarkDuration = 150;
 
     /**
-     * Constructs a BongoCat. The sprites are loaded and made.
+     * Constructs a BongoCat.
      */
     public BongoCat() {
         leftPawUp();
@@ -55,6 +55,13 @@ public class BongoCat implements Drawable {
     }
 
     /**
+     * Moves the left paw of the bongo cat up.
+     */
+    public void leftPawUp() {
+        state[0] = -1;
+    }
+
+    /**
      * Moves the right paw of the bongo cat down.
      */
     public void rightPawDown() {
@@ -64,22 +71,15 @@ public class BongoCat implements Drawable {
     }
 
     /**
-     * Moves the left paw of the bongo cat up.
-     */
-    public void leftPawUp() {
-        state[0] = -1;
-    }
-
-    /**
      * Moves the right paw of the bongo cat up.
      */
     public void rightPawUp() {
         state[1] = -1;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
+    //DRAWABLE METHODS --------------------------------------------------------------------------------------
+
     public void configureSprites() {
         BufferedImage body = Utils.loadScaledImage("resources/bongo cat/body.png");
         BufferedImage leftPawDown = Utils.loadScaledImage("resources/bongo cat/left paw down.png");
@@ -106,11 +106,6 @@ public class BongoCat implements Drawable {
         sprites[3][3] = Utils.mergeImages(new BufferedImage[]{body, leftPawDown, leftPawHit, rightPawDown, rightPawHit});
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param g2D the graphics context in which this object is drawn
-     */
     public void draw(Graphics2D g2D) {
 
         long[] drawState = {state[0], state[1]}; //save the current state

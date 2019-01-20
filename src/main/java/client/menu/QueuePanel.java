@@ -22,8 +22,8 @@ public class QueuePanel extends DropDownPanel {
     private MenuPanel menuPanel;
 
     private BufferedImage settingDrape = Utils.loadScaledImage("resources/menu/controls drape.png");
-    private BufferedImage leftBongoCat = Utils.loadScaledImage("resources/bongo cat/leftbongocat.png");
-    private BufferedImage rightBongoCat = Utils.loadScaledImage("resources/bongo cat/rightbongocat.png");
+    private BufferedImage leftBongoCat = Utils.loadScaledImage("resources/menu/left bongo cat.png");
+    private BufferedImage rightBongoCat = Utils.loadScaledImage("resources/menu/right bongo cat.png");
 
     private AtomicBoolean lock = new AtomicBoolean(false);
     private AtomicBoolean matchMade = new AtomicBoolean(false);

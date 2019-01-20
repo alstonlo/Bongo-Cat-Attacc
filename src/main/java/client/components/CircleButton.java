@@ -88,9 +88,10 @@ public class CircleButton implements Drawable {
         this.onSubmit = onSubmit;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
+
+    //DRAWABLE METHODS ------------------------------------------------------------------------------------
+
     public void configureSprites() {
         sprites = new BufferedImage[2];
 
@@ -119,11 +120,6 @@ public class CircleButton implements Drawable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param g2D the graphics context in which this object is drawn
-     */
     public void draw(Graphics2D g2D) {
         if (sprites == null) {
             return;
