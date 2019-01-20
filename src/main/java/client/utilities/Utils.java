@@ -13,6 +13,7 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Convenience class containing methods for graphical scaling, rounding, loading resources, etc.
@@ -167,6 +168,7 @@ public class Utils {
 
         BufferedImage target = createCompatibleImage(image.getWidth(), image.getHeight());
         Graphics2D g2d = target.createGraphics();
+        g2d.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2d.drawImage(image, 0, 0, null);
         g2d.dispose();
         return target;

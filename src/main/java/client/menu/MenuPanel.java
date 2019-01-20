@@ -60,8 +60,8 @@ public class MenuPanel extends GamePanel {
         this.cat = new BongoCat();
         this.cat.configureSprites();
         this.background = Utils.loadScaledImage("resources/menu/yellow.png");
-        this.catIcon = Utils.loadScaledImage("resources/menu/cathead.png",Utils.scale(80),Utils.scale(80));
         this.title = getTitleSprite();
+        this.catIcon = Utils.loadScaledImage("resources/menu/cathead.png", Utils.scale(100),Utils.scale(100));
 
         //create the drawer panels
         this.loginPanel = new LoginPanel(window, this);
@@ -174,15 +174,15 @@ public class MenuPanel extends GamePanel {
         g2D.drawImage(background, 0, 0, this);
         g2D.drawImage(title, 0, 0, null);
 
+        if (window.getUsername() != "") {
+            g2D.drawString(window.getUsername(), Utils.scale(100), Utils.scale(1200));
+        }
+        g2D.drawImage(catIcon, Utils.scale(30), Utils.scale(1200), null);
+
         cat.draw(g2D);
         for (CircleButton button : buttons) {
             button.draw(g2D);
         }
-
-        if (window.getUsername() != "") {
-            g2D.drawString(window.getUsername(), Utils.scale(100), Utils.scale(1200));
-        }
-        g2D.drawImage(catIcon, Utils.scale(50), Utils.scale(1200), null);
     }
 
     // Loading sprites methods -----------------------------------------------------------------------

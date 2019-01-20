@@ -70,6 +70,9 @@ public class QueuePanel extends DropDownPanel {
     void pullDown() {
         if (lock.compareAndSet(false, true)) {
             clock.configureSprites();
+            leftPanel.configureSprites();
+            rightPanel.configureSprites();
+
             ThreadPool.execute(this::animate);
             super.pullDown();
         }
@@ -78,8 +81,6 @@ public class QueuePanel extends DropDownPanel {
     void matchMade(String user1, String user2) {
         leftPanel.setUsername(user1);
         rightPanel.setUsername(user2);
-        leftPanel.configureSprites();
-        rightPanel.configureSprites();
         matchMade.set(true);
     }
 
