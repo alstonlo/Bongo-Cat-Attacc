@@ -27,33 +27,11 @@ public class ServerListener extends Listener {
         this.obj = obj;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void connected(Connection connection) {
-    }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param connection
-     * @param o
-     */
     @Override
     public void received(Connection connection, Object o) {
         if (obj != null && o instanceof Protocol) { //only notify if the Object is actually a Protocol
             ThreadPool.execute(() -> obj.notifyReceived((Protocol) o));
         }
     }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param connection
-     */
-    @Override
-    public void disconnected(Connection connection) {
-    }
-
 }

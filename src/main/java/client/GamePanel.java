@@ -1,7 +1,5 @@
 package client;
 
-import client.utilities.Settings;
-
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -29,25 +27,18 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
         this.animationTimer = new Timer(1000 / FPS, (e) -> update());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    // Animatable methods ---------------------------------------------------------------------
+
     @Override
     public void run() {
         animationTimer.start();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void update() {
         repaint();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void stop() {
         animationTimer.stop();

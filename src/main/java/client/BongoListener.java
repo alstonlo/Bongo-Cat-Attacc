@@ -24,11 +24,6 @@ public class BongoListener implements KeyListener {
 
     private ExecutorService pool = ThreadPool.getPool();
 
-    /**
-     * Constructs a BongoListener.
-     */
-    BongoListener() {
-    }
 
     /**
      * Sets the object that is controlled by this listener.
