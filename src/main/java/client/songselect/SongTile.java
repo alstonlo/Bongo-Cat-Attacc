@@ -1,6 +1,7 @@
 package client.songselect;
 
 import client.components.Song;
+import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
 
@@ -88,13 +89,15 @@ class SongTile {
 
         g2D.setColor(new Color(44, 44, 44, 200));
         g2D.fillRoundRect(0, 0, WIDTH, HEIGHT, 30, 30);
+
         g2D.setColor(Color.WHITE);
-        g2D.drawString(song.getName(),Utils.scale(360), Utils.scale(40));
-        g2D.drawString("Difficulty: ", Utils.scale(360), Utils.scale(70));
+        g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 20));
+        g2D.drawString(song.getName(),Utils.scale(360), Utils.scale(45));
+        g2D.drawString("Difficulty: ", Utils.scale(360), Utils.scale(80));
 
         BufferedImage star = Utils.loadScaledImage("resources/songs/bongo.png",40,40);
         for (int i = 0; i < song.getDifficulty(); i++){
-            g2D.drawImage(star ,Utils.scale(360+(55*i)),Utils.scale(90), null);
+            g2D.drawImage(star ,Utils.scale(360+(60*i)),Utils.scale(90), null);
         }
 
         g2D.drawImage(album, Utils.scale(30), Utils.scale(25), null);

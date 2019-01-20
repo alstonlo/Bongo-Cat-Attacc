@@ -265,14 +265,14 @@ public class SongSelectPanel extends GamePanel {
     }
 
     void configureTitle(){
-        title = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(150));
+        title = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(280));
         Graphics2D g2D = (Graphics2D)title.getGraphics();
-        g2D.setColor(new Color(255,255,255,240));
-        g2D.fillRect(0,0,Utils.scale(750),Utils.scale(150));
+        g2D.setColor(new Color(255,255,255,200));
+        g2D.fillRect(0,0,Utils.scale(750),Utils.scale(280));
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.setColor(Pallette.OUTLINE_COLOR);
-        g2D.setStroke(new BasicStroke(4));
-        g2D.drawRect(0,0,Utils.scale(750),Utils.scale(150));
+        g2D.setStroke(new BasicStroke(Utils.scale(10)));
+        g2D.drawRect(0,0,Utils.scale(750),Utils.scale(280));
         g2D.setFont(Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(50)));
         FontMetrics fontMetrics = g2D.getFontMetrics();
         g2D.drawString("Select Song", Utils.scale(375)-fontMetrics.stringWidth("Select Song")/2, Utils.scale(80));
