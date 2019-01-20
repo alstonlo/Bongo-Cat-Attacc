@@ -1,9 +1,14 @@
 package client.menu;
 
 import client.GamePanel;
+import client.Window;
 import protocol.Protocol;
 
 public class GamePlayPanel extends GamePanel {
+
+    GamePlayPanel(Window window){
+        super(window);
+    }
     @Override
     public void notifyRightPress() {
 
