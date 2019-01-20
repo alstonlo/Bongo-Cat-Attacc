@@ -1,6 +1,7 @@
 package client.menu;
 
 import client.Drawable;
+import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
 
@@ -40,9 +41,9 @@ class QueueRectangle implements Drawable {
         g2D.setColor(bgColor);
         g2D.fillRect(0, 0, sprite.getWidth(), sprite.getHeight());
         g2D.drawImage(Utils.loadScaledImage(catFileName,Utils.scale(325),Utils.scale(200)), Utils.scale(20),Utils.scale(480), null);
-        g2D.setFont(Utils.loadFont("resources/cloud.ttf", Utils.scale(50))); //drawing the two usernames and corresponding bongo cats
+        g2D.setFont(Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(50))); //drawing the two usernames and corresponding bongo cats
         FontMetrics fontMetrics = g2D.getFontMetrics();
-        g2D.setColor(Color.WHITE);
+        g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.drawString(username, Utils.scale(187) - fontMetrics.stringWidth(username) / 2, Utils.scale(800));
         g2D.dispose();
     }
