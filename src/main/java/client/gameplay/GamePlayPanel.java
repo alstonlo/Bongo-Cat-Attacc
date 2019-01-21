@@ -3,6 +3,7 @@ package client.gameplay;
 import client.GamePanel;
 import client.Window;
 import client.components.Clock;
+import client.components.Song;
 import client.utilities.Pallette;
 import client.utilities.Utils;
 import protocol.Message;
@@ -20,21 +21,23 @@ public class GamePlayPanel extends GamePanel {
     private NoteManager noteManager;
 
     private Clock clock;
+    private Song song;
 
-    public GamePlayPanel(Window window){
+    public GamePlayPanel(Window window, Song song){
         super(window);
+        this.song = song;
     }
 
     @Override
     public void run() {
         super.run();
         configureSprites();
-        clock = new Clock(Utils.scale(100), Utils.scale(100), window.getSong().getDuration()*1000,Utils.scale(60));
+        clock = new Clock(Utils.scale(100), Utils.scale(100), song.getDuration()*1000,Utils.scale(60));
         clock.configureSprites();
         clock.start();
-        noteManager = new NoteManager(window.getSong());
+        noteManager = new NoteManager(song);
         noteManager.run();
-        window.getSong().getAudio().loop(Clip.LOOP_CONTINUOUSLY);
+        song.getAudio().start();
     }
 
 
