@@ -17,8 +17,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.sql.Time;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
@@ -26,19 +24,21 @@ public class QueuePanel extends DropDownPanel {
 
     private AtomicBoolean lock = new AtomicBoolean(false);
 
-    private AtomicBoolean matchMade = new AtomicBoolean(false);
-    private String host, guest;
+    private AtomicBoolean animating = new AtomicBoolean(false);
 
     private BufferedImage drape = Utils.loadScaledImage("resources/menu/queue drape.png");
 
     private Clock clock;
     private int messageState = 0;
-    private double secondsPerDot = 0.8;
-    private String[] message = {"Finding Matches", "Finding Matches.", "Finding Matches..", "Finding Matches..."};
+    private final long DOT_DURATION = 800;
+    private String[] message = {"Finding Matches",
+                                "Finding Matches.",
+                                "Finding Matches..",
+                                "Finding Matches..."};
 
+    private float opacity = 0f;
     private final long SLIDE_DURATION = 500;
     private final long VS_ANIMATION_DURATION = 500;
-    private float opacity = 0f;
 
     private PlayerQueueRectangle leftPanel;
     private PlayerQueueRectangle rightPanel;
@@ -84,19 +84,26 @@ public class QueuePanel extends DropDownPanel {
     public void notifyReceived(Message message) {
         if (message instanceof MatchMadeMessage && getState() == DOWN_STATE) {
             MatchMadeMessage match = (MatchMadeMessage) message;
-            matchMade.set(true);
             transition(match.host, match.guest);
         }
     }
 
     private void animate() {
+        animating.set(true);
+
         clock.configureSprites();
         clock.start();
 
         long startTime = System.currentTimeMillis();
-        while (!matchMade.get()) {
-            messageState = Utils.round((System.currentTimeMillis() - startTime) / (1000.0 * secondsPerDot)) % 4;
+        while (animating.get()) {
+            messageState = (int) ((System.currentTimeMillis() - startTime) / DOT_DURATION) % 4;
         }
+
+        clock.stop();
+    }
+
+    private void stop() {
+        animating.set(false);
     }
 
     private void transition(String host, String guest) {
@@ -121,7 +128,6 @@ public class QueuePanel extends DropDownPanel {
         }
         opacity = 1f;
 
-        clock.stop();
     }
 
     /**
