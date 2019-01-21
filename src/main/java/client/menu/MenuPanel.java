@@ -62,7 +62,7 @@ public class MenuPanel extends GamePanel {
         buttons[1] = new CircleButton(playIcon, Utils.scale(670), Utils.scale(1120), Utils.scale(50));
         panels[1] = new QueuePanel(window);
         buttons[2] = new CircleButton(controlsIcon, Utils.scale(670), Utils.scale(1250), Utils.scale(50));
-        panels[2] = new SettingPanel(window);
+        panels[2] = new InstructionPanel(window);
 
         int counter = 0;
         for (CircleButton button : buttons) {
@@ -197,7 +197,7 @@ public class MenuPanel extends GamePanel {
     }
 
     private BufferedImage loadUsernameSprite() {
-        BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(550), Utils.scale(100));
+        BufferedImage sprite = Utils.createCompatibleImage(550,100);
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.drawImage(Utils.loadScaledImage("resources/menu/cat icon.png", 550, 100), 0, 0,null);
