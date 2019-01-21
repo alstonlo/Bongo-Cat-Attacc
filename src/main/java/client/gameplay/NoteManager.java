@@ -1,5 +1,6 @@
 package client.gameplay;
 
+import client.Controllable;
 import client.Drawable;
 import client.components.Song;
 import client.utilities.Pallette;
@@ -38,6 +39,10 @@ public class NoteManager implements Drawable {
 
     private int duration; //in seconds
 
+    private double accuracy = 0;
+    private double accuracySum = 0;
+    private int totalNotes = 0;
+
     NoteManager(Song song) {
         notes = song.getNotes();
         bps = song.getBps();
@@ -67,9 +72,11 @@ public class NoteManager implements Drawable {
                 currentBeat += 1;
                 if (notes.get(currentBeat)[0] == 1) {
                     leftNoteCoords.add(new int[]{361, 634});
+                    totalNotes++;
                 }
                 if (notes.get(currentBeat)[1] == 1) {
                     rightNoteCoords.add(new int[]{389, 634});
+                    totalNotes++;
                 }
             }
 
@@ -131,9 +138,32 @@ public class NoteManager implements Drawable {
             int height = multiplier * HEIGHT;
             g2D.drawOval(Utils.scale(x) - WIDTH / 2, Utils.scale(y) - HEIGHT / 2, WIDTH, HEIGHT);
         }
+        g2D.drawString(String.valueOf(accuracy),Utils.scale(150), Utils.scale(150));
     }
 
     public int calculateLength(int x, int y, int newX, int newY) {
         return (int) Math.round(Math.sqrt((Utils.scale(newX - x))) * (Utils.scale(newX - x)) + (Utils.scale(newY - y)) * (Utils.scale(newY - y)));
     }
+
+
+    public void notifyLeftPress() {
+        System.out.println("left is working");
+        int distance = calculateLength(leftNoteCoords.get(0)[0], leftNoteCoords.get(0)[1],279,1150);
+        accuracySum += 100-((distance-15)*5);
+        accuracy = accuracySum/totalNotes;
+        synchronized (leftNoteCoords){
+            leftNoteCoords.remove(0);
+        }
+    }
+
+    public void notifyRightPress() {
+        System.out.println("right is working");
+        int distance = calculateLength(rightNoteCoords.get(0)[0], rightNoteCoords.get(0)[1],471,1150);
+        accuracySum += 100-((distance-15)*5);
+        accuracy = accuracySum/totalNotes;
+        synchronized (rightNoteCoords){
+            rightNoteCoords.remove(0);
+        }
+    }
+
 }

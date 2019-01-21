@@ -50,7 +50,7 @@ public class GamePlayPanel extends GamePanel {
 
     @Override
     public void notifyRightPress() {
-
+        noteManager.notifyRightPress();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class GamePlayPanel extends GamePanel {
 
     @Override
     public void notifyLeftPress() {
-
+        noteManager.notifyLeftPress();
     }
 
     @Override
