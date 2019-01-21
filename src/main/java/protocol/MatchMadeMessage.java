@@ -7,6 +7,7 @@ package protocol;
  * Last Updated: 01/19/2019
  */
 public class MatchMadeMessage extends Message {
+
     public final String username1;
     public final String username2;
 

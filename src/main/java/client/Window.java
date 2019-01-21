@@ -3,6 +3,7 @@ package client;
 import client.components.Song;
 import client.gameplay.GamePlayPanel;
 import client.menu.MenuPanel;
+import client.menu.QueuePanel;
 import client.songselect.SongSelectPanel;
 import client.utilities.Settings;
 import client.utilities.Utils;
@@ -33,10 +34,6 @@ public class Window extends JFrame {
         SwingUtilities.invokeLater(() -> new Window());
     }
 
-    public static final int MENU_STATE = 0;
-    public static final int SONG_SELECT_STATE = 1;
-    public static final int GAME_STATE = 2;
-
     private String username = "";
 
     private Client client;
@@ -44,7 +41,6 @@ public class Window extends JFrame {
     private ServerListener serverListener = new ServerListener();
 
     private GamePanel currPanel;
-    private Song currGameSong;
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
@@ -86,7 +82,7 @@ public class Window extends JFrame {
                 close();
             }
         });
-        switchState(MENU_STATE);
+        switchPanel(new MenuPanel(this));
         this.setVisible(true);
         this.requestFocus();
         this.pack();
@@ -120,21 +116,6 @@ public class Window extends JFrame {
     }
 
     /**
-     * @return the song for the game currently in play
-     */
-    public Song getSong(){
-        return this.currGameSong;
-    }
-
-    /**
-     * updates the song of the current game
-     * @param song the new song
-     */
-    public void setSong(Song song){
-        this.currGameSong = song;
-    }
-
-    /**
      * Sends a message to the server. Currently, the message defaults to being
      * sent over TCP.
      *
@@ -145,43 +126,12 @@ public class Window extends JFrame {
     }
 
     /**
-     * Switches this Window's state based on the state argument. Valid states
-     * are listed in this class's static fields.
-     *
-     * @param state an integer representing the state of this Window
-     * @throws IndexOutOfBoundsException if the state argument is invalid
-     */
-    public void switchState(int state) {
-
-        /*
-         * The reason new panels are created each time is because I want to
-         * release the sprites and resources by allowing them to be collected.
-         */
-        switch (state) {
-            case MENU_STATE:
-                switchPanel(new MenuPanel(this));
-                break;
-
-            case SONG_SELECT_STATE:
-                switchPanel(new SongSelectPanel(this));
-                break;
-
-            case GAME_STATE:
-                switchPanel(new GamePlayPanel(this));
-                break;
-
-            default:
-                throw new IndexOutOfBoundsException();
-        }
-    }
-
-    /**
      * Switches the JPanel displayed on this Window's content pane.
      * The JPanel displayed must be a GamePanel.
      *
      * @param newPanel the new JPanel to be displayed
      */
-    private void switchPanel(GamePanel newPanel) {
+    public void switchPanel(GamePanel newPanel) {
         if (currPanel != null) { //stop the animation running on the currently displayed panel
             currPanel.stop();
         }
@@ -199,5 +149,4 @@ public class Window extends JFrame {
 
         newPanel.run();               //run its animation
     }
-
 }

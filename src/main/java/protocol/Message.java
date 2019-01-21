@@ -12,8 +12,8 @@ import java.util.Date;
 public abstract class Message {
 
     /**
-     * True, if the protocol is meant to be sent over TCP (default); false,
-     * if the protocol is meant to be sent over UDP.
+     * True, if the message is meant to be sent over TCP (default); false,
+     * if the message is meant to be sent over UDP.
      */
     public boolean isTCP = true;
 
@@ -23,7 +23,7 @@ public abstract class Message {
     public final Date timeCreated;
 
     /**
-     * The ID of the protocol, if necessary (default null).
+     * The ID of the message, if necessary (default null).
      */
     public String id = null;
 

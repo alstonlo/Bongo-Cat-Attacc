@@ -2,6 +2,7 @@ package client.menu;
 
 import client.Window;
 import client.components.Clock;
+import client.songselect.SongSelectPanel;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
@@ -150,13 +151,14 @@ public class QueuePanel extends DropDownPanel {
 
         clock.stop();
 
-        try {
-          Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        window.switchState(Window.SONG_SELECT_STATE);
+        SongSelectPanel songSelect = new SongSelectPanel(window, "", "");
+        songSelect.add(this);
+        window.switchPanel(songSelect);
+        songSelect.remove(this);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        System.out.println("ded");
+    }
 }

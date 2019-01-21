@@ -4,6 +4,8 @@ import client.GamePanel;
 import client.components.Song;
 import client.Window;
 import client.components.Clock;
+import client.gameplay.GamePlayPanel;
+import client.menu.QueuePanel;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
@@ -34,7 +36,7 @@ public class SongSelectPanel extends GamePanel {
 
     private static final long SLIDE_DURATION = 500;
 
-    private BufferedImage title;
+    private BufferedImage header;
 
     private AtomicBoolean isAnimating = new AtomicBoolean(false);
 
@@ -61,7 +63,7 @@ public class SongSelectPanel extends GamePanel {
      *
      * @param window the window that the panel belongs to
      */
-    public SongSelectPanel(Window window) {
+    public SongSelectPanel(Window window, String host, String guest) {
         super(window);
 
         Song[] songs; //load the songs
@@ -109,7 +111,7 @@ public class SongSelectPanel extends GamePanel {
     @Override
     public void run() {
         super.run();
-        configureTitle();
+        loadHeaderSprite();
         clock.configureSprites();
         clock.start();
         switchSong(songTiles[selected].getAudio());
@@ -151,8 +153,7 @@ public class SongSelectPanel extends GamePanel {
         if (currSong != null){
             currSong.stop();
         }
-        window.setSong(getTile(selected).getSong());
-        window.switchState(Window.GAME_STATE);
+        window.switchPanel(new GamePlayPanel(window, songTiles[selected].getSong()));
     }
 
     private void switchSong(Clip song){
@@ -185,7 +186,7 @@ public class SongSelectPanel extends GamePanel {
         for (SongTile tile : toRender) { //draw all the tiles' foregrounds
             tile.drawForeground(g2D);
         }
-        g2D.drawImage(title, 0,0, null);
+        g2D.drawImage(header, 0,0, null);
 
         clock.draw(g2D);
 
@@ -288,9 +289,9 @@ public class SongSelectPanel extends GamePanel {
         }
     }
 
-    void configureTitle(){
-        title = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(260));
-        Graphics2D g2D = (Graphics2D)title.getGraphics();
+    void loadHeaderSprite(){
+        header = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(260));
+        Graphics2D g2D = (Graphics2D) header.getGraphics();
         g2D.setColor(new Color(255,255,255,200));
         g2D.fillRect(0,0,Utils.scale(750),Utils.scale(260));
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
@@ -300,6 +301,7 @@ public class SongSelectPanel extends GamePanel {
         g2D.setFont(Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(50)));
         FontMetrics fontMetrics = g2D.getFontMetrics();
         g2D.drawString("Select Song", Utils.scale(375)-fontMetrics.stringWidth("Select Song")/2, Utils.scale(80));
+        g2D.dispose();
     }
 
 }
