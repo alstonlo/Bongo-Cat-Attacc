@@ -8,6 +8,7 @@ import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
 import protocol.Message;
+import protocol.ResponseMessage;
 
 import javax.sound.sampled.Clip;
 import java.awt.Font;
@@ -28,7 +29,6 @@ public class MenuPanel extends GamePanel {
     private BufferedImage titleSprite;
     private BufferedImage backgroundSprite;
     private BufferedImage usernameSprite;
-
 
     private int buttonIndex = 0;
     private CircleButton[] buttons = new CircleButton[3];
@@ -175,6 +175,7 @@ public class MenuPanel extends GamePanel {
             panel.notifyReceived(message);
         }
 
+        //load the username sprite in case the username changes
         if (!window.getUsername().equals("")) {
             usernameSprite = loadUsernameSprite();
         }

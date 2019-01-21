@@ -2,15 +2,13 @@ package client.menu;
 
 import client.Window;
 import client.components.Clock;
-import client.gameplay.GamePlayPanel;
-import client.songselect.SongSelectPanel;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
+import protocol.MatchMadeMessage;
 import protocol.Message;
 
-import javax.swing.JButton;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -22,10 +20,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
 
-    private BufferedImage drape = Utils.loadScaledImage("resources/menu/queue drape.png");
 
     private AtomicBoolean lock = new AtomicBoolean(false);
+
     private AtomicBoolean matchMade = new AtomicBoolean(false);
+    private String host, guest;
+
+    private BufferedImage drape = Utils.loadScaledImage("resources/menu/queue drape.png");
 
     private Clock clock;
     private int messageState = 0;
@@ -45,17 +46,6 @@ public class QueuePanel extends DropDownPanel {
     QueuePanel(Window window) {
         super(window);
 
-        JButton backButton = new JButton("SongSelect");
-        backButton.setFont(Utils.loadFont("moon.otf", Utils.scale(25)));
-        backButton.setSize(Utils.scale(100), Utils.scale(70));
-        backButton.setLocation(Utils.scale(90), Utils.scale(260));
-        backButton.addActionListener(e -> matchMade("Username 1", "Username 2"));
-        backButton.setBorder(null);
-        backButton.setBackground(new Color(255, 221, 216));
-        backButton.setForeground(Pallette.OUTLINE_COLOR);
-        backButton.setFocusPainted(false);
-        add(backButton);
-
         this.clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
         this.leftPanel = new QueueRectangle(
                 0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
@@ -69,9 +59,11 @@ public class QueuePanel extends DropDownPanel {
 
     @Override
     void pullDown() {
-        if (lock.compareAndSet(false, true)) {
-            clock.configureSprites();
+        if (window.getUsername().equals("")) {
+            return; //don't do anything if the player hasn't logged in
+        }
 
+        if (lock.compareAndSet(false, true)) {
             ThreadPool.execute(this::animate);
             super.pullDown();
         }
@@ -79,21 +71,47 @@ public class QueuePanel extends DropDownPanel {
 
     @Override
     public void notifyReceived(Message message) {
+        if (message instanceof MatchMadeMessage) {
+            MatchMadeMessage matchMade = (MatchMadeMessage) message;
 
+        }
     }
 
-    void matchMade(String user1, String user2) {
-        leftPanel.setUsername(user1);
-        rightPanel.setUsername(user2);
-        leftPanel.configureSprites();
-        rightPanel.configureSprites();
-        matchMade.set(true);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e){
-            e.printStackTrace();
+    private void animate() {
+        clock.configureSprites();
+        clock.start();
+
+        long startTime = System.currentTimeMillis();
+        while (!matchMade.get()) {
+            messageState = Utils.round((System.currentTimeMillis() - startTime) / (1000.0 * secondsPerDot)) % 4;
         }
-        window.switchPanel(new SongSelectPanel(window, user1, user2));
+
+        transition();
+    }
+
+    private void transition() {
+
+        long startTime = System.currentTimeMillis();
+        double deltaTime = 0;
+        while (deltaTime < SLIDE_DURATION) {
+            double y = Settings.PANEL_SIZE.height * (deltaTime / SLIDE_DURATION);
+            leftPanel.setY(-Settings.PANEL_SIZE.height + y);
+            rightPanel.setY(Settings.PANEL_SIZE.height - y);
+            deltaTime = System.currentTimeMillis() - startTime;
+        }
+        leftPanel.setY(0);
+        rightPanel.setY(0);
+
+        opacity = 0f;
+        startTime = System.currentTimeMillis();
+        deltaTime = 0;
+        while (deltaTime < VS_ANIMATION_DURATION) {
+            opacity = (float) (deltaTime / VS_ANIMATION_DURATION);
+            deltaTime = System.currentTimeMillis() - startTime;
+        }
+        opacity = 1f;
+
+        clock.stop();
     }
 
     /**
@@ -126,36 +144,5 @@ public class QueuePanel extends DropDownPanel {
             g2D.drawString("vs.", Utils.scale(375) - fontMetrics.stringWidth("vs.") / 2, Utils.scale(690));
             g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER)); //resetting opacity
         }
-    }
-
-    private void animate() {
-        clock.start();
-
-        long startTime = System.currentTimeMillis();
-        while (!matchMade.get()) {
-            messageState = Utils.round((System.currentTimeMillis() - startTime) / (1000.0 * secondsPerDot)) % 4;
-        }
-
-        startTime = System.currentTimeMillis();
-        double deltaTime = 0;
-        while (deltaTime < SLIDE_DURATION) {
-            double y = Settings.PANEL_SIZE.height * (deltaTime / SLIDE_DURATION);
-            leftPanel.setY(-Settings.PANEL_SIZE.height + y);
-            rightPanel.setY(Settings.PANEL_SIZE.height - y);
-            deltaTime = System.currentTimeMillis() - startTime;
-        }
-        leftPanel.setY(0);
-        rightPanel.setY(0);
-
-        opacity = 0f;
-        startTime = System.currentTimeMillis();
-        deltaTime = 0;
-        while (deltaTime < VS_ANIMATION_DURATION) {
-            opacity = (float) (deltaTime / VS_ANIMATION_DURATION);
-            deltaTime = System.currentTimeMillis() - startTime;
-        }
-        opacity = 1f;
-
-        clock.stop();
     }
 }
