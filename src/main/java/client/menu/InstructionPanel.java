@@ -60,8 +60,10 @@ public class InstructionPanel extends DropDownPanel {
         Graphics2D g2D = (Graphics2D) background.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
 
-        g2D.drawImage(Utils.loadScaledImage("resources/instructions/A.png",Utils.scale(100),Utils.scale(100)),Utils.scale(300),Utils.scale(400),null);
-        g2D.drawImage(Utils.loadScaledImage("resources/instructions/L.png",Utils.scale(100),Utils.scale(100)),Utils.scale(450),Utils.scale(400),null);
+        g2D.drawImage(Utils.loadScaledImage("resources/instructions/A.png",120,120),Utils.scale(220),Utils.scale(530),null);
+        g2D.drawImage(Utils.loadScaledImage("resources/instructions/L.png",120,120),Utils.scale(420),Utils.scale(530),null);
+        g2D.drawImage(Utils.loadScaledImage("resources/game/bongocat.png",210,100),Utils.scale(270), Utils.scale(780),null);
+        g2D.drawImage(Utils.loadScaledImage("resources/instructions/trophy.png",70,92),Utils.scale(250),Utils.scale(800),null);
 
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 30));
@@ -70,9 +72,15 @@ public class InstructionPanel extends DropDownPanel {
                 Utils.scale(375)-fontMetrics.stringWidth("Use the A and L key to")/2,Utils.scale(450));
         g2D.drawString("press the left and right bongo.",
                 Utils.scale(375)-fontMetrics.stringWidth("press the left and right bongo.")/2,Utils.scale(500));
+
+        g2D.drawString("Play the notes more accurately",
+                Utils.scale(375)-fontMetrics.stringWidth("Play the notes more accurately")/2,Utils.scale(700));
+        g2D.drawString("to get a higher score!",
+                Utils.scale(375)-fontMetrics.stringWidth("to get a higher score!")/2,Utils.scale(750));
+
         g2D.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT, 50));
-        
         fontMetrics = g2D.getFontMetrics();
+        g2D.drawString("&", Utils.scale(375)-fontMetrics.stringWidth("&")/2,Utils.scale(610));
         g2D.drawString("Instructions",Utils.scale(375)-fontMetrics.stringWidth("Instructions")/2,Utils.scale(400));
         g2D.dispose();
     }
