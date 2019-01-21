@@ -2,6 +2,7 @@ package client.menu;
 
 import client.Window;
 import client.utilities.Pallette;
+import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
 import protocol.Message;
@@ -57,15 +58,22 @@ public class InstructionPanel extends DropDownPanel {
     void configureBackground(){
         background = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(1334));
         Graphics2D g2D = (Graphics2D) background.getGraphics();
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+
         g2D.drawImage(Utils.loadScaledImage("resources/instructions/A.png",Utils.scale(100),Utils.scale(100)),Utils.scale(300),Utils.scale(400),null);
         g2D.drawImage(Utils.loadScaledImage("resources/instructions/L.png",Utils.scale(100),Utils.scale(100)),Utils.scale(450),Utils.scale(400),null);
+
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 30));
         FontMetrics fontMetrics = g2D.getFontMetrics();
-        g2D.drawString("Use the A and L key to press the left and right bongo.",
-                Utils.scale(375)-fontMetrics.stringWidth("Use the A and L key to press the left and right bongo.")/2,Utils.scale(450));
+        g2D.drawString("Use the A and L key to",
+                Utils.scale(375)-fontMetrics.stringWidth("Use the A and L key to")/2,Utils.scale(450));
+        g2D.drawString("press the left and right bongo.",
+                Utils.scale(375)-fontMetrics.stringWidth("press the left and right bongo.")/2,Utils.scale(500));
         g2D.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT, 50));
+        
         fontMetrics = g2D.getFontMetrics();
         g2D.drawString("Instructions",Utils.scale(375)-fontMetrics.stringWidth("Instructions")/2,Utils.scale(400));
+        g2D.dispose();
     }
 }
