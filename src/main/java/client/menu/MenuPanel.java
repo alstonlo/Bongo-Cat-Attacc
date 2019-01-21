@@ -59,7 +59,7 @@ public class MenuPanel extends GamePanel {
         buttons[1] = new CircleButton(playIcon, Utils.scale(670), Utils.scale(1120), Utils.scale(50));
         panels[1] = new QueuePanel(window);
         buttons[2] = new CircleButton(controlsIcon, Utils.scale(670), Utils.scale(1250), Utils.scale(50));
-        panels[2] = new SettingPanel(window);
+        panels[2] = new InstructionPanel(window);
 
         int counter = 0;
         for (CircleButton button : buttons) {
