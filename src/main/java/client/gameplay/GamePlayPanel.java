@@ -56,8 +56,12 @@ public class GamePlayPanel extends GamePanel {
         Graphics2D g2D = (Graphics2D) g;
         g2D.setComposite(AlphaComposite.SrcOver.derive(alpha));
         g2D.drawImage(background,0,0,null);
-        noteManager.draw(g2D);
-        clock.draw(g2D);
+        if (noteManager!=null) {
+            noteManager.draw(g2D);
+        }
+        if (clock != null) {
+            clock.draw(g2D);
+        }
     }
 
     protected void closeGame(double accuracy){
@@ -66,6 +70,7 @@ public class GamePlayPanel extends GamePanel {
     }
 
     private void close(){
+        clock.stop();
         long startTime = System.currentTimeMillis();
         if (playingSong!= null){
             playingSong.stop();
