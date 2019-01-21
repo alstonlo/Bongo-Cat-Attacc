@@ -2,7 +2,9 @@ package client.gameplay;
 
 import client.utilities.Utils;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Note {
@@ -18,7 +20,10 @@ public class Note {
     private int width;
     public final int type;
 
+    public Color color = Color.BLACK;
+
     public final AtomicBoolean active = new AtomicBoolean(true);
+    public final AtomicBoolean offScreen = new AtomicBoolean(false);
 
     Note(int x, int y, int type){
         this.x = x;
@@ -38,15 +43,23 @@ public class Note {
              this.x += increase;
              this.y = (int) Math.round(((700.0 / 111) * x) - 1819.0);
          }
-         if (y >= 1180){
+         if (y >= 1200){
              this.active.set(false);
+             this.offScreen.set(false);
          }
     }
 
+    void setRed(){
+        color = Color.RED;
+    }
 
+    void setGreen(){
+        color = Color.GREEN;
+    }
 
     void draw(Graphics2D g2D){
-        g2D.drawOval(Utils.scale(x), Utils.scale(y), Utils.scale(HEIGHT), Utils.scale(WIDTH));
+        g2D.setColor(color);
+        g2D.fillOval(Utils.scale(x), Utils.scale(y), Utils.scale(HEIGHT), Utils.scale(WIDTH));
     }
 
     int calculateDistance(int newX, int newY) {

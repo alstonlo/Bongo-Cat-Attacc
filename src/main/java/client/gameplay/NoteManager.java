@@ -93,7 +93,7 @@ public class NoteManager implements Drawable {
 
     public synchronized void removeOldNotes() {
             for (Note note : screenNotes) {
-                if (!note.active.get()) {
+                if (note.offScreen.get()) {
                     screenNotes.remove(note);
                 }
             }
@@ -115,19 +115,28 @@ public class NoteManager implements Drawable {
         Note pressedNote = getNextNote(0);
         if (pressedNote!=null) {
             int distance = pressedNote.calculateDistance(279, 1150);
-            if (distance <= 30) {
-                accuracySum += 100*Math.sqrt((-distance/30.0)+1);
+            if (distance <= 100) {
+                accuracySum += 100*Math.sqrt((-distance/100.0)+1);
+                System.out.println(100*Math.sqrt((-distance/100.0)+1));
+                pressedNote.setGreen();
+            } else {
+                pressedNote.setRed();
             }
             pressedNote.active.set(false);
+
         }
     }
 
     public void notifyRightPress() {
         Note pressedNote = getNextNote(1);
         if (pressedNote != null) {
-            int distance = pressedNote.calculateDistance(279, 1150);
-            if (distance <= 30) {
-                accuracySum +=  100*Math.sqrt((-distance/30.0)+1);
+            int distance = pressedNote.calculateDistance(471, 1150);
+            if (distance <= 100) {
+                accuracySum +=  100*Math.sqrt((-distance/100.0)+1);
+                System.out.println(100*Math.sqrt((-distance/100.0)+1));
+                pressedNote.setGreen();
+            } else {
+                pressedNote.setRed();
             }
             pressedNote.active.set(false);
         }
