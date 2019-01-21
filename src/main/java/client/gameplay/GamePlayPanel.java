@@ -4,11 +4,13 @@ import client.GamePanel;
 import client.Window;
 import client.components.Clock;
 import client.components.Song;
+import client.menu.EndGamePanel;
 import client.utilities.Pallette;
 import client.utilities.Utils;
 import protocol.Message;
 
 import javax.sound.sampled.Clip;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -22,6 +24,7 @@ public class GamePlayPanel extends GamePanel {
 
     private Clock clock;
     private Song song;
+    private float alpha = 1f;
 
     public GamePlayPanel(Window window, Song song){
         super(window);
@@ -36,7 +39,7 @@ public class GamePlayPanel extends GamePanel {
         clock = new Clock(Utils.scale(100), Utils.scale(100), song.getDuration()*1000,Utils.scale(60));
         clock.configureSprites();
         clock.start();
-        noteManager = new NoteManager(song);
+        noteManager = new NoteManager(song,this);
         noteManager.run();
         if (song.getAudio() != null) {
             song.getAudio().start();
@@ -48,10 +51,21 @@ public class GamePlayPanel extends GamePanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         Graphics2D g2D = (Graphics2D) g;
+        g2D.setComposite(AlphaComposite.SrcOver.derive(alpha));
         g2D.drawImage(background,0,0,null);
         noteManager.draw(g2D);
         clock.draw(g2D);
+    }
+
+    protected void closeGame(double accuracy){
+        System.out.println("done!");
+        long startTime = System.currentTimeMillis();
+        while (alpha > 0f){
+            alpha =  1f-Math.round(((System.currentTimeMillis()-startTime)/1000.0)*0.5);
+        }
+        window.switchPanel(new EndGamePanel(window,accuracy));
     }
 
     @Override

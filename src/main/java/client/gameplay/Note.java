@@ -43,9 +43,11 @@ public class Note {
              this.x += increase;
              this.y = (int) Math.round(((700.0 / 111) * x) - 1819.0);
          }
-         if (y >= 1200){
+         if (y >= 1170){
              this.active.set(false);
-             this.offScreen.set(false);
+         }
+         if (y >= 1200){
+             this.offScreen.set(true);
          }
     }
 

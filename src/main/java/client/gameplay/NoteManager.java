@@ -9,6 +9,7 @@ import client.utilities.Utils;
 import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,38 +23,28 @@ public class NoteManager implements Drawable {
     private ArrayList<int[]> notes;
     private ConcurrentLinkedQueue<Note> screenNotes = new ConcurrentLinkedQueue<>();
     private int currentBeat = 1;
-    private int lastBeat = 0;
 
-    private int WIDTH = Utils.scale(30);
-    private int HEIGHT = Utils.scale(20);
-
-    private AtomicBoolean gameInPlay = new AtomicBoolean(false);
-    private int baseDistance = calculateLength(361, 634, 375, 546);
-
-    private ArrayList<Integer> leftToRemove = new ArrayList<>();
-    private ArrayList<Integer> rightToRemove = new ArrayList<>();
+    public AtomicBoolean gameInPlay = new AtomicBoolean(false);
 
     private int bps;
-
-    private Song song;
-
     private int duration; //in seconds
 
     private double accuracy = 0;
     private double accuracySum = 0;
     private int totalNotes = 0;
 
-    NoteManager(Song song) {
+    private GamePlayPanel panel;
+
+    NoteManager(Song song, GamePlayPanel panel) {
         notes = song.getNotes();
         bps = song.getBps();
         duration = song.getDuration();
-        this.song = song;
+        this.panel = panel;
     }
 
     public void run() {
         gameInPlay.set(true);
         ThreadPool.execute(this::update);
-        long startTime = System.currentTimeMillis();
     }
 
     @Override
@@ -65,6 +56,10 @@ public class NoteManager implements Drawable {
         long prevTime = System.currentTimeMillis();
         long startTime = System.currentTimeMillis();
         while (gameInPlay.get()) {
+            if ((System.currentTimeMillis()-startTime)/1000.0 > duration){
+                gameInPlay.set(false);
+                panel.closeGame(accuracy);
+            }
             if (((System.currentTimeMillis()-startTime)/1000.0)*bps > currentBeat) {
                 currentBeat+=1;
                 //System.out.println((System.currentTimeMillis()-startTime)/1000+" "+currentBeat);
@@ -103,11 +98,8 @@ public class NoteManager implements Drawable {
         for (Note note : screenNotes){
             note.draw(g2D);
         }
+        g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.drawString(String.valueOf(accuracy),Utils.scale(150), Utils.scale(150));
-    }
-
-    public int calculateLength(int x, int y, int newX, int newY) {
-        return (int) Math.round(Math.sqrt((Utils.scale(newX - x))) * (Utils.scale(newX - x)) + (Utils.scale(newY - y)) * (Utils.scale(newY - y)));
     }
 
 
@@ -117,12 +109,11 @@ public class NoteManager implements Drawable {
             int distance = pressedNote.calculateDistance(279, 1150);
             if (distance <= 100) {
                 accuracySum += 100*Math.sqrt((-distance/100.0)+1);
-                System.out.println(100*Math.sqrt((-distance/100.0)+1));
                 pressedNote.setGreen();
+                pressedNote.active.set(false);
             } else {
                 pressedNote.setRed();
             }
-            pressedNote.active.set(false);
 
         }
     }
@@ -133,12 +124,11 @@ public class NoteManager implements Drawable {
             int distance = pressedNote.calculateDistance(471, 1150);
             if (distance <= 100) {
                 accuracySum +=  100*Math.sqrt((-distance/100.0)+1);
-                System.out.println(100*Math.sqrt((-distance/100.0)+1));
                 pressedNote.setGreen();
+                pressedNote.active.set(false);
             } else {
                 pressedNote.setRed();
             }
-            pressedNote.active.set(false);
         }
     }
 
