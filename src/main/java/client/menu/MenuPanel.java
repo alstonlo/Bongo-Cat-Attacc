@@ -197,7 +197,7 @@ public class MenuPanel extends GamePanel {
     }
 
     private BufferedImage loadUsernameSprite() {
-        BufferedImage sprite = Utils.createCompatibleImage(550,100);
+        BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(550), Utils.scale(100));
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.drawImage(Utils.loadScaledImage("resources/menu/cat icon.png", 550, 100), 0, 0,null);
