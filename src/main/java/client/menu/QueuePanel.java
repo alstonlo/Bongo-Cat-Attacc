@@ -2,6 +2,7 @@ package client.menu;
 
 import client.Window;
 import client.components.Clock;
+import client.songselect.SongSelectPanel;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
@@ -9,6 +10,7 @@ import client.utilities.Utils;
 import protocol.MatchMadeMessage;
 import protocol.Message;
 
+import javax.swing.JButton;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -55,13 +57,32 @@ public class QueuePanel extends DropDownPanel {
                 Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
                 new Color(125, 151, 230), "resources/menu/right bongo cat.png");
         this.rightPanel.setY(Settings.PANEL_SIZE.height);
+
+        this.setLayout(null);
+        JButton matchMadeButton = new JButton("Match Made");
+        matchMadeButton.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT, 25));
+        matchMadeButton.setSize(Utils.scale(200), Utils.scale(70));
+        matchMadeButton.setLocation(Utils.scale(275), Utils.scale(900));
+        matchMadeButton.addActionListener(e -> ThreadPool.execute(() -> {
+            matchMade.set(true);
+            leftPanel.setUsername("Player 1");
+            leftPanel.configureSprites();
+            rightPanel.setUsername("Player 2");
+            rightPanel.configureSprites();
+        }));
+        matchMadeButton.setBorder(null);
+        matchMadeButton.setBackground(new Color(255, 221, 216));
+        matchMadeButton.setForeground(Pallette.OUTLINE_COLOR);
+        matchMadeButton.setFocusPainted(false);
+
+        this.add(matchMadeButton);
     }
 
     @Override
     void pullDown() {
-        if (window.getUsername().equals("")) {
+        /*if (window.getUsername().equals("")) {
             return; //don't do anything if the player hasn't logged in
-        }
+        }*/
 
         if (lock.compareAndSet(false, true)) {
             ThreadPool.execute(this::animate);
@@ -73,7 +94,6 @@ public class QueuePanel extends DropDownPanel {
     public void notifyReceived(Message message) {
         if (message instanceof MatchMadeMessage) {
             MatchMadeMessage matchMade = (MatchMadeMessage) message;
-
         }
     }
 
@@ -112,6 +132,13 @@ public class QueuePanel extends DropDownPanel {
         opacity = 1f;
 
         clock.stop();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        window.switchPanel(new SongSelectPanel(window, "user1", "user2"));
     }
 
     /**

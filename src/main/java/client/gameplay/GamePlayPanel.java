@@ -119,6 +119,7 @@ public class GamePlayPanel extends GamePanel {
         g2D.drawImage(Utils.loadScaledImage("resources/game/grass.png",750,850),0, Utils.scale(484), null);
         g2D.drawImage(Utils.loadScaledImage("resources/game/bongocat.png",200,95), Utils.scale(275),Utils.scale(540),null);
         g2D.setColor(Pallette.OUTLINE_COLOR);
+        g2D.setStroke(new BasicStroke(3));
         g2D.drawLine(Utils.scale(100), Utils.scale(1150), Utils.scale(650), Utils.scale(1150));
         g2D.setStroke(new BasicStroke(5));
         g2D.drawLine(Utils.scale(300),Utils.scale(634), Utils.scale(0), Utils.scale(1334));

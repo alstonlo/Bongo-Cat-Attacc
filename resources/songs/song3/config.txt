@@ -1,4 +1,4 @@
 name: Kiseki
 difficulty: 2
 bpm: 180
-duration: 10
+duration: 30

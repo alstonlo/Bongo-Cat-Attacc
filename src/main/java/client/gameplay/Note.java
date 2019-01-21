@@ -47,7 +47,7 @@ public class Note {
          if (y >= 1170){
              this.active.set(false);
          }
-         if (y >= 1200){
+         if (y >= 1400){
              this.offScreen.set(true);
          }
     }

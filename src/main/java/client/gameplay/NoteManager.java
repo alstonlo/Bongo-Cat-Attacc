@@ -113,12 +113,10 @@ public class NoteManager implements Drawable {
             if (distance <= 100) {
                 accuracySum += 100 * Math.sqrt((-distance / 100.0) + 1);
                 pressedNote.setGreen();
-                pressedNote.active.set(false);
-                pressedNote.offScreen.set(true);
             } else {
                 pressedNote.setRed();
             }
-
+            pressedNote.active.set(false);
         }
     }
 
@@ -129,11 +127,10 @@ public class NoteManager implements Drawable {
             if (distance <= 100) {
                 accuracySum += 100 * Math.sqrt((-distance / 100.0) + 1);
                 pressedNote.setGreen();
-                pressedNote.active.set(false);
-                pressedNote.offScreen.set(true);
             } else {
                 pressedNote.setRed();
             }
+            pressedNote.active.set(false);
         }
     }
 
