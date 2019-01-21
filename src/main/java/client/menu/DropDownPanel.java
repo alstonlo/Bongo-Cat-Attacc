@@ -46,6 +46,10 @@ abstract class DropDownPanel extends JPanel implements Messagable {
         this.setVisible(true);
     }
 
+    int getState() {
+        return state.get();
+    }
+
     /**
      * Relocates this panel if it has moved from the previous call
      * of relocate() due to {@link DropDownPanel#pullDown()} or

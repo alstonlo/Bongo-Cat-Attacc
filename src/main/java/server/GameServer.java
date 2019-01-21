@@ -131,7 +131,6 @@ class GameServer {
         }
 
         matchMakingRoom.queue(player);
-        player.sendTCP(new ResponseMessage(protocol));
     }
 
     private void process(Player player, RegisterMessage protocol) {

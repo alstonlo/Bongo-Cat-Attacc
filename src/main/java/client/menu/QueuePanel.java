@@ -6,6 +6,7 @@ import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
+import protocol.JoinQueueMessage;
 import protocol.MatchMadeMessage;
 import protocol.Message;
 
@@ -16,6 +17,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.sql.Time;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class QueuePanel extends DropDownPanel {
@@ -37,8 +40,8 @@ public class QueuePanel extends DropDownPanel {
     private final long VS_ANIMATION_DURATION = 500;
     private float opacity = 0f;
 
-    private QueueRectangle leftPanel;
-    private QueueRectangle rightPanel;
+    private PlayerQueueRectangle leftPanel;
+    private PlayerQueueRectangle rightPanel;
 
     private Font vsFont = Pallette.getScaledFont(Pallette.TITLE_FONT, 80);
     private Font messageFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 40);
@@ -47,11 +50,11 @@ public class QueuePanel extends DropDownPanel {
         super(window);
 
         this.clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
-        this.leftPanel = new QueueRectangle(
+        this.leftPanel = new PlayerQueueRectangle(
                 0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
                 new Color(245, 132, 148), "resources/menu/left bongo cat.png");
         this.leftPanel.setY(-Settings.PANEL_SIZE.height);
-        this.rightPanel = new QueueRectangle(
+        this.rightPanel = new PlayerQueueRectangle(
                 Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
                 new Color(125, 151, 230), "resources/menu/right bongo cat.png");
         this.rightPanel.setY(Settings.PANEL_SIZE.height);
@@ -66,14 +69,23 @@ public class QueuePanel extends DropDownPanel {
         if (lock.compareAndSet(false, true)) {
             ThreadPool.execute(this::animate);
             super.pullDown();
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            window.sendMessage(new JoinQueueMessage());
         }
     }
 
     @Override
     public void notifyReceived(Message message) {
-        if (message instanceof MatchMadeMessage) {
-            MatchMadeMessage matchMade = (MatchMadeMessage) message;
-
+        if (message instanceof MatchMadeMessage && getState() == DOWN_STATE) {
+            MatchMadeMessage match = (MatchMadeMessage) message;
+            matchMade.set(true);
+            transition(match.host, match.guest);
         }
     }
 
@@ -85,11 +97,9 @@ public class QueuePanel extends DropDownPanel {
         while (!matchMade.get()) {
             messageState = Utils.round((System.currentTimeMillis() - startTime) / (1000.0 * secondsPerDot)) % 4;
         }
-
-        transition();
     }
 
-    private void transition() {
+    private void transition(String host, String guest) {
 
         long startTime = System.currentTimeMillis();
         double deltaTime = 0;
