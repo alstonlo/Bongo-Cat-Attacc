@@ -15,12 +15,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NoteManager implements Drawable {
     private ArrayList<int[]> notes;
-    private List<int[]> leftNoteCoords = Collections.synchronizedList(new ArrayList<>());
-    private List<int[]> rightNoteCoords = Collections.synchronizedList(new ArrayList<>());
+    private ConcurrentLinkedQueue<Note> screenNotes = new ConcurrentLinkedQueue<>();
     private int currentBeat = 1;
     private int lastBeat = 0;
 
@@ -62,82 +62,45 @@ public class NoteManager implements Drawable {
     }
 
     private void update() {
-        long noteCreationPrevTime = System.currentTimeMillis();
-        long animationPrevTime = System.currentTimeMillis();
+        long prevTime = System.currentTimeMillis();
         long startTime = System.currentTimeMillis();
         while (gameInPlay.get()) {
-            long noteCreationElapsedTime = System.currentTimeMillis() - noteCreationPrevTime;
-            if (noteCreationElapsedTime > 1000.0/bps) {
-                noteCreationPrevTime = System.currentTimeMillis();
-                currentBeat += 1;
+            if (((System.currentTimeMillis()-startTime)/1000.0)*bps > currentBeat) {
+                currentBeat = (int) Math.round(((System.currentTimeMillis()-startTime)/1000.0)*bps);
                 if (notes.get(currentBeat)[0] == 1) {
-                    leftNoteCoords.add(new int[]{361, 634});
+                    screenNotes.add(new Note(361,634,Note.LEFT_TYPE));
                     totalNotes++;
                 }
                 if (notes.get(currentBeat)[1] == 1) {
-                    rightNoteCoords.add(new int[]{389, 634});
+                    screenNotes.add(new Note(389,634,Note.RIGHT_TYPE));
                     totalNotes++;
                 }
                 accuracy = accuracySum/totalNotes;
             }
 
-            long animationElapsedTime = System.currentTimeMillis() - animationPrevTime;
-            if (animationElapsedTime > 100) {
-                animationPrevTime = System.currentTimeMillis();
-                for (int i = 0; i < leftNoteCoords.size(); i++) {
-                    int[] currCoords = leftNoteCoords.get(i);
-                    if (currCoords[1] <= 1200) {
-                        currCoords[0] -= (int) Math.round((animationElapsedTime) / 25.0);
-                        currCoords[1] = (int) Math.round(((-700.0 / 111) * currCoords[0]) + 2910.0);
-                        leftNoteCoords.set(i, currCoords);
-                    } else {
-                        leftToRemove.add(i);
-                   }
-
+            long elapsedTime = System.currentTimeMillis() - prevTime;
+            if (elapsedTime > 100){
+                prevTime = System.currentTimeMillis();
+                for (Note note : screenNotes) {
+                    note.updatePosition((int) elapsedTime /20);
                 }
-                for (int i = 0; i < rightNoteCoords.size(); i++) {
-                    int[] currCoords = rightNoteCoords.get(i);
-                    if (currCoords[1] <= 1200) {
-                        currCoords[0] += (int) Math.round((animationElapsedTime) / 25.0);
-                        currCoords[1] = (int) Math.round(((700.0 / 111) * currCoords[0]) - 1819.0);
-                        rightNoteCoords.set(i, currCoords);
-                    } else {
-                        rightToRemove.add(i);
-                    }
-                }
-                removeOldNotes();
             }
+           removeOldNotes();
 
         }
     }
 
     public synchronized void removeOldNotes() {
-        for (int i = 0; i < leftToRemove.size(); i++) {
-            leftNoteCoords.remove((int) leftToRemove.get(i));
-        }
-        for (int i = 0; i < rightToRemove.size(); i++) {
-            rightNoteCoords.remove((int) rightToRemove.get(i));
-        }
-        rightToRemove.clear();
-        leftToRemove.clear();
+            for (Note note : screenNotes) {
+                if (!note.active.get()) {
+                    screenNotes.remove(note);
+                }
+            }
     }
 
     public void draw(Graphics2D g2D) {
-        for (int i = 0; i < leftNoteCoords.size(); i++) {
-            int x = leftNoteCoords.get(i)[0];
-            int y = leftNoteCoords.get(i)[1];
-            int multiplier = calculateLength(x, y, 375, 546) / baseDistance;
-            int width = multiplier * WIDTH;
-            int height = multiplier * HEIGHT;
-            g2D.fillOval(Utils.scale(x) - WIDTH / 2, Utils.scale(y) - HEIGHT / 2, WIDTH, HEIGHT);
-        }
-        for (int i = 0; i < rightNoteCoords.size(); i++) {
-            int x = rightNoteCoords.get(i)[0];
-            int y = rightNoteCoords.get(i)[1];
-            int multiplier = calculateLength(x, y, 375, 546) / baseDistance;
-            int width = multiplier * WIDTH;
-            int height = multiplier * HEIGHT;
-            g2D.drawOval(Utils.scale(x) - WIDTH / 2, Utils.scale(y) - HEIGHT / 2, WIDTH, HEIGHT);
+        for (Note note : screenNotes){
+            note.draw(g2D);
         }
         g2D.drawString(String.valueOf(accuracy),Utils.scale(150), Utils.scale(150));
     }
@@ -148,23 +111,36 @@ public class NoteManager implements Drawable {
 
 
     public void notifyLeftPress() {
-        int distance = calculateLength(leftNoteCoords.get(0)[0], leftNoteCoords.get(0)[1],279,1150);
-        if (distance<15) {
-            accuracySum += 100 - ((distance - 15) * (distance - 15));
-        }
-        synchronized (leftNoteCoords){
-            leftNoteCoords.remove(0);
+        Note pressedNote = getNextNote(0);
+        if (pressedNote!=null) {
+            int distance = pressedNote.calculateDistance(279, 1150);
+            if (distance < 15) {
+                accuracySum += 100 - ((distance - 15) * (distance - 15));
+            }
+            pressedNote.active.set(false);
         }
     }
 
     public void notifyRightPress() {
-        int distance = calculateLength(rightNoteCoords.get(0)[0], rightNoteCoords.get(0)[1],471,1150);
-        if (distance<15) {
-            accuracySum += 100 - ((distance - 15) * (distance - 15));
+        Note pressedNote = getNextNote(0);
+        if (pressedNote != null) {
+            int distance = pressedNote.calculateDistance(279, 1150);
+            if (distance < 15) {
+                accuracySum += 100 - ((distance - 15) * (distance - 15));
+            }
+            pressedNote.active.set(false);
         }
-        synchronized (rightNoteCoords){
-            rightNoteCoords.remove(0);
+    }
+
+    Note getNextNote(int type){
+        Note nextNote = null;
+        for (Note note : screenNotes){
+            if ((note.active.get()) && (note.type == type)){
+                nextNote = note;
+                break;
+            }
         }
+        return nextNote;
     }
 
 }

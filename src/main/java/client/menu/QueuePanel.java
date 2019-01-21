@@ -2,6 +2,7 @@ package client.menu;
 
 import client.Window;
 import client.components.Clock;
+import client.gameplay.GamePlayPanel;
 import client.songselect.SongSelectPanel;
 import client.utilities.Pallette;
 import client.utilities.Settings;
@@ -87,6 +88,12 @@ public class QueuePanel extends DropDownPanel {
         leftPanel.configureSprites();
         rightPanel.configureSprites();
         matchMade.set(true);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        window.switchPanel(new SongSelectPanel(window, user1, user2));
     }
 
     /**
