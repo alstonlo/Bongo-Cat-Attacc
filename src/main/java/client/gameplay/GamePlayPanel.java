@@ -79,7 +79,7 @@ public class GamePlayPanel extends GamePanel {
             alpha = 1f-((System.currentTimeMillis()-startTime)/3000f);
         }
         alpha = 0f;
-        window.switchPanel(new EndGamePanel(window,accuracy));
+        window.switchPanel(new EndGamePanel(window,accuracy, 0.0,"Player 1", "Player 2"));
     }
 
     @Override
