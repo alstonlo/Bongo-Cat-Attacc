@@ -50,16 +50,18 @@ public class GamePlayPanel extends GamePanel {
         }
     }
 
-
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2D = (Graphics2D) g;
         g2D.setComposite(AlphaComposite.SrcOver.derive(alpha));
         g2D.drawImage(background,0,0,null);
-        noteManager.draw(g2D);
-        clock.draw(g2D);
+        if (noteManager!=null) {
+            noteManager.draw(g2D);
+        }
+        if (clock != null) {
+            clock.draw(g2D);
+        }
     }
 
     protected void closeGame(double accuracy){
@@ -68,13 +70,15 @@ public class GamePlayPanel extends GamePanel {
     }
 
     private void close(){
+        clock.stop();
         long startTime = System.currentTimeMillis();
         if (playingSong!= null){
             playingSong.stop();
         }
         while (alpha > 0f){
-            alpha = 1f-((System.currentTimeMillis()-startTime)/2500f);
+            alpha = 1f-((System.currentTimeMillis()-startTime)/3000f);
         }
+        alpha = 0f;
         window.switchPanel(new EndGamePanel(window,accuracy));
     }
 
@@ -108,12 +112,12 @@ public class GamePlayPanel extends GamePanel {
 
     }
 
-    void configureSprites(){
+    private void configureSprites(){
         background = Utils.createCompatibleImage(Utils.scale(750), Utils.scale(1334));
         Graphics2D g2D = (Graphics2D) background.getGraphics();
 
-        g2D.setColor(new Color(138, 219, 91));
-        g2D.fillRect(0,Utils.scale(634), Utils.scale(750), Utils.scale(1334));
+        g2D.drawImage(Utils.loadScaledImage("resources/game/grass.png",750,850),0, Utils.scale(484), null);
+        g2D.drawImage(Utils.loadScaledImage("resources/game/bongocat.png",200,95), Utils.scale(275),Utils.scale(540),null);
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.drawLine(Utils.scale(100), Utils.scale(1150), Utils.scale(650), Utils.scale(1150));
         g2D.setStroke(new BasicStroke(5));
