@@ -78,6 +78,7 @@ public class NoteManager implements Drawable {
                     rightNoteCoords.add(new int[]{389, 634});
                     totalNotes++;
                 }
+                accuracy = accuracySum/totalNotes;
             }
 
             long animationElapsedTime = System.currentTimeMillis() - animationPrevTime;
@@ -85,7 +86,7 @@ public class NoteManager implements Drawable {
                 animationPrevTime = System.currentTimeMillis();
                 for (int i = 0; i < leftNoteCoords.size(); i++) {
                     int[] currCoords = leftNoteCoords.get(i);
-                    if (currCoords[0] >= 250) {
+                    if (currCoords[1] <= 1200) {
                         currCoords[0] -= (int) Math.round((animationElapsedTime) / 25.0);
                         currCoords[1] = (int) Math.round(((-700.0 / 111) * currCoords[0]) + 2910.0);
                         leftNoteCoords.set(i, currCoords);
@@ -96,7 +97,7 @@ public class NoteManager implements Drawable {
                 }
                 for (int i = 0; i < rightNoteCoords.size(); i++) {
                     int[] currCoords = rightNoteCoords.get(i);
-                    if (currCoords[0] <= 500) {
+                    if (currCoords[1] <= 1200) {
                         currCoords[0] += (int) Math.round((animationElapsedTime) / 25.0);
                         currCoords[1] = (int) Math.round(((700.0 / 111) * currCoords[0]) - 1819.0);
                         rightNoteCoords.set(i, currCoords);
@@ -147,20 +148,20 @@ public class NoteManager implements Drawable {
 
 
     public void notifyLeftPress() {
-        System.out.println("left is working");
         int distance = calculateLength(leftNoteCoords.get(0)[0], leftNoteCoords.get(0)[1],279,1150);
-        accuracySum += 100-((distance-15)*5);
-        accuracy = accuracySum/totalNotes;
+        if (distance<15) {
+            accuracySum += 100 - ((distance - 15) * (distance - 15));
+        }
         synchronized (leftNoteCoords){
             leftNoteCoords.remove(0);
         }
     }
 
     public void notifyRightPress() {
-        System.out.println("right is working");
         int distance = calculateLength(rightNoteCoords.get(0)[0], rightNoteCoords.get(0)[1],471,1150);
-        accuracySum += 100-((distance-15)*5);
-        accuracy = accuracySum/totalNotes;
+        if (distance<15) {
+            accuracySum += 100 - ((distance - 15) * (distance - 15));
+        }
         synchronized (rightNoteCoords){
             rightNoteCoords.remove(0);
         }
