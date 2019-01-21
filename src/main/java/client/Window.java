@@ -1,17 +1,14 @@
 package client;
 
-import client.components.Song;
-import client.gameplay.GamePlayPanel;
 import client.menu.MenuPanel;
-import client.menu.QueuePanel;
 import client.songselect.SongSelectPanel;
 import client.utilities.Settings;
 import client.utilities.Utils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import protocol.Network;
 import protocol.Message;
+import protocol.Network;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -123,6 +120,10 @@ public class Window extends JFrame {
      */
     public void sendMessage(Message message) {
         client.sendTCP(message);
+    }
+
+    public void test(String one, String two) {
+        switchPanel(new SongSelectPanel(this, one, two));
     }
 
     /**

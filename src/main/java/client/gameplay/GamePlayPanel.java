@@ -37,7 +37,9 @@ public class GamePlayPanel extends GamePanel {
         clock.start();
         noteManager = new NoteManager(song);
         noteManager.run();
-        song.getAudio().start();
+        if (song.getAudio() != null) {
+            song.getAudio().start();
+        }
     }
 
 

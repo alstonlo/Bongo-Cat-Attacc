@@ -126,6 +126,15 @@ class LoginPanel extends DropDownPanel {
         add(errorMessageArea);
     }
 
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2D = (Graphics2D) g;
+        g2D.drawImage(drape, 0, 0, null);
+    }
+
     /**
      * Displays an error onto the panel.
      *
@@ -179,14 +188,6 @@ class LoginPanel extends DropDownPanel {
         toSend.id = UUID.randomUUID().toString();
         lastSent = toSend;
         window.sendMessage(toSend);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D g2D = (Graphics2D) g;
-        g2D.drawImage(drape, 0, 0, null);
     }
 
 

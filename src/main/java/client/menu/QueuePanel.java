@@ -150,15 +150,5 @@ public class QueuePanel extends DropDownPanel {
         opacity = 1f;
 
         clock.stop();
-
-        SongSelectPanel songSelect = new SongSelectPanel(window, "", "");
-        songSelect.add(this);
-        window.switchPanel(songSelect);
-        songSelect.remove(this);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        System.out.println("ded");
     }
 }

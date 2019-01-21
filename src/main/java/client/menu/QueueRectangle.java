@@ -34,6 +34,10 @@ class QueueRectangle implements Drawable {
         this.username = username;
     }
 
+    void setY(double y) {
+        this.y = y;
+    }
+
     public void configureSprites() {
         this.sprite = Utils.createCompatibleImage(width, height);
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
@@ -50,10 +54,6 @@ class QueueRectangle implements Drawable {
         g2D.drawString(username, Utils.scale(187) - fontMetrics.stringWidth(username) / 2, Utils.scale(800));
 
         g2D.dispose();
-    }
-
-    void setY(double y) {
-        this.y = y;
     }
 
     public void draw(Graphics2D g2D) {

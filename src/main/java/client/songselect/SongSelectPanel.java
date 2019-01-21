@@ -153,7 +153,7 @@ public class SongSelectPanel extends GamePanel {
         if (currSong != null){
             currSong.stop();
         }
-        window.switchPanel(new GamePlayPanel(window, songTiles[selected].getSong()));
+        window.switchPanel(new GamePlayPanel(window, getTile(selected).getSong()));
     }
 
     private void switchSong(Clip song){

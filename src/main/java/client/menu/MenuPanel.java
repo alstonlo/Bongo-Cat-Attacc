@@ -88,7 +88,7 @@ public class MenuPanel extends GamePanel {
 
 
         g2D.drawImage(catIcon, Utils.scale(30), Utils.scale(1200), null);
-        g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT,30));
+        g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 30));
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.drawString(window.getUsername(), Utils.scale(100), Utils.scale(1200));
         cat.draw(g2D);
@@ -194,5 +194,4 @@ public class MenuPanel extends GamePanel {
         g2D.dispose();
         return titleSprite;
     }
-
 }
