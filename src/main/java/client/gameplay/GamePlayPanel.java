@@ -29,6 +29,7 @@ public class GamePlayPanel extends GamePanel {
     public void run() {
         super.run();
         configureSprites();
+        window.requestFocus();
         clock = new Clock(Utils.scale(100), Utils.scale(100), window.getSong().getDuration()*1000,Utils.scale(60));
         clock.configureSprites();
         clock.start();
