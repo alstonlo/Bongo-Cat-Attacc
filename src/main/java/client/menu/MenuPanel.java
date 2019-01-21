@@ -10,6 +10,8 @@ import client.utilities.Utils;
 import protocol.Message;
 
 import javax.sound.sampled.Clip;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -23,9 +25,10 @@ import java.awt.image.BufferedImage;
 public class MenuPanel extends GamePanel {
 
     private BongoCat cat;
-    private BufferedImage title;
-    private BufferedImage background;
-    private BufferedImage catIcon;
+    private BufferedImage titleSprite;
+    private BufferedImage backgroundSprite;
+    private BufferedImage usernameSprite;
+
 
     private int buttonIndex = 0;
     private CircleButton[] buttons = new CircleButton[3];
@@ -45,9 +48,9 @@ public class MenuPanel extends GamePanel {
         //load the image assets
         this.cat = new BongoCat();
         this.cat.configureSprites();
-        this.background = Utils.loadScaledImage("resources/menu/yellow.png");
-        this.title = loadTitleSprite();
-        this.catIcon = Utils.loadScaledImage("resources/menu/cat icon.png", 100, 100);
+        this.backgroundSprite = Utils.loadScaledImage("resources/menu/yellow.png");
+        this.titleSprite = loadTitleSprite();
+        this.usernameSprite = loadUsernameSprite();
 
         //create the buttons and the panels they trigger
         BufferedImage loginIcon = Utils.loadImage("resources/icons/login.png");
@@ -83,14 +86,10 @@ public class MenuPanel extends GamePanel {
 
         Graphics2D g2D = (Graphics2D) g;
 
-        g2D.drawImage(background, 0, 0, this);
-        g2D.drawImage(title, 0, 0, null);
+        g2D.drawImage(backgroundSprite, 0, 0, this);
+        g2D.drawImage(titleSprite, 0, 0, null);
+        g2D.drawImage(usernameSprite, Utils.scale(30), Utils.scale(1200), null);
 
-
-        g2D.drawImage(catIcon, Utils.scale(30), Utils.scale(1200), null);
-        g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 30));
-        g2D.setColor(Pallette.OUTLINE_COLOR);
-        g2D.drawString(window.getUsername(), Utils.scale(100), Utils.scale(1200));
         cat.draw(g2D);
         for (CircleButton button : buttons) {
             button.draw(g2D);
@@ -113,7 +112,7 @@ public class MenuPanel extends GamePanel {
     public void run() {
         super.run();
 
-        //playing background music
+        //playing backgroundSprite music
 //        bgMusic = Utils.loadAudio("resources/menu/music.wav");
         if (bgMusic != null) {
             bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
@@ -133,7 +132,7 @@ public class MenuPanel extends GamePanel {
     public void stop() {
         super.stop();
 
-        //stop the background music
+        //stop the backgroundSprite music
         if (bgMusic != null) {
             bgMusic.close();
         }
@@ -175,23 +174,41 @@ public class MenuPanel extends GamePanel {
         for (DropDownPanel panel : panels) {
             panel.notifyReceived(message);
         }
+
+        if (!window.getUsername().equals("")) {
+            usernameSprite = loadUsernameSprite();
+        }
     }
 
 
     // Loading sprites methods -----------------------------------------------------------------------
 
-    /**
-     * @return a scaled 500px x 200px sprite of the title
-     */
     private BufferedImage loadTitleSprite() {
-        BufferedImage titleSprite = Utils.createCompatibleImage(Utils.scale(500), Utils.scale(250));
-        Graphics2D g2D = (Graphics2D) titleSprite.getGraphics();
+        BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(500), Utils.scale(250));
+        Graphics2D g2D = (Graphics2D) sprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT, 80));
         g2D.drawString("Bongo Cat", Utils.scale(50), Utils.scale(100));
         g2D.drawString("Attacc!", Utils.scale(50), Utils.scale(200));
         g2D.dispose();
-        return titleSprite;
+        return sprite;
+    }
+
+    private BufferedImage loadUsernameSprite() {
+        BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(550), Utils.scale(100));
+        Graphics2D g2D = (Graphics2D) sprite.getGraphics();
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+        g2D.drawImage(Utils.loadScaledImage("resources/menu/cat icon.png", 550, 100), 0, 0,null);
+
+        Font usernameFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 50);
+        FontMetrics metrics = g2D.getFontMetrics(usernameFont);
+        g2D.setFont(usernameFont);
+        g2D.setColor(Pallette.OUTLINE_COLOR);
+        int y = (sprite.getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
+        g2D.drawString(window.getUsername(), Utils.scale(110), y);
+
+        g2D.dispose();
+        return sprite;
     }
 }
