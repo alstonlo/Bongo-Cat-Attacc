@@ -66,7 +66,8 @@ public class NoteManager implements Drawable {
         long startTime = System.currentTimeMillis();
         while (gameInPlay.get()) {
             if (((System.currentTimeMillis()-startTime)/1000.0)*bps > currentBeat) {
-                currentBeat = (int) Math.round(((System.currentTimeMillis()-startTime)/1000.0)*bps);
+                currentBeat+=1;
+                //System.out.println((System.currentTimeMillis()-startTime)/1000+" "+currentBeat);
                 if (notes.get(currentBeat)[0] == 1) {
                     screenNotes.add(new Note(361,634,Note.LEFT_TYPE));
                     totalNotes++;
@@ -82,7 +83,7 @@ public class NoteManager implements Drawable {
             if (elapsedTime > 100){
                 prevTime = System.currentTimeMillis();
                 for (Note note : screenNotes) {
-                    note.updatePosition((int) elapsedTime /20);
+                    note.updatePosition((int) elapsedTime /15);
                 }
             }
            removeOldNotes();
@@ -114,19 +115,19 @@ public class NoteManager implements Drawable {
         Note pressedNote = getNextNote(0);
         if (pressedNote!=null) {
             int distance = pressedNote.calculateDistance(279, 1150);
-            if (distance < 15) {
-                accuracySum += 100 - ((distance - 15) * (distance - 15));
+            if (distance <= 30) {
+                accuracySum += 100*Math.sqrt((-distance/30.0)+1);
             }
             pressedNote.active.set(false);
         }
     }
 
     public void notifyRightPress() {
-        Note pressedNote = getNextNote(0);
+        Note pressedNote = getNextNote(1);
         if (pressedNote != null) {
             int distance = pressedNote.calculateDistance(279, 1150);
-            if (distance < 15) {
-                accuracySum += 100 - ((distance - 15) * (distance - 15));
+            if (distance <= 30) {
+                accuracySum +=  100*Math.sqrt((-distance/30.0)+1);
             }
             pressedNote.active.set(false);
         }

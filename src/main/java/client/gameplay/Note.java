@@ -50,7 +50,9 @@ public class Note {
     }
 
     int calculateDistance(int newX, int newY) {
-        return (int) Math.round(Math.sqrt((Utils.scale(newX - x))) * (Utils.scale(newX - x)) + (Utils.scale(newY - y)) * (Utils.scale(newY - y)));
+        int value = (int) Math.round(Math.sqrt( (newX - x) * (newX - x) + (newY - y) * (newY - y)));
+        return value;
+
     }
 
 }
