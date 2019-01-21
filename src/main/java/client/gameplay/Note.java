@@ -1,5 +1,6 @@
 package client.gameplay;
 
+import client.utilities.Pallette;
 import client.utilities.Utils;
 
 import java.awt.Color;
@@ -20,7 +21,7 @@ public class Note {
     private int width;
     public final int type;
 
-    public Color color = Color.BLACK;
+    public Color color = Pallette.OUTLINE_COLOR;
 
     public final AtomicBoolean active = new AtomicBoolean(true);
     public final AtomicBoolean offScreen = new AtomicBoolean(false);
