@@ -95,8 +95,8 @@ public class SongSelectPanel extends GamePanel {
 
         JButton backButton = new JButton("GamePlay");
         backButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 25));
-        backButton.setSize(Utils.scale(100), Utils.scale(70));
-        backButton.setLocation(Utils.scale(90), Utils.scale(260));
+        backButton.setSize(Utils.scale(200), Utils.scale(70));
+        backButton.setLocation(Utils.scale( 275), Utils.scale(1200));
         backButton.addActionListener(e -> ThreadPool.execute(() -> startGame()));
         backButton.setBorder(null);
         backButton.setBackground(new Color(190, 207, 255));

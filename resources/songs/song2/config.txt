@@ -1,4 +1,4 @@
 name: Kuusou Forest
 difficulty: 3
 bpm: 200
-duration: 100
+duration: 5
