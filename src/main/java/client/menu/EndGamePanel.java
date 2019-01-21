@@ -23,7 +23,7 @@ public class EndGamePanel extends GamePanel {
 
         JButton menuButton = new JButton("Main Menu");
         menuButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 25));
-        menuButton.setSize(Utils.scale(100), Utils.scale(70));
+        menuButton.setSize(Utils.scale(200), Utils.scale(70));
         menuButton.setLocation(Utils.scale(90), Utils.scale(260));
         menuButton.addActionListener(e -> ThreadPool.execute(() -> returnToMenu()));
         menuButton.setBorder(null);
@@ -37,6 +37,7 @@ public class EndGamePanel extends GamePanel {
     }
 
     private void returnToMenu(){
+        window.requestFocus();
         window.switchPanel(new MenuPanel(window));
     }
 
@@ -47,7 +48,7 @@ public class EndGamePanel extends GamePanel {
         g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
         g2D.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT,30));
         g2D.drawString("Game Over!", Utils.scale(150), Utils.scale(600));
-        g2D.drawString(String.format("Your accuracy was: %2f",accuracy), Utils.scale(150), Utils.scale(800) );
+        g2D.drawString(String.format("Your accuracy was: %.2f",accuracy)+"%", Utils.scale(150), Utils.scale(800) );
     }
 
     @Override

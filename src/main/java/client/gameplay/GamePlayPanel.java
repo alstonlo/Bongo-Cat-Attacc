@@ -6,6 +6,7 @@ import client.components.Clock;
 import client.components.Song;
 import client.menu.EndGamePanel;
 import client.utilities.Pallette;
+import client.utilities.ThreadPool;
 import client.utilities.Utils;
 import protocol.Message;
 
@@ -24,7 +25,9 @@ public class GamePlayPanel extends GamePanel {
 
     private Clock clock;
     private Song song;
+    private Clip playingSong;
     private float alpha = 1f;
+    private double accuracy;
 
     public GamePlayPanel(Window window, Song song){
         super(window);
@@ -42,7 +45,8 @@ public class GamePlayPanel extends GamePanel {
         noteManager = new NoteManager(song,this);
         noteManager.run();
         if (song.getAudio() != null) {
-            song.getAudio().start();
+            playingSong = song.getAudio();
+            playingSong.start();
         }
     }
 
@@ -51,7 +55,6 @@ public class GamePlayPanel extends GamePanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Graphics2D g2D = (Graphics2D) g;
         g2D.setComposite(AlphaComposite.SrcOver.derive(alpha));
         g2D.drawImage(background,0,0,null);
@@ -60,10 +63,17 @@ public class GamePlayPanel extends GamePanel {
     }
 
     protected void closeGame(double accuracy){
-        System.out.println("done!");
+        this.accuracy = accuracy;
+        ThreadPool.execute(this::close);
+    }
+
+    private void close(){
         long startTime = System.currentTimeMillis();
+        if (playingSong!= null){
+            playingSong.stop();
+        }
         while (alpha > 0f){
-            alpha =  1f-Math.round(((System.currentTimeMillis()-startTime)/1000.0)*0.5);
+            alpha = 1f-((System.currentTimeMillis()-startTime)/2500f);
         }
         window.switchPanel(new EndGamePanel(window,accuracy));
     }

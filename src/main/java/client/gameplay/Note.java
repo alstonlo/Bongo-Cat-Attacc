@@ -61,7 +61,7 @@ public class Note {
 
     void draw(Graphics2D g2D){
         g2D.setColor(color);
-        g2D.fillOval(Utils.scale(x), Utils.scale(y), Utils.scale(HEIGHT), Utils.scale(WIDTH));
+        g2D.fillOval(Utils.scale(x), Utils.scale(y), Utils.scale(WIDTH), Utils.scale(HEIGHT));
     }
 
     int calculateDistance(int newX, int newY) {

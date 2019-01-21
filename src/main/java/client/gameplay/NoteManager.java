@@ -62,7 +62,6 @@ public class NoteManager implements Drawable {
             }
             if (((System.currentTimeMillis()-startTime)/1000.0)*bps > currentBeat) {
                 currentBeat+=1;
-                //System.out.println((System.currentTimeMillis()-startTime)/1000+" "+currentBeat);
                 if (notes.get(currentBeat)[0] == 1) {
                     screenNotes.add(new Note(361,634,Note.LEFT_TYPE));
                     totalNotes++;
@@ -82,7 +81,6 @@ public class NoteManager implements Drawable {
                 }
             }
            removeOldNotes();
-
         }
     }
 
@@ -111,6 +109,7 @@ public class NoteManager implements Drawable {
                 accuracySum += 100*Math.sqrt((-distance/100.0)+1);
                 pressedNote.setGreen();
                 pressedNote.active.set(false);
+                pressedNote.offScreen.set(true);
             } else {
                 pressedNote.setRed();
             }
@@ -126,6 +125,7 @@ public class NoteManager implements Drawable {
                 accuracySum +=  100*Math.sqrt((-distance/100.0)+1);
                 pressedNote.setGreen();
                 pressedNote.active.set(false);
+                pressedNote.offScreen.set(true);
             } else {
                 pressedNote.setRed();
             }
