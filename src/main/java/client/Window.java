@@ -107,7 +107,7 @@ public class Window extends JFrame {
      * @param username the player's username
      */
     public void setUsername(String username) {
-        if (username.equals("")) {
+        if (this.username.equals("")) {
             this.username = username;
         }
     }
@@ -122,9 +122,6 @@ public class Window extends JFrame {
         client.sendTCP(message);
     }
 
-    public void test(String one, String two) {
-        switchPanel(new SongSelectPanel(this, one, two));
-    }
 
     /**
      * Switches the JPanel displayed on this Window's content pane.
