@@ -1,4 +1,12 @@
 package client.songselect;
 
-public class GuestSongSelectPanel {
+import client.Window;
+
+public class GuestSongSelectPanel extends SongSelectPanel{
+
+    public GuestSongSelectPanel(Window window, String opponent) {
+        super(window, opponent);
+    }
+
+
 }

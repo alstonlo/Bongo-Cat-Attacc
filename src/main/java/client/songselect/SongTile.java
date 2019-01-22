@@ -20,19 +20,15 @@ import java.awt.image.BufferedImage;
  */
 class SongTile {
 
-    private static final int WIDTH = Utils.scale(600);
-    private static final int HEIGHT = Utils.scale(350);
-    private static final int Y_POS = Utils.scale(800);
-
     private Song song;
     private double x = 0; //the actual and time-accurate x-coordinate
     private double drawX = 0; //the x-coordinate the tile should be drawn at
 
     private Clip audio;
-    private BufferedImage splash;
-    private BufferedImage album;
 
-    private BufferedImage foreground;
+    private BufferedImage splashSprite;
+    private BufferedImage albumSprite;
+    private BufferedImage foregroundSprite;
 
     private final int panelWidth = Settings.PANEL_SIZE.width; //for convenience
 
@@ -67,45 +63,23 @@ class SongTile {
     }
 
     /**
-     * Loads the resources used by this tile (e.g. splash art). Although,
+     * Loads the resources used by this tile (e.g. splashSprite art). Although,
      * we could load in the constructor, having it as a method allows for better
      * flexibility with managing resources.
      */
     void loadTile() {
-        this.splash = song.getSplash();
-        this.album = Utils.scale(song.getAlbum(), 300,300);
+        this.splashSprite = song.getSplash();
+        this.albumSprite = Utils.scale(song.getAlbum(), 300, 300);
+        this.foregroundSprite = loadForegroundSprite();
         this.audio = song.getAudioExcerpt();
-        configureImage();
     }
 
-    Clip getAudio(){
+    Clip getAudio() {
         return this.audio;
     }
 
-    Song getSong(){
+    Song getSong() {
         return this.song;
-    }
-
-    private void configureImage(){
-        foreground = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2D = (Graphics2D) foreground.getGraphics();
-        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
-
-        g2D.setColor(new Color(44, 44, 44, 200));
-        g2D.fillRoundRect(0, 0, WIDTH, HEIGHT, 30, 30);
-
-        g2D.setColor(Color.WHITE);
-        g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 20));
-        g2D.drawString(song.getName(),Utils.scale(360), Utils.scale(45));
-        g2D.drawString("Difficulty: ", Utils.scale(360), Utils.scale(80));
-
-        BufferedImage star = Utils.loadScaledImage("resources/songs/bongo.png",40,40);
-        for (int i = 0; i < song.getDifficulty(); i++){
-            g2D.drawImage(star ,Utils.scale(360+(45*i)),Utils.scale(90), null);
-        }
-
-        g2D.drawImage(album, Utils.scale(30), Utils.scale(25), null);
-        g2D.dispose();
     }
 
     /**
@@ -123,16 +97,42 @@ class SongTile {
         }
 
         g2D.setComposite(AlphaComposite.SrcOver.derive(alpha));
-        g2D.drawImage(splash, 0, 0, null);
+        g2D.drawImage(splashSprite, 0, 0, null);
         g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER)); //reset composite
     }
 
     /**
-     * Draws the foreground of the tile onto the graphics object.
+     * Draws the foregroundSprite of the tile onto the graphics object.
      *
      * @param g2D the Graphics context in which to paint
      */
     void drawForeground(Graphics2D g2D) {
-        g2D.drawImage(foreground,Utils.round(drawX) + (panelWidth - WIDTH) / 2, Y_POS,null);
+        g2D.drawImage(foregroundSprite,
+                Utils.round(drawX) + (panelWidth - foregroundSprite.getWidth()) / 2,
+                Utils.scale(800), null);
+    }
+
+    private BufferedImage loadForegroundSprite() {
+        BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(600), Utils.scale(350));
+        Graphics2D g2D = (Graphics2D) sprite.getGraphics();
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+
+        g2D.setColor(new Color(44, 44, 44, 200));
+        g2D.fillRoundRect(0, 0, sprite.getWidth(), sprite.getHeight(), 30, 30);
+
+        g2D.setColor(Color.WHITE);
+        g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 20));
+        g2D.drawString(song.getName(), Utils.scale(360), Utils.scale(45));
+        g2D.drawString("Difficulty: ", Utils.scale(360), Utils.scale(80));
+
+        BufferedImage star = Utils.loadScaledImage("resources/songs/bongo.png", 40, 40);
+        for (int i = 0; i < song.getDifficulty(); i++) {
+            g2D.drawImage(star, Utils.scale(360 + (45 * i)), Utils.scale(90), null);
+        }
+
+        g2D.drawImage(albumSprite, Utils.scale(30), Utils.scale(25), null);
+        g2D.dispose();
+
+        return sprite;
     }
 }

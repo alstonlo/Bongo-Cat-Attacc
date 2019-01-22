@@ -1,9 +1,9 @@
 package client.songselect;
 
 import client.GamePanel;
-import client.components.Song;
 import client.Window;
 import client.components.Clock;
+import client.components.Song;
 import client.gameplay.GamePlayPanel;
 import client.utilities.Pallette;
 import client.utilities.Settings;
@@ -31,18 +31,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author Alston and Katelyn
  * last updated 1/13/2019
  */
-public class SongSelectPanel extends GamePanel {
+public abstract class SongSelectPanel extends GamePanel {
 
     private static final long SLIDE_DURATION = 500;
 
     private AtomicBoolean isAnimating = new AtomicBoolean(false);
 
-    private boolean hosting;
     private String opponent;
 
     private int selected = 0; //the index of the focused song tile
     private SongTile[] songTiles;
-    private Clip currSong;
+    private Clip playingSong;
 
     /*
      * Contains the tiles that are in the frame of viewing, and therefore,
@@ -63,10 +62,9 @@ public class SongSelectPanel extends GamePanel {
      *
      * @param window the window that the panel belongs to
      */
-    public SongSelectPanel(Window window, boolean hosting, String opponent) {
+    public SongSelectPanel(Window window, String opponent) {
         super(window);
         this.setLayout(null);
-        this.hosting = hosting;
         this.opponent = opponent;
 
         Song[] songs; //load the songs
@@ -98,7 +96,7 @@ public class SongSelectPanel extends GamePanel {
         JButton backButton = new JButton("GamePlay");
         backButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 25));
         backButton.setSize(Utils.scale(200), Utils.scale(70));
-        backButton.setLocation(Utils.scale( 275), Utils.scale(1200));
+        backButton.setLocation(Utils.scale(275), Utils.scale(1200));
         backButton.addActionListener(e -> ThreadPool.execute(() -> startGame()));
         backButton.setBorder(null);
         backButton.setBackground(new Color(190, 207, 255));
@@ -112,8 +110,6 @@ public class SongSelectPanel extends GamePanel {
     @Override
     public void run() {
         super.run();
-        loadHeaderSprite();
-        clock.configureSprites();
         clock.start();
         switchSong(songTiles[selected].getAudio());
     }
@@ -136,56 +132,6 @@ public class SongSelectPanel extends GamePanel {
     }
 
     /**
-     * Starts the game using the currently selected song
-     */
-    private void startGame(){
-        if (currSong != null){ //stops the audio
-            currSong.stop();
-        }
-        window.addBasePanel(new GamePlayPanel(window, getTile(selected).getSong()));
-    }
-
-    /**
-     * Changes the song being currently played to the specified clip
-     * @param song the new song clip to be played
-     */
-    private void switchSong(Clip song){
-        if (currSong != null){
-            currSong.stop();
-        }
-        currSong = song;
-        if (currSong != null) {
-            currSong.loop(Clip.LOOP_CONTINUOUSLY);
-        }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D g2D = (Graphics2D) g;
-
-        SongTile[] toRender; //the tiles that must be rendered
-        synchronized (viewFrame) {
-            toRender = viewFrame.toArray(new SongTile[0]);
-        }
-
-        for (SongTile tile : toRender) { //clamp all the tiles to draw them
-            tile.clamp();
-        }
-        for (SongTile tile : toRender) { //draw all the tiles' backgrounds
-            tile.drawBackground(g2D);
-        }
-        for (SongTile tile : toRender) { //draw all the tiles' foregrounds
-            tile.drawForeground(g2D);
-        }
-
-        g2D.drawImage(header, 0,0, null);
-
-        clock.draw(g2D);
-    }
-
-    /**
      * Retrieves from the array at index i. The array is treated as a closed loop
      * such that A[-1] = A[A.length - 1].
      *
@@ -200,10 +146,35 @@ public class SongSelectPanel extends GamePanel {
     }
 
     /**
+     * Changes the song being currently played to the specified clip
+     *
+     * @param audio the new song clip to be played
+     */
+    private void switchSong(Clip audio) {
+        if (playingSong != null) {
+            playingSong.stop();
+        }
+        playingSong = audio;
+        if (playingSong != null) {
+            playingSong.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+    }
+
+    /**
+     * Starts the game using the currently selected song
+     */
+    private void startGame() {
+        if (playingSong != null) { //stops the audio
+            playingSong.stop();
+        }
+        window.addBasePanel(new GamePlayPanel(window, getTile(selected).getSong()));
+    }
+
+    /**
      * Moves the viewFrame one tile to the left over the span of {@link SongSelectPanel#SLIDE_DURATION}.
      * moveLeft() only triggers if the panel is not currently in an animating state.
      */
-    private void moveLeft() {
+    void moveLeft() {
         if (isAnimating.compareAndSet(false, true)) {
 
             SongTile center; //the tile at the center
@@ -240,11 +211,38 @@ public class SongSelectPanel extends GamePanel {
         }
     }
 
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2D = (Graphics2D) g;
+
+        SongTile[] toRender; //the tiles that must be rendered
+        synchronized (viewFrame) {
+            toRender = viewFrame.toArray(new SongTile[0]);
+        }
+
+        for (SongTile tile : toRender) { //clamp all the tiles to draw them
+            tile.clamp();
+        }
+        for (SongTile tile : toRender) { //draw all the tiles' backgrounds
+            tile.drawBackground(g2D);
+        }
+        for (SongTile tile : toRender) { //draw all the tiles' foregrounds
+            tile.drawForeground(g2D);
+        }
+
+        g2D.drawImage(header, 0, 0, null);
+
+        clock.draw(g2D);
+    }
+
     /**
      * Moves the viewFrame one tile to the right over the span of {@link SongSelectPanel#SLIDE_DURATION}.
      * moveRight() only triggers if the panel is not currently in an animating state.
      */
-    private void moveRight() {
+    void moveRight() {
         if (isAnimating.compareAndSet(false, true)) {
 
             SongTile center;  //the tile at the center
@@ -281,18 +279,18 @@ public class SongSelectPanel extends GamePanel {
         }
     }
 
-    private BufferedImage loadHeaderSprite(){
-        BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(260));
+    private BufferedImage loadHeaderSprite() {
+        BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(750), Utils.scale(260));
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
-        g2D.setColor(new Color(255,255,255,200));
-        g2D.fillRect(0,0,Utils.scale(750),Utils.scale(260));
+        g2D.setColor(new Color(255, 255, 255, 200));
+        g2D.fillRect(0, 0, Utils.scale(750), Utils.scale(260));
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setStroke(new BasicStroke(Utils.scale(10)));
-        g2D.drawRect(0,0,Utils.scale(750),Utils.scale(260));
+        g2D.drawRect(0, 0, Utils.scale(750), Utils.scale(260));
         g2D.setFont(Utils.loadFont("resources/fonts/cloud.ttf", Utils.scale(50)));
         FontMetrics fontMetrics = g2D.getFontMetrics();
-        g2D.drawString("Select Song", Utils.scale(375)-fontMetrics.stringWidth("Select Song")/2, Utils.scale(80));
+        g2D.drawString("Select Song", Utils.scale(375) - fontMetrics.stringWidth("Select Song") / 2, Utils.scale(80));
         g2D.dispose();
         return sprite;
     }
