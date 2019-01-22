@@ -8,7 +8,6 @@ import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
 import protocol.Message;
-import protocol.ResponseMessage;
 
 import javax.sound.sampled.Clip;
 import java.awt.Font;
@@ -20,8 +19,8 @@ import java.awt.image.BufferedImage;
 /**
  * Panel for the main menu.
  *
- * @author Katelyn Wang and Alston
- * last updated 1/12/2019
+ * @author Katelyn and Alston
+ * last updated 1/18/2019
  */
 public class MenuPanel extends GamePanel {
 
@@ -200,7 +199,7 @@ public class MenuPanel extends GamePanel {
         BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(550), Utils.scale(100));
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
-        g2D.drawImage(Utils.loadScaledImage("resources/menu/cat icon.png", 550, 100), 0, 0,null);
+        g2D.drawImage(Utils.loadScaledImage("resources/menu/cat icon.png", 550, 100), 0, 0, null);
 
         Font usernameFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 50);
         FontMetrics metrics = g2D.getFontMetrics(usernameFont);

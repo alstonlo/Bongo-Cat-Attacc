@@ -33,8 +33,8 @@ import java.util.UUID;
  * Login panel where players can log into their accounts or
  * register new accounts.
  *
- * @author Alston
- * last updated 1/12/2018
+ * @author Alston and Katelyn
+ * last updated 1/18/2018
  */
 class LoginPanel extends DropDownPanel {
 
