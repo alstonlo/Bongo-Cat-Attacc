@@ -26,8 +26,8 @@ public class EndGamePanel extends GamePanel {
     private final long SLIDE_DURATION = 500;
     private final long VS_ANIMATION_DURATION = 500;
 
-    private final QueueRectangle leftPanel;
-    private final QueueRectangle rightPanel;
+    private final PlayerQueueRectangle leftPanel;
+    private final PlayerQueueRectangle rightPanel;
 
     private BufferedImage foregroundSprite;
 
@@ -42,11 +42,11 @@ public class EndGamePanel extends GamePanel {
 
         setLayout(null);
 
-        this.leftPanel = new QueueRectangle(
+        this.leftPanel = new PlayerQueueRectangle(
                 0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
                 new Color(255,201,215), "resources/menu/left bongo cat.png");
         this.leftPanel.setY(-Settings.PANEL_SIZE.height);
-        this.rightPanel = new QueueRectangle(
+        this.rightPanel = new PlayerQueueRectangle(
                 Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
                 new Color(198, 244, 255), "resources/menu/right bongo cat.png");
         this.rightPanel.setY(Settings.PANEL_SIZE.height);
