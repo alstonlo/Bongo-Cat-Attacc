@@ -1,5 +1,7 @@
 package client;
 
+import client.utilities.Settings;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -22,7 +24,10 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
      * @param window the Window this panel belongs to
      */
     public GamePanel(Window window) {
+        this.setSize(Settings.PANEL_SIZE);
+        this.setLocation(0, 0);
         this.setDoubleBuffered(true);
+
         this.window = window;
         this.animationTimer = new Timer(1000 / FPS, (e) -> update());
     }

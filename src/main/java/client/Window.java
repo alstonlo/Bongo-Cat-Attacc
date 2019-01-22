@@ -1,7 +1,6 @@
 package client;
 
 import client.menu.MenuPanel;
-import client.songselect.SongSelectPanel;
 import client.utilities.Settings;
 import client.utilities.Utils;
 import com.esotericsoftware.kryonet.Client;
@@ -11,11 +10,14 @@ import protocol.Message;
 import protocol.Network;
 
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * JFrame on which all panels are displayed. We wanted to
@@ -31,13 +33,16 @@ public class Window extends JFrame {
         SwingUtilities.invokeLater(() -> new Window());
     }
 
+    private final Integer BASE_LAYER = 1;
+    private JLayeredPane layers = new JLayeredPane();
+    private Map<Integer, GamePanel> runningPanels = new HashMap<>();
+
     private String username = "";
 
     private Client client;
     private BongoListener bongoListener = new BongoListener();
     private ServerListener serverListener = new ServerListener();
 
-    private GamePanel currPanel;
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
@@ -79,7 +84,12 @@ public class Window extends JFrame {
                 close();
             }
         });
-        switchPanel(new MenuPanel(this));
+
+        layers.setPreferredSize(Settings.PANEL_SIZE);
+        this.add(layers);
+
+        displayBasePanel(new MenuPanel(this));
+
         this.setVisible(true);
         this.requestFocus();
         this.pack();
@@ -87,14 +97,7 @@ public class Window extends JFrame {
     }
 
     /**
-     * Releases all resources used by this window.
-     */
-    public void close() {
-        client.close();
-    }
-
-    /**
-     * @return the username of the player, or null if the player hasn't logged in
+     * @return the username of the player
      */
     public String getUsername() {
         return username;
@@ -123,28 +126,32 @@ public class Window extends JFrame {
     }
 
 
-    /**
-     * Switches the JPanel displayed on this Window's content pane.
-     * The JPanel displayed must be a GamePanel.
-     *
-     * @param newPanel the new JPanel to be displayed
-     */
-    public void switchPanel(GamePanel newPanel) {
-        if (currPanel != null) { //stop the animation running on the currently displayed panel
-            currPanel.stop();
-        }
-        currPanel = newPanel;         //set it as the currently displayed panel
+    public void displayBasePanel(GamePanel basePanel) {
 
-        bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
-        serverListener.setControllableObj(newPanel);
+        bongoListener.setControlledObj(basePanel); //make basePanel able to be controlled
+        serverListener.setControllableObj(basePanel);
+
+        displayPanel(BASE_LAYER, basePanel);
+    }
+
+    public void displayPanel(Integer layer, GamePanel newPanel) {
+
+        GamePanel oldPanel = runningPanels.get(layer);
+        if (oldPanel != null) { //stop the animation running on the currently displayed panel
+            oldPanel.stop();
+        }
+        runningPanels.put(layer, newPanel);        //set it as the currently displayed panel
+        newPanel.run();                             //run its animation
 
         SwingUtilities.invokeLater(() -> {
-            getContentPane().removeAll(); //removes previous panel and add new one
-            getContentPane().add(newPanel);
-            getContentPane().revalidate();
-            getContentPane().repaint();   //repaint
+            layers.add(newPanel, BASE_LAYER);
+            layers.revalidate();
+            layers.repaint();
         });
+    }
 
-        newPanel.run();               //run its animation
+
+    public void close() {
+        client.close();
     }
 }

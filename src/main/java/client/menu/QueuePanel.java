@@ -42,8 +42,8 @@ public class QueuePanel extends DropDownPanel {
     private final long SLIDE_DURATION = 500;
     private final long VS_ANIMATION_DURATION = 500;
 
-    private PlayerQueueRectangle leftPanel;
-    private PlayerQueueRectangle rightPanel;
+    private QueueRectangle leftPanel;
+    private QueueRectangle rightPanel;
 
     private Font vsFont = Pallette.getScaledFont(Pallette.TITLE_FONT, 80);
     private Font messageFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 40);
@@ -52,11 +52,11 @@ public class QueuePanel extends DropDownPanel {
         super(window);
 
         this.clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
-        this.leftPanel = new PlayerQueueRectangle(
+        this.leftPanel = new QueueRectangle(
                 0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
                 new Color(245, 132, 148), "resources/menu/left bongo cat.png");
         this.leftPanel.setY(-Settings.PANEL_SIZE.height);
-        this.rightPanel = new PlayerQueueRectangle(
+        this.rightPanel = new QueueRectangle(
                 Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
                 new Color(125, 151, 230), "resources/menu/right bongo cat.png");
         this.rightPanel.setY(Settings.PANEL_SIZE.height);
@@ -67,7 +67,6 @@ public class QueuePanel extends DropDownPanel {
         matchMadeButton.setSize(Utils.scale(200), Utils.scale(70));
         matchMadeButton.setLocation(Utils.scale(275), Utils.scale(900));
         matchMadeButton.addActionListener(e -> ThreadPool.execute(() -> {
-            matchMade.set(true);
             leftPanel.setUsername("Player 1");
             leftPanel.configureSprites();
             rightPanel.setUsername("Player 2");
@@ -156,7 +155,7 @@ public class QueuePanel extends DropDownPanel {
         } catch (InterruptedException e){
             e.printStackTrace();
         }
-        window.switchPanel(new SongSelectPanel(window, "user1", "user2"));
+        window.displayBasePanel(new SongSelectPanel(window, "user1", "user2"));
     }
 
     /**

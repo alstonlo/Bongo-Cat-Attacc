@@ -81,7 +81,7 @@ public class EndGamePanel extends GamePanel {
 
     private void returnToMenu(){
         window.requestFocus();
-        window.switchPanel(new MenuPanel(window));
+        window.displayBasePanel(new MenuPanel(window));
     }
 
     @Override

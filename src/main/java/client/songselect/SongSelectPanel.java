@@ -5,7 +5,6 @@ import client.components.Song;
 import client.Window;
 import client.components.Clock;
 import client.gameplay.GamePlayPanel;
-import client.menu.QueuePanel;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
@@ -153,7 +152,7 @@ public class SongSelectPanel extends GamePanel {
         if (currSong != null){
             currSong.stop();
         }
-        window.switchPanel(new GamePlayPanel(window, getTile(selected).getSong()));
+        window.displayBasePanel(new GamePlayPanel(window, getTile(selected).getSong()));
     }
 
     private void switchSong(Clip song){
