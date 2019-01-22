@@ -19,18 +19,17 @@ import java.util.TimerTask;
  */
 public class StartFrame extends JFrame {
     private static Image bongoCat; //retrieves the image
-    private static Image mouth; //retrieves the image
     private static Image[] left = new Image[2];
     private static Image[] right = new Image[2];
 
     static {
         try {
-            bongoCat = ImageIO.read(new File("resources/bongo.png"));
-            mouth = ImageIO.read(new File("resources/m1.png"));
-            left[0] = ImageIO.read(new File("resources/l1.png"));
-            left[1] = ImageIO.read(new File("resources/l2.png"));
-            right[0] = ImageIO.read(new File("resources/r2.png"));
-            right[1] = ImageIO.read(new File("resources/r1.png"));
+            bongoCat = ImageIO.read(new File("resources/bongo cat/body.png"));
+
+            left[0] = ImageIO.read(new File("resources/bongo cat/left paw down.png"));
+            left[1] = ImageIO.read(new File("resources/bongo cat/left paw up.png"));
+            right[0] = ImageIO.read(new File("resources/bongo cat/right paw down.png"));
+            right[1] = ImageIO.read(new File("resources/bongo cat/right paw up.png"));
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -78,15 +77,14 @@ public class StartFrame extends JFrame {
     public void paint(Graphics g) {
         super.paint(g);
 
-        g.drawImage(bongoCat, -200, 0, this);
-        g.drawImage(mouth, -200, 100, this);
+        g.drawImage(bongoCat, -200, -100, this);
 
         if (state == 0) {
-            g.drawImage(left[0], -200, 100, frame);
-            g.drawImage(right[0], -200, 100, frame);
+            g.drawImage(left[0], -200, 0, frame);
+            g.drawImage(right[0], -200, 0, frame);
         } else {
-            g.drawImage(left[1], -200, 100, frame);
-            g.drawImage(right[1], -200, 100, frame);
+            g.drawImage(left[1], -200, 0, frame);
+            g.drawImage(right[1], -200, 0, frame);
         }
     }
 }

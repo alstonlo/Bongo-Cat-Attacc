@@ -10,12 +10,12 @@ public class HostSongSelectPanel extends SongSelectPanel {
 
     @Override
     void moveLeft() {
-        super.moveLeft();
+        super.moveRight();
     }
 
     @Override
     void moveRight() {
-        super.moveRight();
+        super.moveLeft();
 
     }
 }
