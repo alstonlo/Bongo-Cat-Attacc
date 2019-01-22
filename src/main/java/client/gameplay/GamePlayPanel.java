@@ -20,7 +20,7 @@ import java.awt.image.BufferedImage;
 /**
  * The panel on which game play occurs
  *
- * @author Katelyn Wang
+ * @author Katelyn and Alston
  * last updated 01/21/2019
  */
 public class GamePlayPanel extends GamePanel {

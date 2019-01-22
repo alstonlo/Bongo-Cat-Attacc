@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Circular 60 second clock with only the seconds hand.
  *
- * @author Alston
+ * @author Alston and Katelyn
  * last updated 1/19/2018
  */
 public class Clock implements Drawable {
