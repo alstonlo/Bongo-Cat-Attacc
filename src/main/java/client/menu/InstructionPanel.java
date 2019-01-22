@@ -25,6 +25,10 @@ public class InstructionPanel extends DropDownPanel {
 
     private BufferedImage backgroundSprite;
 
+    /**
+     * Constructs an InstructionPanel
+     * @param window Window to which this panel belongs and is drawn upon 
+     */
     InstructionPanel(Window window) {
         super(window);
         this.setLayout(null);

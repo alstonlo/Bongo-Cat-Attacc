@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * The object representing a single note within a game
  *
- * @Author Katelyn Wang
+ * @Author Katelyn and Alston
  * last updated 01/21/2019
  */
 public class Note {
@@ -38,7 +38,7 @@ public class Note {
 
     public int hitState = -1;
 
-    public Color color = Pallette.OUTLINE_COLOR;
+    public Color neutralColor = Pallette.OUTLINE_COLOR;
 
     /**
      * Constructor to create a Note
@@ -64,6 +64,11 @@ public class Note {
 //        height = HEIGHT * sizePercent;
     }
 
+    /**
+     * Updates the position of the note by checking the amount of time elapsed since its creation
+     * Deactivates notes which pass the line
+     * Updates the offscreen boolean for notes which have left the screen
+     */
     void reposition() {
         double elapsedTime = System.currentTimeMillis() - spawnTime;
         double percent = elapsedTime / duration;
@@ -88,14 +93,15 @@ public class Note {
     }
 
     /**
-     * Changes the colour of the note to green
+     * Changes the hit state to successfully hit (1)
      */
     void setHit() {
         hitState = 1;
     }
 
     /**
-     * Changes the colour of the note to red
+     * Checks that the note hasn't been played yet
+     * Changes the hit state to missed (0)
      */
     void setMissed() {
         if (hitState == -1) {
@@ -110,7 +116,7 @@ public class Note {
      */
     void draw(Graphics2D g2D) {
         if (hitState == -1) {
-            g2D.setColor(color);
+            g2D.setColor(neutralColor);
         } else if (hitState == 0) {
             g2D.setColor(Color.RED);
         } else if (hitState == 1) {

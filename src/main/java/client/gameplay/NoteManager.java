@@ -9,7 +9,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -64,7 +63,8 @@ public class NoteManager {
     }
 
     /**
-     * Starts the game by starting the thread to update the current notes on the screen
+     * Starts the game by starting the timers to schedule addition of notes
+     * Starts thread to update notes' position
      */
     public void run() {
         gameInPlay.set(true);
@@ -92,12 +92,15 @@ public class NoteManager {
                 accuracy = accuracySum / totalNotes;
                 barHeight = (int) Math.round(700 * accuracy / 100);
             }
-        }, 0, 1000/bps);
+        }, 0, 1000 / bps);
 
 
         ThreadPool.execute(this::update);
     }
 
+    /**
+     * Closes the note manager by cancelling the timer which will set gameInPlay to false and close the game
+     */
     public void close() {
         timer.cancel();
     }
@@ -158,7 +161,7 @@ public class NoteManager {
     }
 
     /**
-     * Calls on teh note played method, indicates a right not was played
+     * Calls on the note played method, indicates a right note was played
      */
     void notifyRightPress() {
         notePlayed(Note.RIGHT_TYPE);
