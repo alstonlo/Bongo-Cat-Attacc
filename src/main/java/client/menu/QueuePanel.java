@@ -21,6 +21,12 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * The panel which queues players as the server tries to match them with an opponent
+ *
+ * @Author Katelyn and Alston
+ * last updated 01/21/19
+ */
 public class QueuePanel extends DropDownPanel {
 
 

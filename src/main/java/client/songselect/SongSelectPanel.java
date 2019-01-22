@@ -148,13 +148,20 @@ public class SongSelectPanel extends GamePanel {
         }
     }
 
+    /**
+     * Starts the game using the currently selected song
+     */
     private void startGame(){
-        if (currSong != null){
+        if (currSong != null){ //stops the audio
             currSong.stop();
         }
-        window.addBasePanel(new GamePlayPanel(window, getTile(selected).getSong()));
+        window.switchPanel(new GamePlayPanel(window, getTile(selected).getSong())); //switches the panel to a gameplaypanel using the current song selected
     }
 
+    /**
+     * Changes the song being currently played to the specified clip
+     * @param song the new song clip to be played
+     */
     private void switchSong(Clip song){
         if (currSong != null){
             currSong.stop();

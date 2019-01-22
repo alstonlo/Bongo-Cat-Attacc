@@ -14,7 +14,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * The panel which displays the instructions
+ *
+ * @Author Katelyn Wang
+ * last updated 01/21/2019
+ */
 public class InstructionPanel extends DropDownPanel {
+    private BufferedImage backgroundSprite;
 
     private JButton backButton;
 
@@ -24,7 +31,7 @@ public class InstructionPanel extends DropDownPanel {
         super(window);
         this.setLayout(null);
 
-        backButton = new JButton("Back");
+        JButton backButton = new JButton("Back");
         backButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 25));
         backButton.setSize(Utils.scale(100), Utils.scale(70));
         backButton.setLocation(Utils.scale(90), Utils.scale(260));
@@ -51,13 +58,17 @@ public class InstructionPanel extends DropDownPanel {
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
 
+        //draws background drape
         g2D.drawImage(Utils.loadScaledImage("resources/menu/controls drape.png"), 0, 0, null);
 
+        //draws the A and L keys
         g2D.drawImage(Utils.loadScaledImage("resources/instructions/A.png", 120, 120), Utils.scale(220), Utils.scale(530), null);
         g2D.drawImage(Utils.loadScaledImage("resources/instructions/L.png", 120, 120), Utils.scale(420), Utils.scale(530), null);
+        //draws the bongo cat holding a trophy
         g2D.drawImage(Utils.loadScaledImage("resources/game/bongocat.png", 210, 100), Utils.scale(270), Utils.scale(780), null);
         g2D.drawImage(Utils.loadScaledImage("resources/instructions/trophy.png", 70, 92), Utils.scale(250), Utils.scale(800), null);
 
+        //drawing the lines of instructions
         g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 30));
         FontMetrics fontMetrics = g2D.getFontMetrics();
@@ -73,8 +84,11 @@ public class InstructionPanel extends DropDownPanel {
 
         g2D.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT, 50));
         fontMetrics = g2D.getFontMetrics();
+        //drawing the ampersand between the A and L keys
         g2D.drawString("&", Utils.scale(375) - fontMetrics.stringWidth("&") / 2, Utils.scale(610));
+        //drawing the title
         g2D.drawString("Instructions", Utils.scale(375) - fontMetrics.stringWidth("Instructions") / 2, Utils.scale(400));
+
         g2D.dispose();
 
         return sprite;
