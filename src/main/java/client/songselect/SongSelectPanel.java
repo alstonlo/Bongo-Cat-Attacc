@@ -115,12 +115,12 @@ public abstract class SongSelectPanel extends GamePanel {
 
     @Override
     public void notifyLeftPress() {
-        moveLeft();
+        moveRight();
     }
 
     @Override
     public void notifyRightPress() {
-        moveRight();
+        moveLeft();
     }
 
     @Override

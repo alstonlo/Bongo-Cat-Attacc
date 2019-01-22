@@ -33,3 +33,4 @@ UserDatabase/
 *.wav
 javadocs/
 
+src/main/java/client/StartFrame.java
