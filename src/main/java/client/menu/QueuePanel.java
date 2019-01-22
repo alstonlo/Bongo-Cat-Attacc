@@ -2,6 +2,8 @@ package client.menu;
 
 import client.Window;
 import client.components.Clock;
+import client.songselect.GuestSongSelectPanel;
+import client.songselect.HostSongSelectPanel;
 import client.songselect.SongSelectPanel;
 import client.utilities.Pallette;
 import client.utilities.Settings;
@@ -117,7 +119,13 @@ public class QueuePanel extends DropDownPanel {
             VsTransitionPanel vsTransition = new VsTransitionPanel(window, hosting, opponent);
             window.addPanel(2, vsTransition);
 
-            SongSelectPanel songSelect = new SongSelectPanel(window, hosting, opponent);
+
+            SongSelectPanel songSelect;
+            if (hosting) {
+                songSelect = new HostSongSelectPanel(window, opponent);
+            } else {
+                songSelect = new GuestSongSelectPanel(window, opponent);
+            }
             window.addBasePanel(songSelect);
 
             retract();

@@ -9,7 +9,10 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -24,6 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * last updated 01/21/2019
  */
 public class NoteManager {
+
     private static final int[] X_REF = {279, 471}; //the coordinates of the reference points where the notes should be played
     private static final int Y_REF = 1150;
     private static final Font MAIN_FONT = Pallette.getScaledFont(Pallette.TITLE_FONT, 30);
@@ -43,8 +47,7 @@ public class NoteManager {
     private static int barHeight = 0;
 
     private GamePlayPanel panel;
-
-
+    private Timer timer;
 
     /**
      * Constructs a NoteManager for the selected song
@@ -53,10 +56,11 @@ public class NoteManager {
      * @param panel the panel which it needs to notify when the song is over
      */
     NoteManager(Song song, GamePlayPanel panel) {
-        notes = song.getNotes();
-        bps = song.getBps();
-        duration = song.getDuration();
+        this.notes = song.getNotes();
+        this.bps = song.getBps();
+        this.duration = song.getDuration();
         this.panel = panel;
+        this.timer = new Timer();
     }
 
     /**
@@ -64,47 +68,48 @@ public class NoteManager {
      */
     public void run() {
         gameInPlay.set(true);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                gameInPlay.set(false);
+                panel.closeGame(accuracy);
+            }
+        }, duration * 1000);
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                currentBeat += 1;
+                if (notes.get(currentBeat)[0] == 1) {
+                    screenNotes.add(new Note(Note.LEFT_TYPE));
+                    totalNotes++;
+                }
+                if (notes.get(currentBeat)[1] == 1) {
+                    screenNotes.add(new Note(Note.RIGHT_TYPE));
+                    totalNotes++;
+                }
+                accuracy = accuracySum / totalNotes;
+                barHeight = (int) Math.round(700 * accuracy / 100);
+            }
+        }, 0, 1000/bps);
+
+
         ThreadPool.execute(this::update);
+    }
+
+    public void close() {
+        timer.cancel();
     }
 
     /**
      * Updates and manages all the notes
      */
     private void update() {
-        long prevTime = System.currentTimeMillis();
-        long startTime = System.currentTimeMillis();
-
-        //runs as long as the game is in play
         while (gameInPlay.get()) {
-            // 1) If the game has been in play for the full duration of the song, ends the game
-            if ((System.currentTimeMillis() - startTime) / 1000.0 > duration) {
-                gameInPlay.set(false);
-                panel.closeGame(accuracy);
+            for (Note note : screenNotes) {
+                note.reposition();
             }
-            // 2) Reads the next line of beats at the proper bps rate
-            if (((System.currentTimeMillis() - startTime) / 1000.0) * bps > currentBeat) {
-                currentBeat += 1;
-                if (notes.get(currentBeat)[0] == 1) {
-                    screenNotes.add(new Note(361, 634, Note.LEFT_TYPE));
-                    totalNotes++;
-                }
-                if (notes.get(currentBeat)[1] == 1) {
-                    screenNotes.add(new Note(389, 634, Note.RIGHT_TYPE));
-                    totalNotes++;
-                }
-                accuracy = accuracySum / totalNotes;
-                barHeight = (int) Math.round(700 * accuracy / 100);
-            }
-
-            // 3) Updates the position of all the existing notes
-            long elapsedTime = System.currentTimeMillis() - prevTime;
-            if (elapsedTime > 100) {
-                prevTime = System.currentTimeMillis();
-                for (Note note : screenNotes) {
-                    note.updatePosition((int) elapsedTime / 15);
-                }
-            }
-            // 4) Discards the notes no longer on the screen
             removeOldNotes();
         }
     }
@@ -130,6 +135,7 @@ public class NoteManager {
         for (Note note : screenNotes) {
             note.draw(g2D);
         }
+
         //drawing the accuracy bar fill-in
         g2D.setColor(new Color(200, 32, 110));
         g2D.fillRect(Utils.scale(50), Utils.scale(300 + (700 - barHeight)), Utils.scale(20), Utils.scale(barHeight));
@@ -166,12 +172,12 @@ public class NoteManager {
     private void notePlayed(int type) {
         Note pressedNote = getNextNote(type);//checks for which note is next of the specified type
         if (pressedNote != null) { //checks that such a note exists
-            int distance = pressedNote.calculateDistance(X_REF[type], Y_REF); //calculates the distance between the line and the note's current position
+            double distance = pressedNote.calculateDistance(X_REF[type], Y_REF); //calculates the distance between the line and the note's current position
             if (distance <= 100) { //if it is within 100 units distance, adds it to the accuracy calculation
                 accuracySum += 100 * Math.sqrt((-distance / 100.0) + 1); //sqrt function to determine accuracy
-                pressedNote.setGreen(); //since the play was sufficiently close, turns the note green to indicate success
+                pressedNote.setHit(); //since the play was sufficiently close, turns the note green to indicate success
             } else {
-                pressedNote.setRed(); //turns the note red if the note was missed
+                pressedNote.setMissed(); //turns the note red if the note was missed
             }
             pressedNote.active.set(false); //deactivates the note (no longer can be played)
         }

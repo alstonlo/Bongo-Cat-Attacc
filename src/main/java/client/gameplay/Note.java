@@ -14,34 +14,40 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * last updated 01/21/2019
  */
 public class Note {
-    private static final int WIDTH = 30; //base sizes, can be used for scaling the notes to become bigger as they come closer to player
-    private static final int HEIGHT = 20;
-    public static final int LEFT_TYPE = 0; //note can either be a left or right note
-    public static final int RIGHT_TYPE = 1;
 
-    private int centreX;//the center coordinates of the note
-    private int centreY;
+    private static final int[][] SRC = {{361, 634}, {389, 634}};
+    private static final int[][] DES = {{279, 1150}, {471, 1150}};
 
-    private int height; //calculated height and width
-    private int width;
+    static final int LEFT_TYPE = 0; //note can either be a left or right note
+    static final int RIGHT_TYPE = 1;
 
+    private static final double WIDTH = 30; //base sizes, can be used for scaling the notes to become bigger as they come closer to player
+    private static final double HEIGHT = 20;
+
+    final AtomicBoolean active = new AtomicBoolean(true); //whether or not the note can be played
+    final AtomicBoolean offScreen = new AtomicBoolean(false); //whether or not the note still has to be drawn (recycling method is based on which notes are still on screen)
+
+    private final long spawnTime;
+    private final long duration = 2000;
+    private double centreX;//the center coordinates of the note
+    private double centreY;
+    private double height; //calculated height and width
+    private double width;
     public final int type;
 
     public Color color = Pallette.OUTLINE_COLOR;
 
-    public final AtomicBoolean active = new AtomicBoolean(true); //whether or not the note can be played
-    public final AtomicBoolean offScreen = new AtomicBoolean(false); //whether or not the note still has to be drawn (recycling method is based on which notes are still on screen)
-
     /**
      * Constructor to create a Note
      *
-     * @param centreX the x coordinate of the oval which visually represents the note
-     * @param centreY the y coordinate of the oval which visually represents the note
-     * @param type    whether this note is a left note or right note
+     * @param type whether this note is a left note or right note
      */
-    Note(int centreX, int centreY, int type) {
-        this.centreX = centreX;
-        this.centreY = centreY;
+    Note(int type) {
+        this.spawnTime = System.currentTimeMillis();
+        this.centreX = SRC[type][0];
+        this.centreY = SRC[type][1];
+        this.width = WIDTH;
+        this.height = HEIGHT;
         this.type = type;
     }
 
@@ -53,23 +59,21 @@ public class Note {
 
     }
 
-    /**
-     * Updates the position
-     * Changes the x position by the stipulated amount
-     * Calculates the y position based on the equation of the line it is on (whether left or right)
-     *
-     * @param changeX the amount the x coordinate is being changed
-     */
-    void updatePosition(int changeX) {
-        if (type == 0) {
-            this.centreX -= changeX;
-            this.centreY = (int) Math.round(((-700.0 / 111) * centreX) + 2910.0);
-        } else {
-            this.centreX += changeX;
-            this.centreY = (int) Math.round(((700.0 / 111) * centreX) - 1819.0);
+    void reposition() {
+        double elapsedTime = System.currentTimeMillis() - spawnTime;
+        double percent = elapsedTime / duration;
+
+        if (type == LEFT_TYPE) {
+            centreX = percent * (DES[LEFT_TYPE][0] - SRC[LEFT_TYPE][0]) + SRC[LEFT_TYPE][0];
+            centreY = percent * (DES[LEFT_TYPE][1] - SRC[LEFT_TYPE][1]) + SRC[LEFT_TYPE][1];
+        } else if (type == RIGHT_TYPE) {
+            centreX = percent * (DES[RIGHT_TYPE][0] - SRC[RIGHT_TYPE][0]) + SRC[RIGHT_TYPE][0];
+            centreY = percent * (DES[RIGHT_TYPE][1] - SRC[RIGHT_TYPE][1]) + SRC[RIGHT_TYPE][1];
         }
+
         if (centreY >= 1170) {
             this.active.set(false);
+            setMissed();
         }
         if (centreY >= 1400) {
             this.offScreen.set(true);
@@ -77,17 +81,17 @@ public class Note {
     }
 
     /**
-     * Changes the colour of the note to red
+     * Changes the colour of the note to green
      */
-    void setRed() {
-        color = Color.RED;
+    void setHit() {
+        color = Color.GREEN;
     }
 
     /**
-     * Changes the colour of the note to green
+     * Changes the colour of the note to red
      */
-    void setGreen() {
-        color = Color.GREEN;
+    void setMissed() {
+        color = Color.RED;
     }
 
     /**
@@ -97,21 +101,16 @@ public class Note {
      */
     void draw(Graphics2D g2D) {
         g2D.setColor(color);
-        g2D.fillOval(Utils.scale(centreX - WIDTH / 2), Utils.scale(centreY - HEIGHT / 2),
-                Utils.scale(WIDTH), Utils.scale(HEIGHT));
+        g2D.fillOval(Utils.scale(centreX - width / 2), Utils.scale(centreY - height / 2), Utils.scale(width), Utils.scale(height));
     }
 
     /**
      * Calculates the distance between the note's current position and another given coordinate
      *
-     * @param otherX the other coordinate's x position
-     * @param otherY the other coordinate's y position
      * @return the distance between this note's position and the other position
      */
-    int calculateDistance(int otherX, int otherY) {
-        int value = (int) Math.round(Math.sqrt((otherX - centreX) * (otherX - centreX) + (otherY - centreY) * (otherY - centreY)));
-        return value;
-
+    double calculateDistance(double x, double y) {
+        return Math.sqrt((x - centreX) * (x - centreX) + (y - centreY) * (y - centreY));
     }
 
 }
