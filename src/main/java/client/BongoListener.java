@@ -27,11 +27,21 @@ public class BongoListener implements KeyListener {
 
     private ExecutorService pool = ThreadPool.getPool();
 
-
+    /**
+     * Adds an object that is controlled by this listener. Each
+     * object will be notified on a separate thread.
+     *
+     * @param obj the object to be controlled by this listener
+     */
     void addControlledObj(Controllable obj) {
         objects.add(obj);
     }
 
+    /**
+     * Removes an object that is controlled by this listener.
+     *
+     * @param obj the object to be controlled by this listener
+     */
     void removeControlledObj(Controllable obj) {
         objects.remove(obj);
     }

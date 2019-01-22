@@ -15,8 +15,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class Note {
 
-    private static final int[][] SRC = {{361, 634}, {389, 634}};
-    private static final int[][] DES = {{279, 1150}, {471, 1150}};
+    private static final double[] FOCAL = {375, 545.902};
+    private static final double[][] SRC = {{361, 634}, {389, 634}};
+    private static final double[][] DES = {{279, 1150}, {471, 1150}};
 
     static final int LEFT_TYPE = 0; //note can either be a left or right note
     static final int RIGHT_TYPE = 1;
@@ -58,7 +59,9 @@ public class Note {
      * Using this multiplier, adjusts the size of the note
      */
     void changeSize() {
-
+//        double sizePercent = calculateDistance(FOCAL[0], FOCAL[1])/83.186;
+//        width = WIDTH * sizePercent;
+//        height = HEIGHT * sizePercent;
     }
 
     /**
@@ -85,6 +88,8 @@ public class Note {
         if (centreY >= 1400) {
             this.offScreen.set(true);
         }
+
+        changeSize();
     }
 
     /**

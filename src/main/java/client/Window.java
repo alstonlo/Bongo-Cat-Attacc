@@ -19,8 +19,6 @@ import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 /**
  * JFrame on which all panels are displayed. We wanted to
@@ -44,9 +42,8 @@ public class Window extends JFrame {
     private ServerListener serverListener = new ServerListener();
 
     private JLayeredPane layeredPane = new JLayeredPane();
-    private final int fps = 60;
-    private Timer animater;
-
+    private final int FPS = 60;
+    private Timer animator;
 
     /**
      * Constructs a new Window, scaling it according to the screen size.
@@ -54,7 +51,7 @@ public class Window extends JFrame {
     Window() {
         super("Bongo Cat Attacc");
 
-        //CLIENT CODE ------------------------------------------------------------------------------
+        //Client code ------------------------------------------------------------------------------
         client = new Client();
         client.start();
         Network.register(client); //register objects sent over the network so they can be serialized
@@ -74,10 +71,10 @@ public class Window extends JFrame {
             System.out.println("Failed to connect to server.");
         }
 
-        //FRAME CODE -----------------------------------------------------------------------------
+        //Frame code -----------------------------------------------------------------------------
 
         this.getContentPane().setPreferredSize(Settings.PANEL_SIZE);
-        pack();
+        this.pack();
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.addKeyListener(bongoListener);
@@ -88,7 +85,6 @@ public class Window extends JFrame {
                 close();
             }
         });
-
         this.layeredPane.setPreferredSize(Settings.PANEL_SIZE);
         this.add(layeredPane);
         this.addBasePanel(new MenuPanel(this));
@@ -97,12 +93,13 @@ public class Window extends JFrame {
         this.pack();
         this.setVisible(true);
 
-        this.animater = new Timer(1000 / fps, (e) -> layeredPane.repaint());
-        animater.start();
+        //continuously update the layered pane
+        this.animator = new Timer(1000 / FPS, (e) -> layeredPane.repaint());
+        animator.start();
     }
 
     /**
-     * @return the username of the player
+     * @return the username of the player; or an empty string if they have not logged in
      */
     public String getUsername() {
         return username;
@@ -130,10 +127,19 @@ public class Window extends JFrame {
         client.sendTCP(message);
     }
 
-
+    /**
+     * Adds a base game panel to this window. Base panels are the core animation panels
+     * of the game, and only one can be playing at a time. Thus, all other base panels
+     * are stopped and removed.
+     *
+     * @param basePanel the base panel to be displayed
+     */
     public void addBasePanel(GamePanel basePanel) {
+
+        //stop and remove all other base panels (they exist in layer 0)
         for (Component comp : layeredPane.getComponentsInLayer(0)) {
             if (comp instanceof GamePanel) {
+                ((GamePanel) comp).stop();
                 layeredPane.remove(comp);
             }
         }
@@ -141,6 +147,15 @@ public class Window extends JFrame {
         addPanel(0, basePanel);
     }
 
+    /**
+     * Adds a panel to the specified layer on the window's pane.
+     * The layer 0 should be avoided as that is the base panel layer.
+     * The new panel is able to be controlled by both the bongo and server
+     * listener.
+     *
+     * @param layer the layer the panel should be added to
+     * @param panel the panel that is added
+     */
     public void addPanel(Integer layer, GamePanel panel) {
         SwingUtilities.invokeLater(() -> {
             layeredPane.add(panel, layer);
@@ -148,12 +163,18 @@ public class Window extends JFrame {
             layeredPane.repaint();
         });
 
-        bongoListener.addControlledObj(panel); //make newPanel able to be controlled
+        //make newPanel able to be controlled
+        bongoListener.addControlledObj(panel);
         serverListener.addControllableObj(panel);
 
-        panel.run();               //run its animation
+        panel.run(); //run its animation
     }
 
+    /**
+     * Stops, then removes a panel from this window.
+     *
+     * @param panel the panel to be removed
+     */
     public void removePanel(GamePanel panel) {
         panel.stop();
         bongoListener.removeControlledObj(panel);
@@ -161,9 +182,12 @@ public class Window extends JFrame {
         SwingUtilities.invokeLater(() -> layeredPane.remove(panel));
     }
 
-    public void close() {
+    /**
+     * Closes the window and releases all resources.
+     */
+    private void close() {
         client.close();
-        animater.stop();
+        animator.stop();
         ThreadPool.getPool().shutdown();
     }
 }

@@ -8,14 +8,4 @@ public class HostSongSelectPanel extends SongSelectPanel {
         super(window, opponent);
     }
 
-    @Override
-    void moveLeft() {
-        super.moveRight();
-    }
-
-    @Override
-    void moveRight() {
-        super.moveLeft();
-
-    }
 }

@@ -10,7 +10,6 @@ import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
 import protocol.Message;
-import protocol.TimeOverMessage;
 
 import javax.sound.sampled.Clip;
 import javax.swing.JButton;
@@ -126,9 +125,6 @@ public abstract class SongSelectPanel extends GamePanel {
 
     @Override
     public void notifyReceived(Message message) {
-        if (message instanceof TimeOverMessage) {
-            startGame();
-        }
     }
 
     /**
