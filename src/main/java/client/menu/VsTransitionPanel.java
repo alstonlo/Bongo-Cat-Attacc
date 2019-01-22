@@ -15,6 +15,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * A vs. transition panel that covers the screen from the queue panel -> song select panel.
+ *
+ * @author Alston
+ * last updated 1/22/2019
+ */
 public class VsTransitionPanel extends GamePanel {
 
     private boolean hosting;
@@ -30,6 +36,13 @@ public class VsTransitionPanel extends GamePanel {
 
     private Font vsFont = Pallette.getScaledFont(Pallette.TITLE_FONT, 80);
 
+    /**
+     * Constructs a VsTransitionPanel.
+     *
+     * @param window   the window that this panel belongs to
+     * @param hosting  true, if you are hosting the game
+     * @param opponent the username of your opponent
+     */
     public VsTransitionPanel(Window window, boolean hosting, String opponent) {
         super(window);
         this.setOpaque(false);
@@ -72,6 +85,9 @@ public class VsTransitionPanel extends GamePanel {
         }
     }
 
+    /**
+     * Animates the sliding in of the vs. transition panel.
+     */
     private void animateIn() {
         long startTime = System.currentTimeMillis();
         double deltaTime = 0;
@@ -91,6 +107,9 @@ public class VsTransitionPanel extends GamePanel {
         opacity = 1f;
     }
 
+    /**
+     * Animates the sliding out of the transition panel.
+     */
     private void animateOut() {
         opacity = 1f;
         long startTime = System.currentTimeMillis();
@@ -109,10 +128,11 @@ public class VsTransitionPanel extends GamePanel {
             deltaTime = System.currentTimeMillis() - startTime;
         }
         y = getHeight() * 2;
-
-
     }
 
+    /**
+     * @return the sprite showing the left player rectangle
+     */
     private BufferedImage loadLeftPlayerSprite() {
         BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(375), Utils.scale(1334));
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
@@ -134,6 +154,9 @@ public class VsTransitionPanel extends GamePanel {
         return sprite;
     }
 
+    /**
+     * @return the sprite showing the right player panel
+     */
     private BufferedImage loadRightPlayerSprite() {
         BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(375), Utils.scale(1334));
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
@@ -151,7 +174,6 @@ public class VsTransitionPanel extends GamePanel {
         g2D.drawString(opponent, Utils.scale(187) - fontMetrics.stringWidth(opponent) / 2, Utils.scale(800));
 
         g2D.dispose();
-
         return sprite;
     }
 }

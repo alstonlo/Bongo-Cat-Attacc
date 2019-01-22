@@ -39,6 +39,7 @@ class PlayerQueueRectangle extends Rectangle implements Drawable {
         this.y = y;
     }
 
+    @Override
     public void configureSprites() {
         this.sprite = Utils.createCompatibleImage(width, height);
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
@@ -57,6 +58,7 @@ class PlayerQueueRectangle extends Rectangle implements Drawable {
         g2D.dispose();
     }
 
+    @Override
     public void draw(Graphics2D g2D) {
         g2D.drawImage(sprite, x, Utils.round(y), null);
     }

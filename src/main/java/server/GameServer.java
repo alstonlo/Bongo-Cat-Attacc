@@ -130,6 +130,7 @@ class GameServer {
             player.sendTCP(new ExceptionMessage(protocol, GameException.NOT_LOGGED_IN_STATE));
         }
 
+        //add the player to the queue room
         matchMakingRoom.queue(player);
     }
 

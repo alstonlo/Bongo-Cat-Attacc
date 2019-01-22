@@ -80,6 +80,7 @@ public class BongoCat implements Drawable {
 
     //Drawable methods --------------------------------------------------------------------------------------
 
+    @Override
     public void configureSprites() {
         BufferedImage body = Utils.loadScaledImage("resources/bongo cat/body.png");
         BufferedImage leftPawDown = Utils.loadScaledImage("resources/bongo cat/left paw down.png");
@@ -106,6 +107,7 @@ public class BongoCat implements Drawable {
         sprites[3][3] = Utils.mergeImages(new BufferedImage[]{body, leftPawDown, leftPawHit, rightPawDown, rightPawHit});
     }
 
+    @Override
     public void draw(Graphics2D g2D) {
 
         long[] drawState = {state[0], state[1]}; //save the current state
