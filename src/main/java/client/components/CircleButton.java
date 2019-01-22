@@ -91,6 +91,7 @@ public class CircleButton implements Drawable {
 
     //Drawable methods ------------------------------------------------------------------------------------
 
+    @Override
     public void configureSprites() {
         sprites = new BufferedImage[2];
 
@@ -119,6 +120,7 @@ public class CircleButton implements Drawable {
         }
     }
 
+    @Override
     public void draw(Graphics2D g2D) {
         if (sprites == null) {
             return;

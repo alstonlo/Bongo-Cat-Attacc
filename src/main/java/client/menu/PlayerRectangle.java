@@ -61,9 +61,7 @@ class PlayerRectangle extends Rectangle implements Drawable {
         this.y = y;
     }
 
-    /**
-     * Draws the graphics to a buffered image to be drawn on the rectangle
-     */
+    @Override
     public void configureSprites() {
         this.sprite = Utils.createCompatibleImage(width, height);
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
@@ -82,10 +80,7 @@ class PlayerRectangle extends Rectangle implements Drawable {
         g2D.dispose();
     }
 
-    /**
-     * Draws the bufferedimage which makes up the PlayerRectangle
-     * @param g2D the graphics context in which this object is drawn
-     */
+    @Override
     public void draw(Graphics2D g2D) {
         g2D.drawImage(sprite, x, Utils.round(y), null);
     }

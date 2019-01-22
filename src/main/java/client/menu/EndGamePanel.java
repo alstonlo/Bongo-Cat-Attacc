@@ -179,36 +179,4 @@ public class EndGamePanel extends GamePanel {
         }
         opacity = 1f;
     }
-
-    //messageable methods ----------------------------------------
-    @Override
-    public void notifyReceived(Message message) {
-
-    }
-
-    //controllable methods ---------------------------------------
-    @Override
-    public void notifyLeftPress() {
-
-    }
-
-    @Override
-    public void notifyLeftRelease() {
-
-    }
-
-    @Override
-    public void notifyRightPress() {
-
-    }
-
-    @Override
-    public void notifyRightRelease() {
-
-    }
-
-    @Override
-    public void notifyHold() {
-
-    }
 }

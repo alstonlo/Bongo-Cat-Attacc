@@ -98,6 +98,7 @@ public class Clock implements Drawable {
 
     //Drawable methods ------------------------------------------------------------------------------------
 
+    @Override
     public void configureSprites() {
 
         //pre-load the backing of this clock
@@ -119,6 +120,7 @@ public class Clock implements Drawable {
         g2D.dispose();
     }
 
+    @Override
     public void draw(Graphics2D g2D) {
         g2D.drawImage(clockSprite, centerX - clockSprite.getWidth() / 2,
                 centerY - clockSprite.getHeight() / 2, null);
