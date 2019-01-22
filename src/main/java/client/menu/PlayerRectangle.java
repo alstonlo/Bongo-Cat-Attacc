@@ -11,7 +11,13 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-class PlayerQueueRectangle extends Rectangle implements Drawable {
+/**
+ * The images which slide in during the endgamepanel
+ *
+ * @Author Katelyn Wang
+ * last updated 01/21/2019
+ */
+class PlayerRectangle extends Rectangle implements Drawable {
 
     private BufferedImage sprite;
     private String catFileName;
@@ -23,7 +29,15 @@ class PlayerQueueRectangle extends Rectangle implements Drawable {
     private int height;
     private Color bgColor;
 
-    PlayerQueueRectangle(int x, int width, int height, Color bgColor, String fileName) {
+    /**
+     * Constructs a PlayerRectangle
+     * @param x the x coordinate of the player rectangle
+     * @param width the width of the rectangle
+     * @param height the height of the rectangle
+     * @param bgColor the background colour
+     * @param fileName the file name of the cat
+     */
+    PlayerRectangle(int x, int width, int height, Color bgColor, String fileName) {
         this.x = x;
         this.width = width;
         this.height = height;
@@ -31,14 +45,25 @@ class PlayerQueueRectangle extends Rectangle implements Drawable {
         this.catFileName = fileName;
     }
 
+    /**
+     * Set username of the panel
+     * @param username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Sets the y coordinate of the panel
+     * @param y the new y coordinate
+     */
     void setY(double y) {
         this.y = y;
     }
 
+    /**
+     * Draws the graphics to a buffered image to be drawn on the rectangle
+     */
     public void configureSprites() {
         this.sprite = Utils.createCompatibleImage(width, height);
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
@@ -57,6 +82,10 @@ class PlayerQueueRectangle extends Rectangle implements Drawable {
         g2D.dispose();
     }
 
+    /**
+     * Draws the bufferedimage which makes up the PlayerRectangle
+     * @param g2D the graphics context in which this object is drawn
+     */
     public void draw(Graphics2D g2D) {
         g2D.drawImage(sprite, x, Utils.round(y), null);
     }

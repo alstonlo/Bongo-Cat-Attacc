@@ -34,8 +34,8 @@ public class EndGamePanel extends GamePanel {
     private final String loserUsername;
 
 
-    private final PlayerQueueRectangle leftWinnerPanel;
-    private final PlayerQueueRectangle rightLoserPanel;
+    private final PlayerRectangle leftWinnerPanel;
+    private final PlayerRectangle rightLoserPanel;
 
     private BufferedImage foregroundSprite;
 
@@ -60,11 +60,11 @@ public class EndGamePanel extends GamePanel {
         setLayout(null);
 
 
-        this.leftWinnerPanel = new PlayerQueueRectangle( //left panel is the winner panel
+        this.leftWinnerPanel = new PlayerRectangle( //left panel is the winner panel
                 0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
                 new Color(255, 201, 215), "resources/menu/left bongo cat.png");
         this.leftWinnerPanel.setY(-Settings.PANEL_SIZE.height);
-        this.rightLoserPanel = new PlayerQueueRectangle( //right panel is the loser panel
+        this.rightLoserPanel = new PlayerRectangle( //right panel is the loser panel
                 Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
                 new Color(198, 244, 255), "resources/menu/right bongo cat.png");
         this.rightLoserPanel.setY(Settings.PANEL_SIZE.height);
