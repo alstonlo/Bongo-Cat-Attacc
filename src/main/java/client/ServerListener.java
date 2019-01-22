@@ -20,9 +20,8 @@ public class ServerListener extends Listener {
     private Set<Messagable> objects = new HashSet<>();
 
     /**
-     * Sets the object that is messaged by this listener.
-     * Initially, this object is set to null and only one object
-     * can be messaged at a time.
+     * Adds an object that is messaged by this listener. Each
+     * object will be notified on a separate thread.
      *
      * @param obj the object to be messaged by this listener
      */
@@ -30,14 +29,20 @@ public class ServerListener extends Listener {
         objects.add(obj);
     }
 
+    /**
+     * Removes an object that is messaged by this listener.
+     *
+     * @param obj the object to be messaged by this listener
+     */
     void removeControllableObj(Messagable obj) {
         objects.remove(obj);
     }
 
-
     @Override
     public void received(Connection connection, Object o) {
         if (o instanceof Message) { //only notify if the Object is actually a Message
+
+            //notify all objects
             objects.forEach(obj -> ThreadPool.execute(() -> obj.notifyReceived((Message) o)));
         }
     }
