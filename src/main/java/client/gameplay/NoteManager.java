@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class NoteManager {
     private static final int[] X_REF = {279, 471}; //the coordinates of the reference points where the notes should be played
     private static final int Y_REF = 1150;
+    private static final Font MAIN_FONT = Pallette.getScaledFont(Pallette.TITLE_FONT, 30);
 
     private ArrayList<int[]> notes;
     private ConcurrentLinkedQueue<Note> screenNotes = new ConcurrentLinkedQueue<>(); //thread safe linked queue of notes
@@ -39,10 +40,10 @@ public class NoteManager {
     private double accuracy = 0;
     private double accuracySum = 0;
     private int totalNotes = 0;
+    private static int barHeight = 0;
 
     private GamePlayPanel panel;
-    private int barHeight = 200;
-    private Font mainFont = Pallette.getScaledFont(Pallette.TITLE_FONT, 30);
+
 
 
     /**
@@ -139,7 +140,7 @@ public class NoteManager {
         g2D.drawRect(Utils.scale(50), Utils.scale(300), Utils.scale(20), Utils.scale(700));
 
         //drawing the current accuracy
-        g2D.setFont(mainFont);
+        g2D.setFont(MAIN_FONT);
         g2D.drawString(String.format("%.2f", accuracy) + "%", Utils.scale(25), Utils.scale(280));
     }
 
