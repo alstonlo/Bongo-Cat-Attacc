@@ -7,7 +7,6 @@ import client.components.CircleButton;
 import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.Utils;
-import protocol.Message;
 
 import javax.sound.sampled.Clip;
 import java.awt.Font;
@@ -92,12 +91,20 @@ public class MenuPanel extends GamePanel {
         }
     }
 
+    /**
+     * Notify to the menu panel that the user has logged in.
+     */
     void notifyLogin() {
         if (!window.getUsername().equals("")) {
             usernameSprite = loadUsernameSprite();
         }
     }
 
+    /**
+     * Selects the button at the specified index and deselects all other.
+     *
+     * @param index the index of the selected button
+     */
     private synchronized void selectButton(int index) {
         for (int i = 0; i < buttons.length; i++) {
             if (i == index) {
