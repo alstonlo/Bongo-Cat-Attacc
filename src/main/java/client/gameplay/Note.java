@@ -57,7 +57,7 @@ public class Note {
      * Uses the current distance from the origin compared to the basedistance from the origin to calculate a multiplier factor
      * Using this multiplier, adjusts the size of the note
      */
-    void calculateSize() {
+    void changeSize() {
 
     }
 

@@ -154,14 +154,14 @@ public class NoteManager {
      * Calls on the note played method, indicates a left note was played
      */
     void notifyLeftPress() {
-        notePlayed(0);
+        notePlayed(Note.LEFT_TYPE);
     }
 
     /**
      * Calls on teh note played method, indicates a right not was played
      */
     void notifyRightPress() {
-        notePlayed(1);
+        notePlayed(Note.RIGHT_TYPE);
     }
 
     /**
