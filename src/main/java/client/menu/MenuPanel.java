@@ -170,6 +170,9 @@ public class MenuPanel extends GamePanel {
 
     // Loading sprites methods -----------------------------------------------------------------------
 
+    /**
+     * @return the sprite for the title
+     */
     private BufferedImage loadTitleSprite() {
         BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(500), Utils.scale(250));
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
@@ -182,6 +185,9 @@ public class MenuPanel extends GamePanel {
         return sprite;
     }
 
+    /**
+     * @return the sprite for the username banner 
+     */
     private BufferedImage loadUsernameSprite() {
         BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(550), Utils.scale(100));
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
