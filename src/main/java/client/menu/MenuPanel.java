@@ -57,7 +57,7 @@ public class MenuPanel extends GamePanel {
         BufferedImage controlsIcon = Utils.loadImage("resources/icons/controls.png");
 
         buttons[0] = new CircleButton(loginIcon, Utils.scale(670), Utils.scale(990), Utils.scale(50));
-        panels[0] = new LoginPanel(window);
+        panels[0] = new LoginPanel(window, this);
         buttons[1] = new CircleButton(playIcon, Utils.scale(670), Utils.scale(1120), Utils.scale(50));
         panels[1] = new QueuePanel(window);
         buttons[2] = new CircleButton(controlsIcon, Utils.scale(670), Utils.scale(1250), Utils.scale(50));
@@ -76,7 +76,6 @@ public class MenuPanel extends GamePanel {
         this.setVisible(true);
     }
 
-
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -90,6 +89,12 @@ public class MenuPanel extends GamePanel {
         cat.draw(g2D);
         for (CircleButton button : buttons) {
             button.draw(g2D);
+        }
+    }
+
+    void notifyLogin() {
+        if (!window.getUsername().equals("")) {
+            usernameSprite = loadUsernameSprite();
         }
     }
 
@@ -155,14 +160,6 @@ public class MenuPanel extends GamePanel {
     public void notifyHold() {
         buttons[buttonIndex].submit();
     }
-
-    @Override
-    public void notifyReceived(Message message) {
-        if (!window.getUsername().equals("")) {
-            usernameSprite = loadUsernameSprite();
-        }
-    }
-
 
     // Loading sprites methods -----------------------------------------------------------------------
 

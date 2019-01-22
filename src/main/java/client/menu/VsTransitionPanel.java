@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 
 public class VsTransitionPanel extends GamePanel {
 
-    private boolean isHost;
+    private boolean hosting;
     private String you, opponent;
 
     private BufferedImage leftPlayerSprite;
@@ -30,13 +30,13 @@ public class VsTransitionPanel extends GamePanel {
 
     private Font vsFont = Pallette.getScaledFont(Pallette.TITLE_FONT, 80);
 
-    public VsTransitionPanel(Window window, String host, String guest) {
+    public VsTransitionPanel(Window window, boolean hosting, String opponent) {
         super(window);
         this.setOpaque(false);
 
         this.you = window.getUsername();
-        this.isHost = host.equals(you);
-        this.opponent = (isHost) ? host : guest;
+        this.hosting = hosting;
+        this.opponent = opponent;
         this.leftPlayerSprite = loadLeftPlayerSprite();
         this.rightPlayerSprite = loadRightPlayerSprite();
     }

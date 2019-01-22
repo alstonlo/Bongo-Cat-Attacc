@@ -38,7 +38,7 @@ import java.util.UUID;
  */
 class LoginPanel extends DropDownPanel {
 
-    private BufferedImage drape = Utils.loadScaledImage("resources/menu/login drape.png");
+    private MenuPanel menu;
 
     private JTextField usernameField;
     private JTextField passwordField;
@@ -50,13 +50,16 @@ class LoginPanel extends DropDownPanel {
 
     private Message lastSent;
 
+    private BufferedImage drape = Utils.loadScaledImage("resources/menu/login drape.png");
+
     /**
      * Constructs a LoginPanel.
      *
      * @param window the Window this panel belongs to
      */
-    LoginPanel(Window window) {
+    LoginPanel(Window window, MenuPanel menu) {
         super(window);
+        this.menu = menu;
         this.setLayout(null);
 
         //text field for username
@@ -226,6 +229,7 @@ class LoginPanel extends DropDownPanel {
 
                 } else if (lastSent instanceof AuthenticateMessage) { //user successfully logged in
                     window.setUsername(((AuthenticateMessage) lastSent).username);
+                    menu.notifyLogin();
                     ThreadPool.execute(this::retract);
                 }
 

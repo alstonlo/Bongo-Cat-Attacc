@@ -151,23 +151,8 @@ public class GamePlayPanel extends GamePanel {
     }
 
     @Override
-    public void notifyRightRelease() {
-
-    }
-
-    @Override
     public void notifyLeftPress() {
         noteManager.notifyLeftPress();
-    }
-
-    @Override
-    public void notifyLeftRelease() {
-
-    }
-
-    @Override
-    public void notifyHold() {
-
     }
 
     //Messagable methos ------------------------------------------------------------------------------------

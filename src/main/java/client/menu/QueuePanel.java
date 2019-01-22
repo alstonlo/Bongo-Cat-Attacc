@@ -110,11 +110,14 @@ public class QueuePanel extends DropDownPanel {
     public void notifyReceived(Message message) {
         if (message instanceof MatchMadeMessage) {
             MatchMadeMessage match = (MatchMadeMessage) message;
+            String you = window.getUsername();
+            boolean hosting = match.host.equals(you);
+            String opponent = (hosting) ? match.guest : match.host;
 
-            VsTransitionPanel vsTransition = new VsTransitionPanel(window, match.host, match.guest);
+            VsTransitionPanel vsTransition = new VsTransitionPanel(window, hosting, opponent);
             window.addPanel(2, vsTransition);
 
-            SongSelectPanel songSelect = new SongSelectPanel(window, match.host, match.guest);
+            SongSelectPanel songSelect = new SongSelectPanel(window, hosting, opponent);
             window.addBasePanel(songSelect);
 
             retract();
@@ -127,7 +130,6 @@ public class QueuePanel extends DropDownPanel {
             }
 
             window.removePanel(vsTransition);
-            window.requestFocus();
         }
     }
 

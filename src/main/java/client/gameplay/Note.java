@@ -97,7 +97,8 @@ public class Note {
      */
     void draw(Graphics2D g2D) {
         g2D.setColor(color);
-        g2D.fillOval(Utils.scale(centreX - WIDTH / 2), Utils.scale(centreY - HEIGHT / 2), Utils.scale(WIDTH), Utils.scale(HEIGHT));
+        g2D.fillOval(Utils.scale(centreX - WIDTH / 2), Utils.scale(centreY - HEIGHT / 2),
+                Utils.scale(WIDTH), Utils.scale(HEIGHT));
     }
 
     /**

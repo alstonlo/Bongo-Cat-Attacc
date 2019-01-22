@@ -35,12 +35,14 @@ public class SongSelectPanel extends GamePanel {
 
     private static final long SLIDE_DURATION = 500;
 
-    private BufferedImage header;
-
     private AtomicBoolean isAnimating = new AtomicBoolean(false);
+
+    private boolean hosting;
+    private String opponent;
 
     private int selected = 0; //the index of the focused song tile
     private SongTile[] songTiles;
+    private Clip currSong;
 
     /*
      * Contains the tiles that are in the frame of viewing, and therefore,
@@ -50,9 +52,8 @@ public class SongSelectPanel extends GamePanel {
      */
     private final Deque<SongTile> viewFrame = new LinkedList<>();
 
+    private BufferedImage header;
     private Clock clock;
-
-    private Clip currSong;
 
 
     /**
@@ -62,8 +63,11 @@ public class SongSelectPanel extends GamePanel {
      *
      * @param window the window that the panel belongs to
      */
-    public SongSelectPanel(Window window, String host, String guest) {
+    public SongSelectPanel(Window window, boolean hosting, String opponent) {
         super(window);
+        this.setLayout(null);
+        this.hosting = hosting;
+        this.opponent = opponent;
 
         Song[] songs; //load the songs
         try {
@@ -87,10 +91,9 @@ public class SongSelectPanel extends GamePanel {
             viewFrame.addFirst(focus);
         }
 
+        this.header = loadHeaderSprite();
         this.clock = new Clock(Utils.scale(375), Utils.scale(170), Utils.scale(60));
         clock.configureSprites();
-
-        this.setLayout(null);
 
         JButton backButton = new JButton("GamePlay");
         backButton.setFont(Pallette.getScaledFont(Pallette.TEXT_FONT, 25));
@@ -101,7 +104,6 @@ public class SongSelectPanel extends GamePanel {
         backButton.setBackground(new Color(190, 207, 255));
         backButton.setForeground(Pallette.OUTLINE_COLOR);
         backButton.setFocusPainted(false);
-
         add(backButton);
 
         window.requestFocus();
@@ -140,7 +142,7 @@ public class SongSelectPanel extends GamePanel {
         if (currSong != null){ //stops the audio
             currSong.stop();
         }
-//        window.switchPanel(new GamePlayPanel(window, getTile(selected).getSong())); //switches the panel to a gameplaypanel using the current song selected
+        window.addBasePanel(new GamePlayPanel(window, getTile(selected).getSong()));
     }
 
     /**
@@ -177,11 +179,10 @@ public class SongSelectPanel extends GamePanel {
         for (SongTile tile : toRender) { //draw all the tiles' foregrounds
             tile.drawForeground(g2D);
         }
+
         g2D.drawImage(header, 0,0, null);
 
         clock.draw(g2D);
-
-
     }
 
     /**
@@ -280,9 +281,9 @@ public class SongSelectPanel extends GamePanel {
         }
     }
 
-    void loadHeaderSprite(){
-        header = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(260));
-        Graphics2D g2D = (Graphics2D) header.getGraphics();
+    private BufferedImage loadHeaderSprite(){
+        BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(750),Utils.scale(260));
+        Graphics2D g2D = (Graphics2D) sprite.getGraphics();
         g2D.setColor(new Color(255,255,255,200));
         g2D.fillRect(0,0,Utils.scale(750),Utils.scale(260));
         g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
@@ -293,6 +294,7 @@ public class SongSelectPanel extends GamePanel {
         FontMetrics fontMetrics = g2D.getFontMetrics();
         g2D.drawString("Select Song", Utils.scale(375)-fontMetrics.stringWidth("Select Song")/2, Utils.scale(80));
         g2D.dispose();
+        return sprite;
     }
 
 }
