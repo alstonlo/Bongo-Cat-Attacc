@@ -14,10 +14,6 @@ public interface Animatable {
      */
     void run();
 
-    /**
-     * Updates the panel and repaints it.
-     */
-    void update();
 
     /**
      * Stops the animation. If the animation is already stopped, nothing happens.

@@ -1,6 +1,7 @@
 package client;
 
 import client.utilities.Settings;
+import protocol.Message;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -13,9 +14,6 @@ import javax.swing.Timer;
  */
 public abstract class GamePanel extends JPanel implements Animatable, Controllable, Messagable {
 
-    private final int FPS = 60; //the preferred FPS for the game
-
-    private Timer animationTimer;
     protected final Window window;
 
     /**
@@ -29,23 +27,39 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
         this.setDoubleBuffered(true);
 
         this.window = window;
-        this.animationTimer = new Timer(1000 / FPS, (e) -> update());
     }
 
     // Animatable methods ---------------------------------------------------------------------
 
     @Override
     public void run() {
-        animationTimer.start();
-    }
-
-    @Override
-    public void update() {
-        repaint();
     }
 
     @Override
     public void stop() {
-        animationTimer.stop();
+    }
+
+    @Override
+    public void notifyLeftPress() {
+    }
+
+    @Override
+    public void notifyLeftRelease() {
+    }
+
+    @Override
+    public void notifyRightPress() {
+    }
+
+    @Override
+    public void notifyRightRelease() {
+    }
+
+    @Override
+    public void notifyHold() {
+    }
+
+    @Override
+    public void notifyReceived(Message message) {
     }
 }

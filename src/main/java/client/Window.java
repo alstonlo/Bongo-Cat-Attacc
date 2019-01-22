@@ -12,12 +12,11 @@ import protocol.Network;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * JFrame on which all panels are displayed. We wanted to
@@ -33,15 +32,16 @@ public class Window extends JFrame {
         SwingUtilities.invokeLater(() -> new Window());
     }
 
-    private final Integer BASE_LAYER = 1;
-    private JLayeredPane layers = new JLayeredPane();
-    private Map<Integer, GamePanel> runningPanels = new HashMap<>();
 
     private String username = "";
 
     private Client client;
     private BongoListener bongoListener = new BongoListener();
     private ServerListener serverListener = new ServerListener();
+
+    private JLayeredPane layeredPane = new JLayeredPane();
+    private GamePanel currBasePanel;
+
 
 
     /**
@@ -85,15 +85,17 @@ public class Window extends JFrame {
             }
         });
 
-        layers.setPreferredSize(Settings.PANEL_SIZE);
-        this.add(layers);
+        layeredPane.setPreferredSize(Settings.PANEL_SIZE);
+        this.add(layeredPane);
 
-        displayBasePanel(new MenuPanel(this));
+        addBasePanel(new MenuPanel(this));
 
         this.setVisible(true);
         this.requestFocus();
         this.pack();
         this.setVisible(true);
+
+        new Timer(1000 / 60, (e) -> layeredPane.repaint()).start();
     }
 
     /**
@@ -126,40 +128,46 @@ public class Window extends JFrame {
     }
 
 
-    public void displayBasePanel(GamePanel basePanel) {
-        if (basePanel != null) { //stop the animation running on the currently displayed panel
-            basePanel.stop();
+    public void addBasePanel(GamePanel basePanel) {
+        if (currBasePanel != null) {
+            removePanel(currBasePanel);
         }
-        basePanel = newPanel;         //set it as the currently displayed panel
-        newPanel.run();               //run its animation
+        basePanel.run();
 
-        bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
-        serverListener.setControllableObj(newPanel);
+        bongoListener.addControlledObj(basePanel); //make newPanel able to be controlled
+        serverListener.addControllableObj(basePanel);
 
         SwingUtilities.invokeLater(() -> {
-            layers.add(newPanel, BASE_LAYER);
-            layers.revalidate();
-            layers.repaint();
+            layeredPane.add(basePanel, 0);
+            layeredPane.revalidate();
+            layeredPane.repaint();
         });
     }
 
-    public void displayPanel(int layer, GamePanel newPanel) {
-        if (basePanel != null) { //stop the animation running on the currently displayed panel
-            basePanel.stop();
+    public void addPanel(Integer layer, GamePanel panel) {
+        if (layer <= 0) {
+            throw new IndexOutOfBoundsException();
         }
-        basePanel = newPanel;         //set it as the currently displayed panel
-        newPanel.run();               //run its animation
 
-        bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
-        serverListener.setControllableObj(newPanel);
+        panel.run();               //run its animation
 
         SwingUtilities.invokeLater(() -> {
-            layers.add(newPanel, BASE_LAYER);
-            layers.revalidate();
-            layers.repaint();
+            layeredPane.add(panel, layer);
+            layeredPane.revalidate();
+            layeredPane.repaint();
         });
     }
 
+    public void removePanel(GamePanel panel) {
+        int layer = layeredPane.getLayer(panel);
+        if (layer == 0) {
+            bongoListener.removeControlledObj(panel);
+            serverListener.removeControllableObj(panel);
+        }
+
+        SwingUtilities.invokeLater(() -> layeredPane.remove(panel));
+        panel.stop();
+    }
 
     public void close() {
         client.close();

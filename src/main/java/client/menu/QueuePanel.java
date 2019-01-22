@@ -122,10 +122,6 @@ public class QueuePanel extends DropDownPanel {
         clock.stop();
     }
 
-    private void stop() {
-        animating.set(false);
-    }
-
     private void transition(String host, String guest) {
 
         long startTime = System.currentTimeMillis();
@@ -155,7 +151,7 @@ public class QueuePanel extends DropDownPanel {
         } catch (InterruptedException e){
             e.printStackTrace();
         }
-        window.displayBasePanel(new SongSelectPanel(window, "user1", "user2"));
+        window.addBasePanel(new SongSelectPanel(window, "user1", "user2"));
     }
 
     /**
@@ -188,5 +184,25 @@ public class QueuePanel extends DropDownPanel {
             g2D.drawString("vs.", Utils.scale(375) - fontMetrics.stringWidth("vs.") / 2, Utils.scale(690));
             g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER)); //resetting opacity
         }
+    }
+
+    @Override
+    public void notifyLeftPress() {
+    }
+
+    @Override
+    public void notifyLeftRelease() {
+    }
+
+    @Override
+    public void notifyRightPress() {
+    }
+
+    @Override
+    public void notifyRightRelease() {
+    }
+
+    @Override
+    public void notifyHold() {
     }
 }

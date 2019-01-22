@@ -1,12 +1,15 @@
 package client.menu;
 
+import client.GamePanel;
 import client.Messagable;
 import client.Window;
 import client.utilities.Settings;
 import client.utilities.Utils;
+import protocol.Message;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import java.awt.Graphics;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,17 +20,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Alston
  * last updated 1/19/2018
  */
-abstract class DropDownPanel extends JPanel implements Messagable {
+abstract class DropDownPanel extends GamePanel {
 
     //the states the panel can be in
-    static int ANIMATION_STATE = -1; //is currently in a drop down animation
-    static int DOWN_STATE = 0;       //is fully down and visible
-    static int UP_STATE = 1;         //is up and not visible
+    static final int ANIMATION_STATE = -1; //is currently in a drop down animation
+    static final int DOWN_STATE = 0;       //is fully down and visible
+    static final int UP_STATE = 1;         //is up and not visible
 
     //how long the drop down animation should be in ms.
     private static final long SLIDE_DURATION = 500;
 
-    Window window;
+    private static final Integer DROP_DOWN_LAYER = 2;
 
     private double y; //preferred y position of the panel
     private AtomicInteger state = new AtomicInteger(UP_STATE);
@@ -38,11 +41,11 @@ abstract class DropDownPanel extends JPanel implements Messagable {
      * @param window the window the panel belongs to
      */
     DropDownPanel(Window window) {
-        this.window = window;
+        super(window);
         this.setSize(Settings.PANEL_SIZE);
         this.y = -getHeight();
         relocate();
-        this.setOpaque(false);
+        this.setOpaque(true);
         this.setVisible(true);
     }
 
@@ -67,7 +70,15 @@ abstract class DropDownPanel extends JPanel implements Messagable {
      */
     void pullDown() {
         if (state.compareAndSet(UP_STATE, ANIMATION_STATE)) {
-            SwingUtilities.invokeLater(() -> requestFocus());
+
+            try {
+                SwingUtilities.invokeAndWait(() -> {
+                    requestFocus();
+                    window.addPanel(DROP_DOWN_LAYER, this);
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                e.printStackTrace();
+            }
 
             long startTime = System.currentTimeMillis();
             double deltaTime = System.currentTimeMillis() - startTime;
@@ -97,8 +108,21 @@ abstract class DropDownPanel extends JPanel implements Messagable {
 
             state.set(UP_STATE);
 
-            SwingUtilities.invokeLater(() -> window.requestFocus());
+            try {
+                SwingUtilities.invokeAndWait(() -> {
+                    window.requestFocus();
+                    window.removePanel(this);
+                });
+            } catch (InvocationTargetException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        relocate();
     }
 }
 

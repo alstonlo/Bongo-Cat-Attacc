@@ -3,9 +3,10 @@ package client;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 
-import javax.naming.ldap.Control;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -19,22 +20,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class BongoListener implements KeyListener {
 
-    private Controllable obj = null;
+    private Set<Controllable> objects = new HashSet<>();
+
     private final AtomicBoolean leftPress = new AtomicBoolean(false);
     private final AtomicBoolean rightPress = new AtomicBoolean(false);
 
     private ExecutorService pool = ThreadPool.getPool();
 
 
-    /**
-     * Sets the object that is controlled by this listener.
-     * Initially, this object is set to null and only one object
-     * can be controlled at a time.
-     *
-     * @param obj the object to be controlled by this listener
-     */
-    void setControlledObj(Controllable obj) {
-        this.obj = obj;
+    void addControlledObj(Controllable obj) {
+        objects.add(obj);
+    }
+
+    void removeControlledObj(Controllable obj) {
+        objects.remove(obj);
     }
 
     /**
@@ -57,14 +56,14 @@ public class BongoListener implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == Settings.LEFT_BONGO_KEY) { //detect left bongo key press
-            if (leftPress.compareAndSet(false, true) && obj != null) {
-                pool.execute(() -> obj.notifyLeftPress());
+            if (leftPress.compareAndSet(false, true)) {
+                objects.forEach(obj -> pool.execute(obj::notifyLeftPress));
             }
         }
 
         if (e.getKeyCode() == Settings.RIGHT_BONGO_KEY) { //detect right bongo press
-            if (rightPress.compareAndSet(false, true) && obj != null) {
-                pool.execute(() -> obj.notifyRightPress());
+            if (rightPress.compareAndSet(false, true)) {
+                objects.forEach(obj -> pool.execute(obj::notifyRightPress));
             }
         }
     }
@@ -80,20 +79,16 @@ public class BongoListener implements KeyListener {
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == Settings.LEFT_BONGO_KEY) { //detect left bongo release
             leftPress.set(false);
-            if (obj != null) {
-                pool.execute(() -> obj.notifyLeftRelease());
-            }
+            objects.forEach(obj -> pool.execute(obj::notifyLeftRelease));
         }
 
         if (e.getKeyCode() == Settings.RIGHT_BONGO_KEY) { //detect right bongo release
             rightPress.set(false);
-            if (obj != null) {
-                pool.execute(() -> obj.notifyRightRelease());
-            }
+            objects.forEach(obj -> pool.execute(obj::notifyRightRelease));
         }
 
         if (e.getKeyCode() == Settings.HOLD_BONGO_KEY) {
-            pool.execute(() -> obj.notifyHold());
+            objects.forEach(obj -> pool.execute(obj::notifyHold));
         }
     }
 }

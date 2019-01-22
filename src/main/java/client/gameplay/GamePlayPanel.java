@@ -13,7 +13,6 @@ import protocol.Message;
 import javax.sound.sampled.Clip;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -111,7 +110,7 @@ public class GamePlayPanel extends GamePanel {
             alpha = 1f - ((System.currentTimeMillis() - startTime) / 3000f);
         }
         alpha = 0f;
-        window.displayBasePanel(new EndGamePanel(window,accuracy, 0.0,"Player 1", "Player 2"));
+        window.addBasePanel(new EndGamePanel(window,accuracy, 0.0,"Player 1", "Player 2"));
     }
 
     /**

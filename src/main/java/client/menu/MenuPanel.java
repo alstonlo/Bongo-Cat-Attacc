@@ -68,9 +68,7 @@ public class MenuPanel extends GamePanel {
         for (CircleButton button : buttons) {
             final int i = counter;  //needed because lambdas need final value
             button.configureSprites();
-            add(panels[i]);
             button.setOnSubmit(() -> panels[i].pullDown());
-
             counter++;
         }
 
@@ -120,17 +118,7 @@ public class MenuPanel extends GamePanel {
     }
 
     @Override
-    public void update() {
-        for (DropDownPanel panel : panels) {
-            panel.relocate();
-        }
-
-        super.update();
-    }
-
-    @Override
     public void stop() {
-        super.stop();
 
         //stop the backgroundSprite music
         if (bgMusic != null) {
@@ -171,10 +159,6 @@ public class MenuPanel extends GamePanel {
 
     @Override
     public void notifyReceived(Message message) {
-        for (DropDownPanel panel : panels) {
-            panel.notifyReceived(message);
-        }
-
         //load the username sprite in case the username changes
         if (!window.getUsername().equals("")) {
             usernameSprite = loadUsernameSprite();
