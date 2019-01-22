@@ -13,7 +13,6 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 /**
  * Convenience class containing methods for graphical scaling, rounding, loading resources, etc.

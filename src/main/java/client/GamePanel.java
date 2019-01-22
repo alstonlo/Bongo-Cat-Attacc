@@ -4,7 +4,6 @@ import client.utilities.Settings;
 import protocol.Message;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 /**
  * Representation of the type of JPanels used by this game.
@@ -29,7 +28,10 @@ public abstract class GamePanel extends JPanel implements Animatable, Controllab
         this.window = window;
     }
 
-    // Animatable methods ---------------------------------------------------------------------
+    /*
+     * the methods overridden underneath do nothing, they are purely just
+     * to avoid code clutter in sub classes.
+     */
 
     @Override
     public void run() {

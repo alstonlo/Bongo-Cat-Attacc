@@ -29,8 +29,6 @@ public class Network {
             Message.class, ExceptionMessage.class, ResponseMessage.class,
             AuthenticateMessage.class, RegisterMessage.class,
             JoinQueueMessage.class, MatchMadeMessage.class,
-            RequestSongMessage.class, TimeOverMessage.class,
-            NotePlayedByOpponentMessage.class, PlayNoteMessage.class
     };
 
     /**
