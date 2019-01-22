@@ -46,6 +46,10 @@ public class QueuePanel extends DropDownPanel {
     private Timer messageAnimator;
     private Font messageFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 40);
 
+    /**
+     * Constructs a QueuePanel
+     * @param window the Window to which this panel belongs and is drawn on
+     */
     QueuePanel(Window window) {
         super(window);
 

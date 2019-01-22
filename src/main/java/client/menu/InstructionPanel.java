@@ -27,7 +27,7 @@ public class InstructionPanel extends DropDownPanel {
 
     /**
      * Constructs an InstructionPanel
-     * @param window Window to which this panel belongs and is drawn upon 
+     * @param window Window to which this panel belongs and is drawn upon
      */
     InstructionPanel(Window window) {
         super(window);
@@ -55,6 +55,11 @@ public class InstructionPanel extends DropDownPanel {
         g2D.drawImage(backgroundSprite, 0, 0, null);
     }
 
+    /**
+     * Loading the background sprite of the instructions
+     * Draws all the images to a bufferedimage
+     * @return the BufferedImage which was produced
+     */
     private BufferedImage loadBackgroundSprite() {
         BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(750), Utils.scale(1334));
         Graphics2D g2D = (Graphics2D) sprite.getGraphics();
