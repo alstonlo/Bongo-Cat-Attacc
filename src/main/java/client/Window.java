@@ -127,21 +127,31 @@ public class Window extends JFrame {
 
 
     public void displayBasePanel(GamePanel basePanel) {
+        if (basePanel != null) { //stop the animation running on the currently displayed panel
+            basePanel.stop();
+        }
+        basePanel = newPanel;         //set it as the currently displayed panel
+        newPanel.run();               //run its animation
 
-        bongoListener.setControlledObj(basePanel); //make basePanel able to be controlled
-        serverListener.setControllableObj(basePanel);
+        bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
+        serverListener.setControllableObj(newPanel);
 
-        displayPanel(BASE_LAYER, basePanel);
+        SwingUtilities.invokeLater(() -> {
+            layers.add(newPanel, BASE_LAYER);
+            layers.revalidate();
+            layers.repaint();
+        });
     }
 
-    public void displayPanel(Integer layer, GamePanel newPanel) {
-
-        GamePanel oldPanel = runningPanels.get(layer);
-        if (oldPanel != null) { //stop the animation running on the currently displayed panel
-            oldPanel.stop();
+    public void displayPanel(int layer, GamePanel newPanel) {
+        if (basePanel != null) { //stop the animation running on the currently displayed panel
+            basePanel.stop();
         }
-        runningPanels.put(layer, newPanel);        //set it as the currently displayed panel
-        newPanel.run();                             //run its animation
+        basePanel = newPanel;         //set it as the currently displayed panel
+        newPanel.run();               //run its animation
+
+        bongoListener.setControlledObj(newPanel); //make newPanel able to be controlled
+        serverListener.setControllableObj(newPanel);
 
         SwingUtilities.invokeLater(() -> {
             layers.add(newPanel, BASE_LAYER);
