@@ -5,7 +5,6 @@ import client.utilities.Pallette;
 import client.utilities.Settings;
 import client.utilities.ThreadPool;
 import client.utilities.Utils;
-import protocol.Message;
 
 import javax.swing.JButton;
 import java.awt.Color;
@@ -21,7 +20,6 @@ import java.awt.image.BufferedImage;
  * last updated 01/21/2019
  */
 public class InstructionPanel extends DropDownPanel {
-    private BufferedImage backgroundSprite;
 
     private JButton backButton;
 
@@ -93,10 +91,4 @@ public class InstructionPanel extends DropDownPanel {
 
         return sprite;
     }
-
-    @Override
-    public void notifyHold() {
-        ThreadPool.execute(() -> retract());
-    }
-
 }

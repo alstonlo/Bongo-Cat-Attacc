@@ -2,6 +2,7 @@ package client;
 
 import client.menu.MenuPanel;
 import client.utilities.Settings;
+import client.utilities.ThreadPool;
 import client.utilities.Utils;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -14,9 +15,12 @@ import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
+import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 /**
  * JFrame on which all panels are displayed. We wanted to
@@ -40,8 +44,8 @@ public class Window extends JFrame {
     private ServerListener serverListener = new ServerListener();
 
     private JLayeredPane layeredPane = new JLayeredPane();
-    private GamePanel currBasePanel;
-
+    private final int fps = 60;
+    private Timer animater;
 
 
     /**
@@ -85,17 +89,16 @@ public class Window extends JFrame {
             }
         });
 
-        layeredPane.setPreferredSize(Settings.PANEL_SIZE);
+        this.layeredPane.setPreferredSize(Settings.PANEL_SIZE);
         this.add(layeredPane);
-
-        addBasePanel(new MenuPanel(this));
-
+        this.addBasePanel(new MenuPanel(this));
         this.setVisible(true);
         this.requestFocus();
         this.pack();
         this.setVisible(true);
 
-        new Timer(1000 / 60, (e) -> layeredPane.repaint()).start();
+        this.animater = new Timer(1000 / fps, (e) -> layeredPane.repaint());
+        animater.start();
     }
 
     /**
@@ -129,47 +132,38 @@ public class Window extends JFrame {
 
 
     public void addBasePanel(GamePanel basePanel) {
-        if (currBasePanel != null) {
-            removePanel(currBasePanel);
+        for (Component comp : layeredPane.getComponentsInLayer(0)) {
+            if (comp instanceof GamePanel) {
+                layeredPane.remove(comp);
+            }
         }
-        basePanel.run();
 
-        bongoListener.addControlledObj(basePanel); //make newPanel able to be controlled
-        serverListener.addControllableObj(basePanel);
-
-        SwingUtilities.invokeLater(() -> {
-            layeredPane.add(basePanel, 0);
-            layeredPane.revalidate();
-            layeredPane.repaint();
-        });
+        addPanel(0, basePanel);
     }
 
     public void addPanel(Integer layer, GamePanel panel) {
-        if (layer <= 0) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        panel.run();               //run its animation
-
         SwingUtilities.invokeLater(() -> {
             layeredPane.add(panel, layer);
             layeredPane.revalidate();
             layeredPane.repaint();
         });
+
+        bongoListener.addControlledObj(panel); //make newPanel able to be controlled
+        serverListener.addControllableObj(panel);
+
+        panel.run();               //run its animation
     }
 
     public void removePanel(GamePanel panel) {
-        int layer = layeredPane.getLayer(panel);
-        if (layer == 0) {
-            bongoListener.removeControlledObj(panel);
-            serverListener.removeControllableObj(panel);
-        }
-
-        SwingUtilities.invokeLater(() -> layeredPane.remove(panel));
         panel.stop();
+        bongoListener.removeControlledObj(panel);
+        serverListener.removeControllableObj(panel);
+        SwingUtilities.invokeLater(() -> layeredPane.remove(panel));
     }
 
     public void close() {
         client.close();
+        animater.stop();
+        ThreadPool.getPool().shutdown();
     }
 }

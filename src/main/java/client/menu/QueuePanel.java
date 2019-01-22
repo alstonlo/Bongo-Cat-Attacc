@@ -12,13 +12,16 @@ import protocol.MatchMadeMessage;
 import protocol.Message;
 
 import javax.swing.JButton;
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -32,52 +35,32 @@ public class QueuePanel extends DropDownPanel {
 
     private AtomicBoolean lock = new AtomicBoolean(false);
 
-    private AtomicBoolean animating = new AtomicBoolean(false);
-
     private BufferedImage drape = Utils.loadScaledImage("resources/menu/queue drape.png");
 
     private Clock clock;
-    private int messageState = 0;
+
     private final long DOT_DURATION = 800;
-    private String[] message = {"Finding Matches",
-                                "Finding Matches.",
-                                "Finding Matches..",
-                                "Finding Matches..."};
-
-    private float opacity = 0f;
-    private final long SLIDE_DURATION = 500;
-    private final long VS_ANIMATION_DURATION = 500;
-
-    private QueueRectangle leftPanel;
-    private QueueRectangle rightPanel;
-
-    private Font vsFont = Pallette.getScaledFont(Pallette.TITLE_FONT, 80);
+    private String message = "Finding Matches";
+    private Timer messageAnimator;
     private Font messageFont = Pallette.getScaledFont(Pallette.TEXT_FONT, 40);
 
     QueuePanel(Window window) {
         super(window);
 
-        this.clock = new Clock(Utils.scale(375), Utils.scale(500), 80);
-        this.leftPanel = new QueueRectangle(
-                0, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
-                new Color(245, 132, 148), "resources/menu/left bongo cat.png");
-        this.leftPanel.setY(-Settings.PANEL_SIZE.height);
-        this.rightPanel = new QueueRectangle(
-                Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.width / 2, Settings.PANEL_SIZE.height,
-                new Color(125, 151, 230), "resources/menu/right bongo cat.png");
-        this.rightPanel.setY(Settings.PANEL_SIZE.height);
+        this.clock = new Clock(Utils.scale(375), Utils.scale(500), Utils.scale(80));
+        this.messageAnimator = new Timer();
 
         this.setLayout(null);
         JButton matchMadeButton = new JButton("Match Made");
         matchMadeButton.setFont(Pallette.getScaledFont(Pallette.TITLE_FONT, 25));
         matchMadeButton.setSize(Utils.scale(200), Utils.scale(70));
         matchMadeButton.setLocation(Utils.scale(275), Utils.scale(900));
-        matchMadeButton.addActionListener(e -> ThreadPool.execute(() -> {
-            leftPanel.setUsername("Player 1");
-            leftPanel.configureSprites();
-            rightPanel.setUsername("Player 2");
-            rightPanel.configureSprites();
-        }));
+        matchMadeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ThreadPool.execute(() -> notifyReceived(new MatchMadeMessage("You", "Other")));
+            }
+        });
         matchMadeButton.setBorder(null);
         matchMadeButton.setBackground(new Color(255, 221, 216));
         matchMadeButton.setForeground(Pallette.OUTLINE_COLOR);
@@ -88,16 +71,11 @@ public class QueuePanel extends DropDownPanel {
 
     @Override
     void pullDown() {
-        /*if (window.getUsername().equals("")) {
-            return; //don't do anything if the player hasn't logged in
-        }*/
-
         if (lock.compareAndSet(false, true)) {
-            ThreadPool.execute(this::animate);
             super.pullDown();
 
             try {
-                Thread.sleep(3000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -107,57 +85,50 @@ public class QueuePanel extends DropDownPanel {
     }
 
     @Override
-    public void notifyReceived(Message message) {
-        if (message instanceof MatchMadeMessage && getState() == DOWN_STATE) {
-            MatchMadeMessage match = (MatchMadeMessage) message;
-            transition(match.host, match.guest);
-        }
-    }
-
-    private void animate() {
-        animating.set(true);
-
+    public void run() {
         clock.configureSprites();
         clock.start();
 
-        long startTime = System.currentTimeMillis();
-        while (animating.get()) {
-            messageState = (int) ((System.currentTimeMillis() - startTime) / DOT_DURATION) % 4;
-        }
-
-        clock.stop();
+        messageAnimator.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                message += ".";
+                if (message.equals("Finding Matches....")) {
+                    message = "Finding Matches";
+                }
+            }
+        }, 0, DOT_DURATION);
     }
 
-    private void transition(String host, String guest) {
-
-        long startTime = System.currentTimeMillis();
-        double deltaTime = 0;
-        while (deltaTime < SLIDE_DURATION) {
-            double y = Settings.PANEL_SIZE.height * (deltaTime / SLIDE_DURATION);
-            leftPanel.setY(-Settings.PANEL_SIZE.height + y);
-            rightPanel.setY(Settings.PANEL_SIZE.height - y);
-            deltaTime = System.currentTimeMillis() - startTime;
-        }
-        leftPanel.setY(0);
-        rightPanel.setY(0);
-
-        opacity = 0f;
-        startTime = System.currentTimeMillis();
-        deltaTime = 0;
-        while (deltaTime < VS_ANIMATION_DURATION) {
-            opacity = (float) (deltaTime / VS_ANIMATION_DURATION);
-            deltaTime = System.currentTimeMillis() - startTime;
-        }
-        opacity = 1f;
-
+    @Override
+    public void stop() {
         clock.stop();
+        messageAnimator.cancel();
+    }
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e){
-            e.printStackTrace();
+    @Override
+    public void notifyReceived(Message message) {
+        if (message instanceof MatchMadeMessage) {
+            MatchMadeMessage match = (MatchMadeMessage) message;
+
+            VsTransitionPanel vsTransition = new VsTransitionPanel(window, match.host, match.guest);
+            window.addPanel(2, vsTransition);
+
+            SongSelectPanel songSelect = new SongSelectPanel(window, match.host, match.guest);
+            window.addBasePanel(songSelect);
+
+            retract();
+            stop();
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            window.removePanel(vsTransition);
+            window.requestFocus();
         }
-        window.addBasePanel(new SongSelectPanel(window, "user1", "user2"));
     }
 
     /**
@@ -174,41 +145,11 @@ public class QueuePanel extends DropDownPanel {
 
         clock.draw(g2D);
 
+        g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
+        g2D.setColor(Pallette.OUTLINE_COLOR);
         g2D.setFont(messageFont);
         FontMetrics fontMetrics = g2D.getFontMetrics();
-        g2D.drawString(message[messageState], Utils.scale(375) - fontMetrics.stringWidth("Finding Match") / 2, Utils.scale(690));
-
-        leftPanel.draw(g2D);
-        rightPanel.draw(g2D);
-
-        if (opacity != 0f) {
-            g2D.setComposite(AlphaComposite.SrcOver.derive(opacity)); //drawing the "vs."
-            g2D.setRenderingHints(Settings.QUALITY_RENDER_SETTINGS);
-            g2D.setFont(vsFont);
-            g2D.setColor(Pallette.OUTLINE_COLOR);
-            fontMetrics = g2D.getFontMetrics();
-            g2D.drawString("vs.", Utils.scale(375) - fontMetrics.stringWidth("vs.") / 2, Utils.scale(690));
-            g2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER)); //resetting opacity
-        }
-    }
-
-    @Override
-    public void notifyLeftPress() {
-    }
-
-    @Override
-    public void notifyLeftRelease() {
-    }
-
-    @Override
-    public void notifyRightPress() {
-    }
-
-    @Override
-    public void notifyRightRelease() {
-    }
-
-    @Override
-    public void notifyHold() {
+        g2D.drawString(message, Utils.scale(355) - fontMetrics.stringWidth("Finding Match") / 2, Utils.scale(690));
+        g2D.setRenderingHints(Settings.DEFAULT_RENDER_SETTINGS);
     }
 }

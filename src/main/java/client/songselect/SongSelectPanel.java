@@ -118,28 +118,13 @@ public class SongSelectPanel extends GamePanel {
 
     @Override
     public void notifyLeftPress() {
-        moveRight();
-    }
-
-
-    @Override
-    public void notifyLeftRelease() {
-    }
-
-    @Override
-    public void notifyRightPress() {
         moveLeft();
     }
 
     @Override
-    public void notifyRightRelease() {
-
+    public void notifyRightPress() {
+        moveRight();
     }
-
-    @Override
-    public void notifyHold() {
-    }
-
 
     @Override
     public void notifyReceived(Message message) {
@@ -155,7 +140,7 @@ public class SongSelectPanel extends GamePanel {
         if (currSong != null){ //stops the audio
             currSong.stop();
         }
-        window.switchPanel(new GamePlayPanel(window, getTile(selected).getSong())); //switches the panel to a gameplaypanel using the current song selected
+//        window.switchPanel(new GamePlayPanel(window, getTile(selected).getSong())); //switches the panel to a gameplaypanel using the current song selected
     }
 
     /**

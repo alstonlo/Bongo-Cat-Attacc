@@ -1,16 +1,11 @@
 package client.menu;
 
 import client.GamePanel;
-import client.Messagable;
 import client.Window;
-import client.utilities.Settings;
 import client.utilities.Utils;
-import protocol.Message;
 
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import java.awt.Graphics;
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -30,7 +25,7 @@ abstract class DropDownPanel extends GamePanel {
     //how long the drop down animation should be in ms.
     private static final long SLIDE_DURATION = 500;
 
-    private static final Integer DROP_DOWN_LAYER = 2;
+    private static final Integer DROP_DOWN_LAYER = 1;
 
     private double y; //preferred y position of the panel
     private AtomicInteger state = new AtomicInteger(UP_STATE);
@@ -42,10 +37,9 @@ abstract class DropDownPanel extends GamePanel {
      */
     DropDownPanel(Window window) {
         super(window);
-        this.setSize(Settings.PANEL_SIZE);
         this.y = -getHeight();
         relocate();
-        this.setOpaque(true);
+        this.setOpaque(false);
         this.setVisible(true);
     }
 
@@ -71,14 +65,12 @@ abstract class DropDownPanel extends GamePanel {
     void pullDown() {
         if (state.compareAndSet(UP_STATE, ANIMATION_STATE)) {
 
-            try {
-                SwingUtilities.invokeAndWait(() -> {
-                    requestFocus();
-                    window.addPanel(DROP_DOWN_LAYER, this);
-                });
-            } catch (InvocationTargetException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            window.addPanel(DROP_DOWN_LAYER, this);
+            y = -getHeight() + 1;
+            SwingUtilities.invokeLater(() -> {
+                requestFocus();
+                relocate();
+            });
 
             long startTime = System.currentTimeMillis();
             double deltaTime = System.currentTimeMillis() - startTime;
@@ -86,8 +78,8 @@ abstract class DropDownPanel extends GamePanel {
                 y = getHeight() * (deltaTime / SLIDE_DURATION - 1);
                 deltaTime = System.currentTimeMillis() - startTime;
             }
-            y = 0;
 
+            y = 0;
             state.set(DOWN_STATE);
         }
     }
@@ -104,18 +96,15 @@ abstract class DropDownPanel extends GamePanel {
                 y = getHeight() * (-deltaTime / SLIDE_DURATION);
                 deltaTime = System.currentTimeMillis() - startTime;
             }
+
+            SwingUtilities.invokeLater(() -> {
+                window.requestFocus();
+                relocate();
+            });
+            window.removePanel(this);
+
             y = -getHeight();
-
             state.set(UP_STATE);
-
-            try {
-                SwingUtilities.invokeAndWait(() -> {
-                    window.requestFocus();
-                    window.removePanel(this);
-                });
-            } catch (InvocationTargetException | InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 

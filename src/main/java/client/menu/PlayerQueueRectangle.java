@@ -11,7 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-class QueueRectangle extends Rectangle implements Drawable {
+class PlayerQueueRectangle extends Rectangle implements Drawable {
 
     private BufferedImage sprite;
     private String catFileName;
@@ -23,7 +23,7 @@ class QueueRectangle extends Rectangle implements Drawable {
     private int height;
     private Color bgColor;
 
-    QueueRectangle(int x, int width, int height, Color bgColor, String fileName) {
+    PlayerQueueRectangle(int x, int width, int height, Color bgColor, String fileName) {
         this.x = x;
         this.width = width;
         this.height = height;

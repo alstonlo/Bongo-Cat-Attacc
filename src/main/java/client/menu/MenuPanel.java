@@ -158,7 +158,6 @@ public class MenuPanel extends GamePanel {
 
     @Override
     public void notifyReceived(Message message) {
-        //load the username sprite in case the username changes
         if (!window.getUsername().equals("")) {
             usernameSprite = loadUsernameSprite();
         }
