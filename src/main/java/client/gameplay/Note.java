@@ -35,6 +35,8 @@ public class Note {
     private double width;
     public final int type;
 
+    public int hitState = -1;
+
     public Color color = Pallette.OUTLINE_COLOR;
 
     /**
@@ -84,14 +86,16 @@ public class Note {
      * Changes the colour of the note to green
      */
     void setHit() {
-        color = Color.GREEN;
+        hitState = 1;
     }
 
     /**
      * Changes the colour of the note to red
      */
     void setMissed() {
-        color = Color.RED;
+        if (hitState == -1) {
+            hitState = 0;
+        }
     }
 
     /**
@@ -100,7 +104,14 @@ public class Note {
      * @param g2D the Graphics2D object to draw the oval
      */
     void draw(Graphics2D g2D) {
-        g2D.setColor(color);
+        if (hitState == -1) {
+            g2D.setColor(color);
+        } else if (hitState == 0) {
+            g2D.setColor(Color.RED);
+        } else if (hitState == 1) {
+            g2D.setColor(Color.GREEN);
+        }
+
         g2D.fillOval(Utils.scale(centreX - width / 2), Utils.scale(centreY - height / 2), Utils.scale(width), Utils.scale(height));
     }
 
