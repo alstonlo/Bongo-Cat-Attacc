@@ -122,7 +122,7 @@ public class MenuPanel extends GamePanel {
         super.run();
 
         //playing backgroundSprite music
-//        bgMusic = Utils.loadAudio("resources/menu/music.wav");
+        bgMusic = Utils.loadAudio("resources/menu/music.wav");
         if (bgMusic != null) {
             bgMusic.loop(Clip.LOOP_CONTINUOUSLY);
         }
@@ -186,7 +186,7 @@ public class MenuPanel extends GamePanel {
     }
 
     /**
-     * @return the sprite for the username banner 
+     * @return the sprite for the username banner
      */
     private BufferedImage loadUsernameSprite() {
         BufferedImage sprite = Utils.createCompatibleImage(Utils.scale(550), Utils.scale(100));
